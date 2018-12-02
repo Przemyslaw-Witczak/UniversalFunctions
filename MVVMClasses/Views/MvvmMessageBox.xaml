@@ -1,0 +1,29 @@
+﻿<Window x:Class="MVVMClasses.MvvmMessageBox"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        mc:Ignorable="d" 
+             Height="133.333" Width="408.772" WindowStartupLocation="CenterScreen" SizeToContent="Height" Title="{Binding WindowTitle}">
+    <Grid Margin="20,20,20,20" VerticalAlignment="Bottom">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition MaxHeight="25" MinHeight="25"></RowDefinition>
+        </Grid.RowDefinitions>
+        <TextBlock Grid.Row="0" HorizontalAlignment="Center" TextWrapping="Wrap" Text="{Binding KomunikatLinia1}" VerticalAlignment="Top" />
+        <TextBlock Grid.Row="1" HorizontalAlignment="Center" TextWrapping="Wrap" Text="{Binding KomunikatLinia2}" VerticalAlignment="Top" />
+        <Grid VerticalAlignment="Bottom" MaxHeight="22" Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition></ColumnDefinition>
+                <ColumnDefinition></ColumnDefinition>
+                <ColumnDefinition></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <Button Grid.Column="0" Content="TAK" Command="{Binding ReturnTrue}" Visibility="{Binding BtnYesNoVisible}"></Button>
+            <Button Grid.Column="2" Content="NIE" Command="{Binding ReturnFalse}" Visibility="{Binding BtnYesNoVisible}"></Button>
+            <Button Grid.Column="1" Content="OK" Command="{Binding ReturnTrue}" Visibility="{Binding BtnOkVisible}"></Button>
+        </Grid>
+    </Grid>
+    
+
+</Window>
