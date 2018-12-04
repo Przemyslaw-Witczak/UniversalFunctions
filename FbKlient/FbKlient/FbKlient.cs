@@ -936,46 +936,20 @@ namespace FbKlientNameSpace
             return false;
         }
         #region Załączniki
+        /// <summary>
+        /// Metoda pobiera załącznik z bazy danych z parametru blob o podanej nazwie i zapisuje w podanej ścieżce
+        /// </summary>
+        /// <param name="FieldName">Nazwa parametru</param>
+        /// <param name="FileName">Ścieżka do pliku gdzie zapisać</param>
         public void GetFile(String FieldName, String FileName)
         {
-
-            int bufferSize = 100;                   // Size of the BLOB buffer.
-            byte[] outbyte = new byte[bufferSize];  // The BLOB byte[] buffer to be filled by GetBytes.
-            long retval;                            // The bytes returned from GetBytes.
-            long startIndex = 0;                    // The starting position in the BLOB output.            
-
+                       
             try
             {
                 using (FileStream fs = new FileStream(FileName, FileMode.OpenOrCreate, FileAccess.Write)) // Writes the BLOB to a file
                 {
-                    using (BinaryWriter bw = new BinaryWriter(fs)) // Streams the BLOB to the FileStream object.
-                    {
-                        // Reset the starting byte for the new BLOB.
-                        startIndex = 0;
-
-                        // Read the bytes into outbyte[] and retain the number of bytes returned.
-                        retval = Response.GetBytes(GetFieldIndex(FieldName), startIndex, outbyte, 0, bufferSize);
-
-                        // Continue reading and writing while there are bytes beyond the size of the buffer.
-                        while (retval == bufferSize)
-                        {
-                            bw.Write(outbyte);
-                            bw.Flush();
-
-                            // Reposition the start index to the end of the last buffer and fill the buffer.
-                            startIndex += bufferSize;
-                            retval = Response.GetBytes(GetFieldIndex(FieldName), startIndex, outbyte, 0, bufferSize);
-                        }
-
-                        // Write the remaining buffer.
-                        bw.Write(outbyte, 0, (int)retval);
-                        bw.Flush();
-                        bw.Close();
-
-                        fs.Close();
-
-                        outbyte = null;
-                    }
+                    GetIntoStream(FieldName, fs);
+                    fs.Close();
                 }
             }
             catch
@@ -985,27 +959,94 @@ namespace FbKlientNameSpace
 
         }
 
+        /// <summary>
+        /// Metoda pobiera parametr o podanej nazwie i zapisuje w strumieniu
+        /// </summary>
+        /// <param name="FieldName"></param>
+        /// <param name="fs"></param>
+        public void GetIntoStream(string FieldName, Stream fs)
+        {
+            using (BinaryWriter bw = new BinaryWriter(fs)) // Streams the BLOB to the FileStream object.
+            {
+                int bufferSize = 100;                   // Size of the BLOB buffer.
+                byte[] outbyte = new byte[bufferSize];  // The BLOB byte[] buffer to be filled by GetBytes.
+                long retval;                            // The bytes returned from GetBytes.
+                long startIndex = 0;                    // The starting position in the BLOB output.
+                                                        // Reset the starting byte for the new BLOB.
+                startIndex = 0;
+
+                // Read the bytes into outbyte[] and retain the number of bytes returned.
+                retval = Response.GetBytes(GetFieldIndex(FieldName), startIndex, outbyte, 0, bufferSize);
+
+                // Continue reading and writing while there are bytes beyond the size of the buffer.
+                while (retval == bufferSize)
+                {
+                    bw.Write(outbyte);
+                    bw.Flush();
+
+                    // Reposition the start index to the end of the last buffer and fill the buffer.
+                    startIndex += bufferSize;
+                    retval = Response.GetBytes(GetFieldIndex(FieldName), startIndex, outbyte, 0, bufferSize);
+                }
+
+                // Write the remaining buffer.
+                bw.Write(outbyte, 0, (int)retval);
+                bw.Flush();
+                
+
+                outbyte = null;
+            }
+        }
+
+        /// <summary>
+        /// Dodaje plik jako obiekt blob
+        /// </summary>
+        /// <param name="ParamName">nazwa parametru zapytania</param>
+        /// <param name="FileName">ścieżka do pliku</param>
         public void SetFile(String ParamName, String FileName)
         {
             try
             {
                 using (FileStream fs = new FileStream(FileName, FileMode.Open, FileAccess.Read))
                 {
-                    using (BinaryReader br = new BinaryReader(fs))
-                    {
-                        byte[] photo = br.ReadBytes((int)fs.Length);
-
-                        br.Close();
-
-                        fs.Close();
-
-                        Commands[QueryId].Parameters.Add(ParamName, FbDbType.Binary, photo.Length).Value = photo;
-                    }
+                    SetStreamParameter(ParamName, fs);
                 }
             }
             catch
             {
-                MyShowMessage("Error while setting blob parameter " + ParamName + " with file " + FileName);
+                MyShowMessage($"Error while setting blob parameter {ParamName} with file {FileName} in SetFile");
+            }
+        }
+
+        private void SetStreamParameter(string ParamName, Stream fs)
+        {
+            using (BinaryReader br = new BinaryReader(fs))
+            {
+                byte[] photo = br.ReadBytes((int)fs.Length);
+
+                br.Close();
+
+                fs.Close();
+
+                Commands[QueryId].Parameters.Add(ParamName, FbDbType.Binary, photo.Length).Value = photo;
+            }
+        }
+
+        /// <summary>
+        /// Dodaje strumień jako obiekt blob
+        /// </summary>
+        /// <param name="ParamName"></param>
+        /// <param name="memoryStream"></param>
+        public void SetFromStream(string ParamName, Stream memoryStream)
+        {
+            try
+            {
+                memoryStream.Position = 0;
+                SetStreamParameter(ParamName, memoryStream);
+            }
+            catch
+            {
+                MyShowMessage($"Error while setting blob parameter {ParamName} in SetStream");
             }
         }
         #endregion
