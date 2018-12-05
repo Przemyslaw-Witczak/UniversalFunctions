@@ -946,9 +946,10 @@ namespace FbKlientNameSpace
                        
             try
             {
-                using (FileStream fs = new FileStream(FileName, FileMode.OpenOrCreate, FileAccess.Write)) // Writes the BLOB to a file
+                //using (FileStream fs = new FileStream(FileName, FileMode.OpenOrCreate, FileAccess.Write)) // Writes the BLOB to a file
+                Stream fs = new FileStream(FileName, FileMode.OpenOrCreate, FileAccess.Write);//) // Writes the BLOB to a file
                 {
-                    GetIntoStream(FieldName, fs);
+                    GetIntoStream(FieldName, ref fs);
                     fs.Close();
                 }
             }
@@ -964,9 +965,10 @@ namespace FbKlientNameSpace
         /// </summary>
         /// <param name="FieldName"></param>
         /// <param name="fs"></param>
-        public void GetIntoStream(string FieldName, Stream fs)
+        public void GetIntoStream(string FieldName, ref Stream fs)
         {
-            using (BinaryWriter bw = new BinaryWriter(fs)) // Streams the BLOB to the FileStream object.
+            //using (BinaryWriter bw = new BinaryWriter(fs)) // Streams the BLOB to the FileStream object.
+            BinaryWriter bw = new BinaryWriter(fs);
             {
                 int bufferSize = 100;                   // Size of the BLOB buffer.
                 byte[] outbyte = new byte[bufferSize];  // The BLOB byte[] buffer to be filled by GetBytes.
