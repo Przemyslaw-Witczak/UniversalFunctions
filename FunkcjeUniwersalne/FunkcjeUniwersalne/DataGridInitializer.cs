@@ -178,12 +178,12 @@ namespace MojeFunkcjeUniwersalneNameSpace
 
             for (int i = 0; i < gridKolumny.Count;i++ )
             {
-                if (gridKolumny[i] is DataGridViewCheckBoxColumn)
+                if (gridKolumny[i] is DataGridViewCheckBoxColumn || gridKolumny[i] is DataGridViewImageColumn)
                 {
                     gridKomponent.Columns.Insert(i, gridKolumny[i]);
                     gridKomponent.Columns.RemoveAt(i + 1);
                     gridKomponent.Columns[i].ReadOnly = false;
-                }
+                }                
                 else
                     gridKomponent.Columns[i].ReadOnly = gridKolumny[i].ReadOnly;
                 gridKomponent.Columns[i].Name = gridKolumny[i].Name;
@@ -199,6 +199,21 @@ namespace MojeFunkcjeUniwersalneNameSpace
 
             //for (Int16 i = 1; i < gridKomponent.ColumnCount; i++)
             //    gridKomponent.Columns[i].ReadOnly = true;         
+        }
+
+        public void AddImageColumn(string columnText)
+        {
+            DataGridViewImageColumn kolumna = new DataGridViewImageColumn()
+            {
+                Name = columnText,
+                ValuesAreIcons = false,
+                ImageLayout = DataGridViewImageCellLayout.Zoom,
+
+            };
+
+            
+
+            gridKolumny.Add(kolumna);
         }
     }
 }
