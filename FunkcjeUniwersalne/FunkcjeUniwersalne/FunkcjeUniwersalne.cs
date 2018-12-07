@@ -566,7 +566,8 @@ namespace MojeFunkcjeUniwersalneNameSpace
         /// remarks https://stackoverflow.com/questions/1922040/how-to-resize-an-image-c-sharp
         public static Bitmap ResizeImage(Image image, int width, int height)
         {
-
+            if (image == null)
+                throw new Exception("No picture to resize!!");
             // Figure out the ratio
             double ratioX = (double)width / (double)image.Width;
             double ratioY = (double)height / (double)image.Height;

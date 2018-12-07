@@ -40,7 +40,25 @@ namespace iTextSharpHelper
     /// </summary>
     public class myPdfCell
     {
-        
+
+        private Image _cellPicture;
+        /// <summary>
+        /// Obrazek do wyświetlania w komórce
+        /// </summary>
+        public Image cellPicture
+        {
+            get
+            {
+                return _cellPicture;
+            }
+            
+            set
+            {
+                _cellPicture = value;
+                text = string.Empty;
+            }
+        }
+
         private string text;
         /// <summary>
         /// Tekst wyświetlany w komórce
@@ -100,6 +118,7 @@ namespace iTextSharpHelper
             RowSpan = 0;
             ColumnSpan = 0;
             mergedRow = false;
+            cellPicture = null;
         }
 
         /// <summary>
@@ -245,18 +264,27 @@ namespace iTextSharpHelper
                 int x=0;
                 while(x<ColumnCount)
                 {
-                    
-                    PdfPCell cell = new PdfPCell(new Phrase(Cells[x][y].Text, Cells[x][y].Font));
-                    SetPdfCellAlignment(cell, Cells[x][y].Align);                    
+
+                    PdfPCell cell;
+                    var currentCell = Cells[x][y];
+                    if (currentCell.cellPicture != null)
+                    {
+                        cell = new PdfPCell(currentCell.cellPicture);
+                        if (!currentCell.NoBorder)
+                            cell.Padding = 1;
+                    }
+                    else
+                        cell = new PdfPCell(new Phrase(currentCell.Text, currentCell.Font));
+                    SetPdfCellAlignment(cell, currentCell.Align);                    
  
-                    if (Cells[x][y].NoBorder)
+                    if (currentCell.NoBorder)
                         cell.Border = 0;
 
-                    if (Cells[x][y].RowSpan > 0)
+                    if (currentCell.RowSpan > 0)
                     {
-                        cell.Rowspan = Cells[x][y].RowSpan;
+                        cell.Rowspan = currentCell.RowSpan;
 
-                        for (int i = y + 1; i < y + Cells[x][y].RowSpan; i++)
+                        for (int i = y + 1; i < y + currentCell.RowSpan; i++)
                         {
                             if (i<RowCount)
                                 Cells[x][i].mergedRow = true;
@@ -269,13 +297,13 @@ namespace iTextSharpHelper
                     }
                    
                     int incrementX=1;
-                    if (Cells[x][y].ColumnSpan > 0)
+                    if (currentCell.ColumnSpan > 0)
                     {
-                        cell.Colspan = Cells[x][y].ColumnSpan;
-                        incrementX = Cells[x][y].ColumnSpan;
+                        cell.Colspan = currentCell.ColumnSpan;
+                        incrementX = currentCell.ColumnSpan;
                     }
                     
-                    if (!Cells[x][y].mergedRow)
+                    if (!currentCell.mergedRow)
                         returnedTable.AddCell(cell);
 
                     x += incrementX;
