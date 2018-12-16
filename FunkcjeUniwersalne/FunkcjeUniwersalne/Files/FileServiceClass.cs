@@ -280,13 +280,13 @@ namespace MojeFunkcjeUniwersalneNameSpace
         }
 
         /// <summary>
-        /// Metoda zabezpiecza nazwę pliku przed niedozwolonymi znakami
+        /// Metoda zabezpiecza nazwę pliku przed niedozwolonymi znakami w Windows: \/:*?"<>| oraz %
         /// </summary>
         /// <param name="fileName"></param>
         /// <returns></returns>
         public static string ReplaceProhibitedCharsFrom(string fileName)
         {
-            return fileName.Replace("/", "_").Replace("\\", "_").Replace("%", "_");
+            return fileName.Replace("/", "_").Replace("\\", "_").Replace("%", "_").Replace(":", "_").Replace("*", "_").Replace("?", "_").Replace("\"", "_").Replace("<", "_").Replace(">", "_").Replace("|", "_");
         }
     }
 }
