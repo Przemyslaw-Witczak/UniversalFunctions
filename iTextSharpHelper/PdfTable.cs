@@ -271,7 +271,7 @@ namespace iTextSharpHelper
                     {
                         cell = new PdfPCell(currentCell.cellPicture);
                         if (!currentCell.NoBorder)
-                            cell.Padding = 1;
+                            cell.Padding = 1; //żeby zdjęcie nie zasłaniało ramek
                     }
                     else
                         cell = new PdfPCell(new Phrase(currentCell.Text, currentCell.Font));
@@ -311,9 +311,9 @@ namespace iTextSharpHelper
                                 
             }
 
-            returnedTable.SpacingAfter = 10;
+            returnedTable.SpacingAfter = 1; //10;
             returnedTable.SetWidths(ColumnWidths.ToArray());
-            returnedTable.SpacingBefore = 10;
+            returnedTable.SpacingBefore = 1;// 10;
 
             return returnedTable;
         }
