@@ -660,7 +660,7 @@ namespace MojeFunkcjeUniwersalneNameSpace
         /// <param name="ListaIndeksow">Opcjonalna lista indeksów wg których rozpoznawane pozycje</param>
         /// <remarks>Zapisuje która pozycja listy została wybrana, jeżeli podano listę indeksów wówczas rozpoznaje wg indeksu
         /// w przeciwnym razie wg pozycji na liście</remarks>
-        public void SaveComboBoxField(ComboBox PoleCombo, List<int> ListaIndeksow)
+        public void SaveComboBoxField(ComboBox PoleCombo, List<int> ListaIndeksow=null)
         {
             int ValueToSave = -1;
             ValueToSave = PoleCombo.SelectedIndex;
@@ -735,7 +735,7 @@ namespace MojeFunkcjeUniwersalneNameSpace
         /// <param name="ListaIndeksow">Opcjonalna lista indeksów wg których rozpoznawane pozycje</param>
         /// <remarks>Odczytuje która pozycja listy została wybrana, jeżeli podano listę indeksów wówczas rozpoznaje wg indeksu
         /// w przeciwnym razie wg pozycji na liście</remarks>
-        public void LoadComboBoxField(ComboBox PoleCombo, List<int> ListaIndeksow)
+        public void LoadComboBoxField(ComboBox PoleCombo, List<int> ListaIndeksow=null)
         {
             int ValueToLoad = -1;
             ValueToLoad = Convert.ToInt32(GetParam(GetControlParentName(PoleCombo.Parent), PoleCombo.Name, "-1"));
