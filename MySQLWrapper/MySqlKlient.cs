@@ -1,10 +1,13 @@
 ﻿using ISqlKlientNameSpace;
+using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace MySQLWrapper
 {
@@ -19,7 +22,13 @@ namespace MySQLWrapper
 
         #region IDisposable Support
         private bool disposedValue = false; // To detect redundant calls
-        
+        private string _dataBaseConnectionString;
+
+        public MySqlKlient(string dataBaseConnectionString)
+        {
+            this._dataBaseConnectionString = dataBaseConnectionString;
+        }
+
         protected virtual void Dispose(bool disposing)
         {
             if (!disposedValue)
@@ -52,15 +61,21 @@ namespace MySQLWrapper
         }
 
         #endregion
+        private MySqlConnection _connection;
+        private MySqlCommand _command;
+        private MySqlDataReader _reader;
 
-        private static string GetConnectionString()
-        {            
-            return $"User = {ConfigurationManager.AppSettings["MySqlUserName"]}; Password = {ConfigurationManager.AppSettings["MySqlUserPassword"]};Database={ConfigurationManager.AppSettings["MySqlDataBase"]};Server={ConfigurationManager.AppSettings["MySqlServer"]};Port={ConfigurationManager.AppSettings["MySqlPort"]};";
+        private string GetConnectionString()
+        {
+            return _dataBaseConnectionString;
         }
 
         public void AddSQL(string SqlString)
         {
-            throw new NotImplementedException();
+            _connection = new MySqlConnection(_dataBaseConnectionString);
+            _connection.Open();
+            _command = new MySqlCommand(SqlString, _connection);
+            
         }
 
         public void ConfigureDataBase()
@@ -73,14 +88,35 @@ namespace MySQLWrapper
             throw new NotImplementedException();
         }
 
-        public void Execute()
-        {
-            throw new NotImplementedException();
-        }
-
         public void ExecuteNonQuery()
         {
-            throw new NotImplementedException();
+            Execute(false);
+        }
+
+        private void Execute(bool WithResponse)
+        {
+            try
+            {
+                //ResponseClose();
+                //if (PodlaczDoBazy())
+                {
+                    if (WithResponse == true)
+                    {
+                        _reader = _command.ExecuteReader();                        
+                    }
+                    else
+                    {
+                        _command.ExecuteNonQuery();
+                        _command.Dispose();
+                        GC.WaitForPendingFinalizers();
+                    }
+                }
+                
+            }
+            catch (Exception ex)
+            {
+                MyShowMessage($"Problem z wykonaniem zapytania: {ex}");
+            }
         }
 
         public bool GetBoolean(string FieldName)
@@ -120,7 +156,7 @@ namespace MySQLWrapper
 
         public int GetInt32(string FieldName)
         {
-            throw new NotImplementedException();
+            return _reader.GetInt32(_reader.GetOrdinal(FieldName));
         }
 
         public long GetInt64(string FieldName)
@@ -130,7 +166,7 @@ namespace MySQLWrapper
 
         public string GetString(string FieldName)
         {
-            throw new NotImplementedException();
+            return _reader.GetString(_reader.GetOrdinal(FieldName));
         }
 
         public object GetValue(string FieldName)
@@ -145,13 +181,66 @@ namespace MySQLWrapper
 
         public bool Read()
         {
-            throw new NotImplementedException();
+            return _reader.Read();
         }
 
         public void SetNull(string paramName)
         {
-            throw new NotImplementedException();
+            ParamByName(paramName, MySqlDbType.Int16).Value = DBNull.Value;
         }
-        
+
+        public MySqlParameter ParamByName(String paramName, MySqlDbType paramType)
+        {
+            try
+            {
+                paramName = paramName.Replace(":", "@");
+
+                if (!paramName.Contains("@"))
+                    paramName = "@" + paramName;
+
+                MySqlParameter returned_param = null;
+                foreach (MySqlParameter param in _command.Parameters)
+                {
+                    if (param.ParameterName.Equals(paramName))
+                    {
+                        returned_param = param;
+                        returned_param.MySqlDbType = paramType;
+                        break;
+                    }
+                }
+
+                if (returned_param == null)
+                {
+                    returned_param = _command.Parameters.Add(paramName, paramType);
+                }
+
+                return returned_param;
+            }
+            catch (Exception ex)
+            {
+                MyShowMessage("Error while setting parameter " + paramName + " " + ex.Message);
+                return null;
+            }
+        }
+
+        #region MetodySystemowe
+        void MyShowMessage(string message)
+        {            
+            //if (ParentForm != null)
+            {
+                MessageBox.Show(message);
+            }
+            //else
+            //{
+            //    throw new Exception(message);
+            //}
+        }
+
+        public void Execute()
+        {
+            Execute(true);
+        }
+        #endregion
+
     }
 }
