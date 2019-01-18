@@ -84,16 +84,6 @@
       <DependentUpon>Potwierdzenie.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\IDowiComponent\IDowiComponent.csproj">
-      <Project>{63641b52-c9f0-4973-87b3-cfee72a1658a}</Project>
-      <Name>IDowiComponent</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\IInputValidiator\IInputValidiator.csproj">
-      <Project>{043458c6-44e6-475c-aa29-273f2b3967bf}</Project>
-      <Name>IInputValidiator</Name>
-    </ProjectReference>
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
