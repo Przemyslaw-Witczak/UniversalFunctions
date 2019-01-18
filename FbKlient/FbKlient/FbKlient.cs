@@ -12,6 +12,7 @@ using System.Text;
 using System.Data.SqlClient;
 using MojeFunkcjeUniwersalneNameSpace.Logger;
 using System.Configuration;
+using ISqlKlientNameSpace;
 //using System.Data.SqlClient;
 
 namespace FbKlientNameSpace
