@@ -80,7 +80,7 @@
       <Name>FunkcjeUniwersalne</Name>
     </ProjectReference>
     <ProjectReference Include="..\BinarySerializer\BinarySerializer.csproj">
-      <Project>{87BD0960-0624-4E8B-BCF0-0917F184A4CC}</Project>
+      <Project>{87bd0960-0624-4e8b-bcf0-0917f184a4cc}</Project>
       <Name>BinarySerializer</Name>
     </ProjectReference>
   </ItemGroup>
