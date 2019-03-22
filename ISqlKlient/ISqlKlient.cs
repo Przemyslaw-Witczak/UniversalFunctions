@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace FbKlientNameSpace
+namespace ISqlKlientNameSpace
 {
     public interface ISqlKlient
     {

@@ -62,7 +62,6 @@
     <Compile Include="frmUstawienia.Designer.cs">
       <DependentUpon>frmUstawienia.cs</DependentUpon>
     </Compile>
-    <Compile Include="ISqlKlient.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -95,6 +94,10 @@
     <ProjectReference Include="..\..\FunkcjeUniwersalne\FunkcjeUniwersalne\FunkcjeUniwersalne.csproj">
       <Project>{22d63d77-4ef4-404d-8cbe-d5e6751a3cab}</Project>
       <Name>FunkcjeUniwersalne</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\ISqlKlient\ISqlKlient.csproj">
+      <Project>{cdb5b687-e81e-4ba6-a605-9f8a7711d28e}</Project>
+      <Name>ISqlKlient</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
