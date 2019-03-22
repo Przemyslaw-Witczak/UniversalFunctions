@@ -105,9 +105,10 @@ namespace MojeFunkcjeUniwersalneNameSpace
         private void GridKomponent_EditingControlShowing(object sender, DataGridViewEditingControlShowingEventArgs e)
         {
             e.Control.KeyPress -= new KeyPressEventHandler(GridViewKolumn_KeyPressOnlyInteger);
-            
+            e.Control.KeyPress -= new KeyPressEventHandler(GridViewKolumn_KeyPressDecimal);
+
             DataGridViewColumnValueType value;
-            if (typyKolumn.TryGetValue(gridKomponent.CurrentCell.ColumnIndex, out value) && value==DataGridViewColumnValueType.Decimal)
+            if (typyKolumn.TryGetValue(gridKomponent.CurrentCell.ColumnIndex, out value) && value!=DataGridViewColumnValueType.NotSet)
             {                
                 TextBox tb = e.Control as TextBox;
                 if (tb != null)
@@ -183,9 +184,13 @@ namespace MojeFunkcjeUniwersalneNameSpace
                     gridKomponent.Columns.Insert(i, gridKolumny[i]);
                     gridKomponent.Columns.RemoveAt(i + 1);
                     gridKomponent.Columns[i].ReadOnly = false;
-                }                
+                }
                 else
-                    gridKomponent.Columns[i].ReadOnly = gridKolumny[i].ReadOnly;
+                {
+                    if (!gridKolumny[i].ReadOnly)
+                        gridKomponent.ReadOnly = false;
+                    gridKomponent.Columns[i].ReadOnly = gridKolumny[i].ReadOnly;                    
+                }
                 gridKomponent.Columns[i].Name = gridKolumny[i].Name;
                 gridKomponent.Columns[i].Visible = gridKolumny[i].Visible;
                 gridKomponent.Columns[i].SortMode = gridKolumny[i].SortMode;
