@@ -37,8 +37,7 @@ namespace iTextSharpHelper
         private PdfWriter writer;
 
         TwoColumnHeaderFooter PageEventHandler = null;
-
-        //ToDo: Sprawdzic czcionki !!
+        
         #region Deklaracje czcionek
         public Font HeaderFont = FontFactory.GetFont(BaseFont.COURIER, BaseFont.CP1250, 18, 1);
         public Font ParagraphFont = FontFactory.GetFont(BaseFont.HELVETICA, BaseFont.CP1250, 10, 0);
@@ -223,8 +222,7 @@ namespace iTextSharpHelper
             {
                 try
                 {
-                    PrintTime = DateTime.Now;
-                    //ToDo: Sprawdzić deklarację czcionki
+                    PrintTime = DateTime.Now;                    
                     bf = BaseFont.CreateFont(BaseFont.HELVETICA, BaseFont.CP1250, BaseFont.NOT_EMBEDDED);
                     cb = writer.DirectContent;
                     template = cb.CreateTemplate(50, 50);
