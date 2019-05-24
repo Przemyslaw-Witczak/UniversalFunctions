@@ -1,13 +1,10 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using MojeFunkcjeUniwersalneNameSpace.Logger;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace MojeFunkcjeUniwersalneNameSpace.Logger.Tests
+namespace FunkcjeUniwersalneTests.Logger
 {
     [TestClass()]
     public class LoggerTests
@@ -30,7 +27,7 @@ namespace MojeFunkcjeUniwersalneNameSpace.Logger.Tests
                             {
                                 //Console.WriteLine($"Uruchomiono o godzinie:{dgStart}, krok: i={i}, j={j}, threadId: { Thread.CurrentThread.ManagedThreadId}.");
                                 string logMessage = $"Godzina logowania: {dgStart}; krok: {i}x{j}, threadId: {Thread.CurrentThread.ManagedThreadId}";
-                                Logger.Instance.Loguj(logMessage);                                
+                                MojeFunkcjeUniwersalneNameSpace.Logger.Logger.Instance.Loguj(logMessage);                                
                             }
                         ));
 

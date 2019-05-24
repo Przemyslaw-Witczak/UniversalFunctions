@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Windows.Forms;
 
@@ -257,6 +259,80 @@ namespace MojeFunkcjeRozszerzajace
                 result.AddRange(child.GetAllNodes());
             }
             return result;
+        }
+    }
+
+    /// <summary>
+    /// Metody rozszerzające klasę FileVersionInfo
+    /// </summary>
+    public static class FileVersionInfoExtensions
+    {
+
+        /// <summary>
+        /// Enum przedstawiający wynik porównania czy równy, większy czy mniejszy
+        /// </summary>
+        public enum EqualityEnum
+        {
+            /// <summary>
+            /// Równy
+            /// </summary>
+            Equal,
+            /// <summary>
+            /// Większy
+            /// </summary>
+            Greater,
+            /// <summary>
+            /// Mniejszy
+            /// </summary>
+            Lower
+        };
+        /// <summary>
+        /// Metoda do porównywania wersji plików
+        /// </summary>
+        /// <param name="sefFileVersionInfo">Wersja którą sprawdzamy czy jest większa czy mniejsza, czy równa do przekazanej w parametrze</param>
+        /// <param name="equalsToFileVersionInfo">Wersja do której porównujemy</param>
+        /// <returns>Greater - jeśli parametr jest mniejszy, Lower - jeśli parametr jest większy, Equal - jeśli parametr jest równy
+        /// </returns>
+        public static EqualityEnum EqualsReturnEnum(this FileVersionInfo sefFileVersionInfo, FileVersionInfo equalsToFileVersionInfo)
+        {
+            var equalityCheckValue = sefFileVersionInfo.FileMajorPart.EqualsReturnEnum(equalsToFileVersionInfo.FileMajorPart);
+            if (equalityCheckValue == EqualityEnum.Greater || equalityCheckValue == EqualityEnum.Lower)
+                return equalityCheckValue;            
+            else
+            {
+                equalityCheckValue = sefFileVersionInfo.FileMinorPart.EqualsReturnEnum(equalsToFileVersionInfo.FileMinorPart);
+                if (equalityCheckValue == EqualityEnum.Greater || equalityCheckValue == EqualityEnum.Lower)
+                    return equalityCheckValue;
+                else
+                {
+                    equalityCheckValue = sefFileVersionInfo.FileBuildPart.EqualsReturnEnum(equalsToFileVersionInfo.FileBuildPart);
+                    if (equalityCheckValue == EqualityEnum.Greater || equalityCheckValue == EqualityEnum.Lower)
+                        return equalityCheckValue;
+                    else
+                    {
+                        equalityCheckValue = sefFileVersionInfo.FilePrivatePart.EqualsReturnEnum(equalsToFileVersionInfo.FilePrivatePart);
+                        //if (equalityCheckValue == EqualityEnum.Greater || equalityCheckValue == EqualityEnum.Lower)
+                        return equalityCheckValue;
+                    }
+                }
+            }            
+        }
+
+        /// <summary>
+        /// Metoda do porównywania wersji plików
+        /// </summary>
+        /// <param name="selfInt">Zmienna int którą sprawdzamy czy jest większa czy mniejsza, czy równa do przekazanej w parametrze</param>
+        /// <param name="equalsToInt">Zmienna do której porównujemy</param>
+        /// <returns>Greater - jeśli parametr jest mniejszy, Lower - jeśli parametr jest większy, Equal - jeśli parametr jest równy
+        /// </returns>
+        public static EqualityEnum EqualsReturnEnum(this int selfInt, int equalsToInt)
+        {
+            if (selfInt > equalsToInt)
+                return EqualityEnum.Greater;
+            else if (selfInt < equalsToInt)
+                return EqualityEnum.Lower;
+            else 
+                return EqualityEnum.Equal;
         }
     }
 

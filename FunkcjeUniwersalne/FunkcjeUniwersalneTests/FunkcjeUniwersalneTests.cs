@@ -1,7 +1,8 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
+﻿using System;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using MojeFunkcjeUniwersalneNameSpace;
 
-namespace MojeFunkcjeUniwersalneNameSpace.Tests
+namespace FunkcjeUniwersalneTests
 {
     [TestClass()]
     public class FunkcjeUniwersalneTests
