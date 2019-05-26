@@ -386,7 +386,7 @@ namespace MojeFunkcjeUniwersalneNameSpace.FTP
             }
         }
 
-        public bool Download(string sapPath, string caiaksPath)
+        public bool Download(string remotePath, string localPath)
         {
 
             try
@@ -410,17 +410,17 @@ namespace MojeFunkcjeUniwersalneNameSpace.FTP
                     //    proc.WaitForExit();
                     //} 
 
-                    string directoryPath = Path.GetDirectoryName(caiaksPath);
+                    string directoryPath = Path.GetDirectoryName(localPath);
                     if (!Directory.Exists(directoryPath)) Directory.CreateDirectory(directoryPath);
                 }
                 catch (Exception ex2)
                 {
-                    Log("Warn", "Nie udało się zweryfikować katalogu docelowego", ex2);
+                    Log("Warn", $"Nie udało się zweryfikować katalogu docelowego: '{localPath}'", ex2);
                 }
 #endregion
 
-                FileStream outputStream = new FileStream(caiaksPath, FileMode.Create);
-                string downloadFile = "ftp://" + _ftpHost +  sapPath;
+                FileStream outputStream = new FileStream(localPath, FileMode.Create);
+                string downloadFile = "ftp://" + _ftpHost +  remotePath;
                 Uri uri = new Uri(downloadFile);
                 reqFTP = (FtpWebRequest)FtpWebRequest.Create(uri);
                 reqFTP.Method = WebRequestMethods.Ftp.DownloadFile;
@@ -454,7 +454,7 @@ namespace MojeFunkcjeUniwersalneNameSpace.FTP
             }
             catch (Exception ex)
             {
-                Log("Error", string.Format("FTP: Wystąpił błąd podczas pobierania pliku '{0}' do lokalizacji '{1}'", sapPath, caiaksPath), ex);
+                Log("Error", string.Format("FTP: Wystąpił błąd podczas pobierania pliku '{0}' do lokalizacji '{1}'", remotePath, localPath), ex);
                 throw ex;
             }
         }
