@@ -386,9 +386,16 @@ namespace MojeFunkcjeUniwersalneNameSpace.FTP
             }
         }
 
+        /// <summary>
+        /// Metoda pobiera z serwera FTP plik
+        /// </summary>
+        /// <param name="remotePath">Ścieżka do zdalnego pliku</param>
+        /// <param name="localPath">Ścieżka do lokalnego pliku</param>
+        /// <returns></returns>
         public bool Download(string remotePath, string localPath)
         {
-
+            if (remotePath.ToCharArray()[0] != '/')
+                remotePath = "/" + remotePath;
             try
             {
                 OnTransferEvent?.Invoke(this, new FtpTransferEventArgs(0));
