@@ -449,6 +449,7 @@ namespace MojeFunkcjeUniwersalneNameSpace.FTP
                     readCount = ftpStream.Read(buffer, 0, bufferSize);
                     readen += readCount;
                     int value = (int)(readen*100/cl);
+                    if (value < 0) value = 0;
                     OnTransferEvent?.Invoke(this, new FtpTransferEventArgs(value));
                     
                 }
