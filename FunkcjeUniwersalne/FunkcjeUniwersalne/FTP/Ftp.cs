@@ -435,8 +435,26 @@ namespace MojeFunkcjeUniwersalneNameSpace.FTP
                 reqFTP.Credentials = new NetworkCredential(_ftpLogin, _ftpPassword);
                 FtpWebResponse response = (FtpWebResponse)reqFTP.GetResponse();
                 Stream ftpStream = response.GetResponseStream();
+                //StreamReader readStream = new StreamReader(ftpStream);
                 long cl = response.ContentLength;
-                
+                if (cl < 0)
+                {
+                    Log("Debug", $"Wycinać rozmiar pliku z komunikatu {response.BannerMessage}");
+                    Log("Debug", $"Wycinać rozmiar pliku z komunikatu {response.StatusDescription}");
+
+                    int openingBracket = response.StatusDescription.IndexOf("(");
+                    int closingBracket = response.StatusDescription.IndexOf(")");                     
+                    var temporarySubstring = response.StatusDescription.Substring(openingBracket+1, closingBracket - openingBracket);
+                    var fileSize = temporarySubstring.Substring(0, temporarySubstring.IndexOf(" "));
+                    try
+                    {
+                        cl = Convert.ToInt64(fileSize);
+                    }
+                    catch (Exception e)
+                    {
+                        Log("Error", $"Nie udało się przekonwertować rozmiaru pliku z komunikatu");
+                    }
+                }
                 int bufferSize = 2048;
                 int readCount;
                 byte[] buffer = new byte[bufferSize];
@@ -450,8 +468,7 @@ namespace MojeFunkcjeUniwersalneNameSpace.FTP
                     readen += readCount;
                     int value = (int)(readen*100/cl);
                     if (value < 0) value = 0;
-                    OnTransferEvent?.Invoke(this, new FtpTransferEventArgs(value));
-                    
+                    OnTransferEvent?.Invoke(this, new FtpTransferEventArgs(value));                    
                 }
 
                 ftpStream.Close();
