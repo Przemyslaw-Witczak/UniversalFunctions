@@ -51,7 +51,7 @@
   <ItemGroup>
     <Compile Include="ExtensionMethods.cs" />
     <Compile Include="PdfHelper.cs" />
-    <Compile Include="PdfTable.cs" />
+    <Compile Include="PdfTableHalper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
