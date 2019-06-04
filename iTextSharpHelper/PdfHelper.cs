@@ -315,7 +315,7 @@ namespace iTextSharpHelper
                 template.BeginText();
                 template.SetFontAndSize(bf, 8);
                 template.SetTextMatrix(0, 0);
-                template.ShowText("" + (writer.PageNumber - 1));
+                template.ShowText("" + (writer.PageNumber));
                 template.EndText();
             }
         }
