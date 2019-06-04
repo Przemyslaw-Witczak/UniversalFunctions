@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
-using System.Text;
+using System.Reflection;
 using System.Windows.Forms;
 
 namespace MojeFunkcjeRozszerzajace
 {
-    
+
     public static class StringExtensions
     {
         /// <summary>
@@ -258,6 +259,47 @@ namespace MojeFunkcjeRozszerzajace
             }
             return result;
         }
+    }
+
+    public static class EnumExtensions
+    {
+        /// <summary>
+        /// Pobiera nazwę z atrybutu Description dla Enum'a
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static string GetDescription(this Enum value)
+        {
+
+            var enumFields =
+                value.GetType().GetFields(
+                    BindingFlags.Static | BindingFlags.GetField | BindingFlags.Public);
+
+            var currentField = enumFields.First(x => x.Name.Equals(value.ToString()));
+
+            var currentFieldsDescriptionAttributes = currentField.GetCustomAttributes(typeof(DescriptionAttribute), true);
+            List<Attribute> fieldsDescriptionAttributes = null;
+            if (currentFieldsDescriptionAttributes!=null)
+                fieldsDescriptionAttributes = (currentFieldsDescriptionAttributes as IList<Attribute>).ToList();
+            //var fieldsDescriptionAttributes = (currentFieldsDescriptionAttributes as IList<Attribute>) ?? currentFieldsDescriptionAttributes.ToList();
+            if (fieldsDescriptionAttributes!=null)
+                return fieldsDescriptionAttributes.Count() != 0 ? ((DescriptionAttribute)fieldsDescriptionAttributes.First()).Description : value.ToString();
+            return String.Empty;
+        }
+
+        public static int GetEnumValue(this Enum value)
+        {
+
+            var enumFields =
+                value.GetType().GetFields(
+                    BindingFlags.Static | BindingFlags.GetField | BindingFlags.Public);
+
+            var currentField = enumFields.First(x => x.Name.Equals(value.ToString()));
+
+            var currentFieldValue = currentField.GetValue(value);
+            return (int)currentFieldValue;
+        }
+              
     }
 
 }

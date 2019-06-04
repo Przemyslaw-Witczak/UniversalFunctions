@@ -42,7 +42,7 @@ namespace iTextSharpHelper
         public Font HeaderFont = FontFactory.GetFont(BaseFont.COURIER, BaseFont.CP1250, 18, 1);
         public Font ParagraphFont = FontFactory.GetFont(BaseFont.HELVETICA, BaseFont.CP1250, 10, 0);
         public Font ParagraphFontBold = FontFactory.GetFont(BaseFont.HELVETICA, BaseFont.CP1250, 10, 1);
-        public Font ParagraphFontBoldUnderline = FontFactory.GetFont(BaseFont.HELVETICA, BaseFont.CP1250, 10, 2);
+        public Font ParagraphFontBoldUnderline = FontFactory.GetFont(BaseFont.HELVETICA, BaseFont.CP1250, 10, 4);
         #endregion
 
 
