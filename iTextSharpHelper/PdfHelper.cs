@@ -13,7 +13,17 @@ namespace iTextSharpHelper
         public static int Bold = 1;
         public static int Italic = 2;    
     };
-
+    
+    /// <summary>
+    /// Klasa statyczna definiująca stałe odpowiadające formatowaniu tekstu
+    /// </summary>
+    public static class ParagraphAlignment
+    {
+        /// <summary>
+        /// Wyśrodkowany
+        /// </summary>
+        public const int Center = 1;
+    }
     /// <summary>
     /// Klasa pośrednicząca, do obsługi dokumentów PDF
     /// </summary>
