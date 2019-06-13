@@ -316,7 +316,8 @@ namespace MojeFunkcjeRozszerzajace
 
         public static string ToDelimitedString<T>(this IEnumerable<T> source, string separator)
         {
-            return source.Count().ToString() + separator + source.ToDelimitedString(x => x.ToString(), separator);
+            string returnedString = $"{source.Count()}{separator}{source.ToDelimitedString(x => x.ToString(), separator)}";//ToDo: Tu brakuje serializacji teraz...
+            return returnedString;
         }
 
         public static string ToDelimitedString<T>(this IEnumerable<T> source, Func<T, string> converter, string separator)
