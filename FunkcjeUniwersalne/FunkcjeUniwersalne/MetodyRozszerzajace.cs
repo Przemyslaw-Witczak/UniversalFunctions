@@ -319,7 +319,8 @@ namespace MojeFunkcjeRozszerzajace
 
         public static string ToDelimitedString<T>(this IEnumerable<T> source, Func<T, string> converter, string separator)
         {
-            return string.Join(separator, source.Select(converter).ToArray());
+            string returnedString = string.Join(separator, source.Select(converter).ToArray());
+            return returnedString;
         }
     }
 }
