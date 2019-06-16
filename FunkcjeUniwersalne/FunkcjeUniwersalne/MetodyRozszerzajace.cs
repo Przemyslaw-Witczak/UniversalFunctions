@@ -31,11 +31,8 @@ namespace MojeFunkcjeRozszerzajace
             
             
             try
-            {
-                
-
+            {                
                 return value.Substring(startIndex, length);
-
             }
             catch (ArgumentOutOfRangeException e)
             {
