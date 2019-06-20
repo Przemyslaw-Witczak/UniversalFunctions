@@ -322,5 +322,7 @@ namespace MojeFunkcjeRozszerzajace
             string returnedString = string.Join(separator, source.Select(converter).ToArray());
             return returnedString;
         }
+
+        
     }
 }
