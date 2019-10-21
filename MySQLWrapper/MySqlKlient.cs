@@ -68,6 +68,21 @@ namespace MySQLWrapper
         {
             _connection = new MySqlConnection(_dataBaseConnectionString);
             _connection.Open();
+            var tmpCommmand = new MySqlCommand("set character_set_results='utf8'", _connection);
+            tmpCommmand.ExecuteNonQuery();
+            //tmpCommmand.CommandText = "set collation_connection='utf8_polish_ci'";
+            tmpCommmand.CommandText = "set collation_connection='latin1_swedish_ci'";
+            tmpCommmand.ExecuteNonQuery();
+            tmpCommmand.CommandText = "set names utf8";
+            tmpCommmand.ExecuteNonQuery();
+            tmpCommmand.CommandText = "SELECT @@character_set_client, @@collation_connection;";
+            var reader = tmpCommmand.ExecuteReader();
+            while (reader.Read())
+            {
+                var readenValue = reader.GetString("@@character_set_client");
+                readenValue = reader.GetString("@@collation_connection");
+            }
+
             _command = new MySqlCommand(SqlString, _connection);
             
         }
