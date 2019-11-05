@@ -87,16 +87,23 @@ namespace DataBaseUniversalFunctions.Abstract
                 FieldInfo searchField = myType.GetField(searchFieldNameAsignedToControl);
                 var control = searchFormField.GetValue(searchForm);
                 object newValue = null;
-                if (control is ComboBox && (control as ComboBox).SelectedIndex>-1)
+                if (control is ComboBox)
                 {
-                    if (string.IsNullOrEmpty(attribute.ListOfIndexesName))
-                        newValue = (control as ComboBox).SelectedIndex;
+                    if ((control as ComboBox).SelectedIndex > -1)
+                    {
+                        if (string.IsNullOrEmpty(attribute.ListOfIndexesName))
+                            newValue = (control as ComboBox).SelectedIndex;
+                        else
+                        {
+                            List<int> listOfIndexes = (searchForm.GetType()?.GetField(attribute.ListOfIndexesName)?.GetValue(searchForm)) as List<int>;
+                            if (listOfIndexes != null)
+                                newValue = listOfIndexes[(control as ComboBox).SelectedIndex];
+
+                        }
+                    }
                     else
                     {
-                        List<int> listOfIndexes = (searchForm.GetType()?.GetField(attribute.ListOfIndexesName)?.GetValue(searchForm)) as List<int>;
-                        if (listOfIndexes!=null)
-                            newValue = listOfIndexes[(control as ComboBox).SelectedIndex];
-                        
+                        newValue = -1;
                     }
                 }
                 else if (control is TextBox && !string.IsNullOrEmpty((control as TextBox).Text))
