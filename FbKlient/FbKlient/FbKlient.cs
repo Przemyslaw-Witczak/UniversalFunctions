@@ -98,9 +98,13 @@ namespace FbKlientNameSpace
                 {
                     queryId = value;
                     if (queryId >= CommandsCount)
+                    {
                         CommandsCount = queryId + 1;
+                    }
                     else if (queryId>-1 && queryId < commandsCount)
+                    {
                         CommandsCount = queryId + 1;
+                    }
                 }
             }
             get
@@ -158,13 +162,18 @@ namespace FbKlientNameSpace
             set
             {
                 if (responseId != value)
+                {
                     responseId = value;
+                }
 
                 if (Responses != null && Responses.Count > responseId)
+                {
                     Response = Responses[responseId];
+                }
                 else
+                {
                     throw new Exception("ResponseId wykracza po za liczbę zapytań !! ResponseId=" + responseId.ToString() + " <= Count=" + Responses.Count.ToString());
-
+                }
             }
         }
 
@@ -251,7 +260,9 @@ namespace FbKlientNameSpace
         private void Loguj(string message)
         {
             if (ConfigurationManager.AppSettings["LogQueries"]=="true")
+            {
                 Logger.Instance.Loguj(message, false);
+            }
         }
 
         #region Konfiguracja klienta
@@ -300,7 +311,9 @@ namespace FbKlientNameSpace
             if (ParentForm != null)
             {
                 if (ParentForm.IsHandleCreated)
+                {
                     ParentForm.Invoke(new setMainFormCursorDelegate(setMainFormCursor), Cursors.WaitCursor); //TODO: To generuje problem w aplikacjach wielowątkowych
+                }
             }
 
             string ConnectionString;
@@ -425,7 +438,9 @@ namespace FbKlientNameSpace
             if (ParentForm != null)
             {
                 if (ParentForm.IsHandleCreated)
-                ParentForm.Invoke(new setMainFormCursorDelegate(setMainFormCursor), Cursors.Default);
+                {
+                    ParentForm.Invoke(new setMainFormCursorDelegate(setMainFormCursor), Cursors.Default);
+                }
             }
             Loguj("FbKlient__DataBaseClose-Koniec");
         }
@@ -434,13 +449,19 @@ namespace FbKlientNameSpace
             Loguj("FbKlient__ResponseClose");
             //QueryId = 0;
             if (Responses == null)
+            {
                 return;
+            }
+
             foreach (FbDataReader response in Responses)
             {
                 if (response != null)
                 {
                     if (response.IsClosed == false)
+                    {
                         response.Close();
+                    }
+
                     response.Dispose();
 
                     //GC.WaitForPendingFinalizers();
@@ -510,7 +531,9 @@ namespace FbKlientNameSpace
                 paramName = paramName.Replace(":", "@");
 
                 if (!paramName.Contains("@"))
+                {
                     paramName = "@" + paramName;
+                }
 
                 FbParameter returned_param = null;
                 foreach (FbParameter param in Commands[queryId].Parameters)
@@ -574,14 +597,18 @@ namespace FbKlientNameSpace
                             //Thread.Sleep(200);
                         }
                         if (Responses.Count > 0)
+                        {
                             Response = Responses[0];
+                        }
                     }
                     else
                     {
                         foreach (FbCommand Command in Commands)
                         {
                             if (!String.IsNullOrEmpty(Command.CommandText))
+                            {
                                 Command.ExecuteNonQuery();
+                            }
                         }
                         CommitTransaction();
                         CommandsClose();
@@ -667,7 +694,10 @@ namespace FbKlientNameSpace
             {
                 int returned_value = Response.GetOrdinal(FieldName);
                 if (returned_value < 0)
+                {
                     MyShowMessage("Can not find field " + FieldName);
+                }
+
                 return returned_value;
             }
             catch (Exception ex)
@@ -691,7 +721,9 @@ namespace FbKlientNameSpace
                 {
                     returned_value = Response.Read();
                     if (!returned_value && Responses.Count - 1 == ResponseId)
+                    {
                         DataBaseClose();
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -711,7 +743,10 @@ namespace FbKlientNameSpace
             try
             {
                 if (Response.IsDBNull(GetFieldIndex(FieldName)))
+                {
                     throw new Exception("'" + FieldName + "' has NULL value, can't convert to bool !");
+                }
+
                 return Response.GetBoolean(GetFieldIndex(FieldName));
             }
             catch (Exception ex)
@@ -731,7 +766,10 @@ namespace FbKlientNameSpace
             try
             {
                 if (Response.IsDBNull(GetFieldIndex(FieldName)))
+                {
                     throw new Exception("'" + FieldName + "' has NULL value, can't convert to byte !");
+                }
+
                 return Response.GetByte(GetFieldIndex(FieldName));
             }
             catch (Exception ex)
@@ -751,7 +789,10 @@ namespace FbKlientNameSpace
             try
             {
                 if (Response.IsDBNull(GetFieldIndex(FieldName)))
+                {
                     throw new Exception("'" + FieldName + "' has NULL value, can't convert to char !");
+                }
+
                 return Response.GetChar(GetFieldIndex(FieldName));
             }
             catch (Exception ex)
@@ -771,7 +812,10 @@ namespace FbKlientNameSpace
             try
             {
                 if (Response.IsDBNull(GetFieldIndex(FieldName)))
+                {
                     throw new Exception("'" + FieldName + "' has NULL value, can't convert to DateTime !");
+                }
+
                 return Response.GetDateTime(GetFieldIndex(FieldName));
             }
             catch (Exception ex)
@@ -791,7 +835,10 @@ namespace FbKlientNameSpace
             try
             {
                 if (Response.IsDBNull(GetFieldIndex(FieldName)))
+                {
                     throw new Exception("'" + FieldName + "' has NULL value, can't convert to Decimal !");
+                }
+
                 return Response.GetDecimal(GetFieldIndex(FieldName));
             }
             catch (Exception ex)
@@ -811,7 +858,10 @@ namespace FbKlientNameSpace
             try
             {
                 if (Response.IsDBNull(GetFieldIndex(FieldName)))
+                {
                     throw new Exception("'" + FieldName + "' has NULL value, can't convert to Double !");
+                }
+
                 return Response.GetDouble(GetFieldIndex(FieldName));
             }
             catch (Exception ex)
@@ -831,7 +881,10 @@ namespace FbKlientNameSpace
             try
             {
                 if (Response.IsDBNull(GetFieldIndex(FieldName)))
+                {
                     throw new Exception("'" + FieldName + "' has NULL value, can't convert to Int16 !");
+                }
+
                 return Response.GetInt16(GetFieldIndex(FieldName));
             }
             catch (Exception ex)
@@ -851,7 +904,10 @@ namespace FbKlientNameSpace
             try
             {
                 if (Response.IsDBNull(GetFieldIndex(FieldName)))
+                {
                     throw new Exception("'" + FieldName + "' has NULL value, can't convert to Int32 !");
+                }
+
                 return Response.GetInt32(GetFieldIndex(FieldName));
             }
             catch (Exception ex)
@@ -871,7 +927,10 @@ namespace FbKlientNameSpace
             try
             {
                 if (Response.IsDBNull(GetFieldIndex(FieldName)))
+                {
                     throw new Exception("'" + FieldName + "' has NULL value, can't convert to Int64 !");
+                }
+
                 return Response.GetInt64(GetFieldIndex(FieldName));
             }
             catch (Exception ex)

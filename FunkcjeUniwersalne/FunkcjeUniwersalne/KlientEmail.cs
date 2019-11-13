@@ -43,7 +43,10 @@ namespace MojeFunkcjeUniwersalneNameSpace
         public void SendMail(string body, string subject)
         {
             if (serwer_smtp == null)
+            {
                 return;
+            }
+
             SendMail(body, subject, serwer_smtp.adresat);
         }
 
@@ -56,7 +59,10 @@ namespace MojeFunkcjeUniwersalneNameSpace
         public void SendMail(string body, string subject, string adresat)
         {
             if (serwer_smtp == null || string.IsNullOrEmpty(serwer_smtp.serwer))
+            {
                 return;
+            }
+
             SendMail(body, subject, adresat, serwer_smtp.nadawca, serwer_smtp.serwer, serwer_smtp.login, serwer_smtp.haslo, serwer_smtp.port);
         }
 
@@ -75,7 +81,9 @@ namespace MojeFunkcjeUniwersalneNameSpace
         {
             //MessageBox.Show(body + " " + subject + " " + adresat + " " + nadawca + " " + serwer + " " + login + " " + haslo);
             if (string.IsNullOrEmpty(serwer) || string.IsNullOrEmpty(adresat) || string.IsNullOrEmpty(nadawca))
+            {
                 return;
+            }
             //string body = @"Using this new feature, you can send an e-mail message from an application very easily.";
 
             Task.Factory.StartNew(() =>

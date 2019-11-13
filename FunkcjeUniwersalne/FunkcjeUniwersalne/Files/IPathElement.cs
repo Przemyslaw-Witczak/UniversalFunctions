@@ -18,6 +18,10 @@
         IPathElement ParentFolder { get; set; }
 
         string GetPathFromParent();
-        
+
+        /// <summary>
+        /// IdIkony jeśli jest ImageListPodpiety
+        /// </summary>
+        int ImageIndex { get; set; }
     }
 }

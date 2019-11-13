@@ -94,7 +94,8 @@ namespace FolderTreeView
                         folder = new FolderElement
                         {
                             Name = klient.GetString("folder_name"),
-                            Indeks = klient.GetInt32("id_katalogi")
+                            Indeks = klient.GetInt32("id_katalogi"),
+                            ImageIndex = 0
                         };
 
                         if (!klient.IsDBNull("id_katalogi_parent"))
@@ -142,18 +143,28 @@ namespace FolderTreeView
         public void InitializeTreeView()
         {
             if (_libraryTree == null && _wpfTreeNodeModel == null)
+            {
                 throw new Exception("Error initializing TreeView!");
+            }
 
             if (_libraryTree != null)
             {
                 _libraryTree.Nodes.Clear();
                 if (_fileClass == null)
+                {
                     throw new Exception($"FolderTreeViewClass::InitializeTreeView, _fileClass not set.");
+                }
 
                 if (_fileClass.DirRoot == null)
+                {
                     return;
+                }
+
                 if (StatusBar != null)
+                {
                     StatusBar.Text = @"Rysowanie drzewa";
+                }
+
                 TreeNode node = _libraryTree.Nodes.Add(_fileClass.DirRoot.Name);
                 node.Tag = _fileClass.DirRoot;
                 _libraryTree.BeginUpdate();
@@ -164,7 +175,9 @@ namespace FolderTreeView
                 _libraryTree.EndUpdate();
                 _libraryTree.ExpandAll();
                 if (StatusBar != null)
+                {
                     StatusBar.Text = @"Zakończono rysowanie drzewa";
+                }
             }
             else if (_wpfTreeNodeModel!=null)
             {
@@ -192,6 +205,7 @@ namespace FolderTreeView
             {
                 var element = parentFolder as FolderElement;
                 if (element != null)
+                {
                     foreach (IPathElement folderElement in element.Children)
                     {
                         if (folderElement is FolderElement)
@@ -200,14 +214,22 @@ namespace FolderTreeView
                             {
                                 var kategoria = folderElement as FolderElement;
                                 TreeNode node = new TreeNode($"{folderElement.Name} [{kategoria.GetChildFoldersList()?.Count}][{kategoria.GetChildFilesList()?.Count}]");
+                                if (folderElement.ImageIndex > -1)
+                                {
+                                    node.ImageIndex = folderElement.ImageIndex;
+                                    node.SelectedImageIndex = folderElement.ImageIndex;
+                                }
                                 node.Tag = folderElement;
                                 parentNode.Nodes.Add(node);
                                 if ((folderElement as FolderElement).Children.Count > 0)
+                                {
                                     AddNode(folderElement, node);
+                                }
                             }
 
                         }
                     }
+                }
             }
             catch (Exception ex)
             {
@@ -222,6 +244,7 @@ namespace FolderTreeView
                 var element = parentFolder as FolderElement;
 
                 if (element != null)
+                {
                     foreach (IPathElement folderElement in element.Children.OrderBy(folder => folder.Name))
                     {
                         if (folderElement is FolderElement)
@@ -234,11 +257,14 @@ namespace FolderTreeView
                                 node.Tag = folderElement;
                                 parentNode.Nodes.Add(node);
                                 if ((folderElement as FolderElement).Children.Count > 0)
+                                {
                                     AddNode(folderElement, node);
+                                }
                             }
 
                         }
                     }
+                }
             }
             catch (Exception ex)
             {
@@ -252,7 +278,10 @@ namespace FolderTreeView
         public void ClearTreeView()
         {
             if (_libraryTree == null)
+            {
                 throw new Exception("Error clearing TreeView, not set!");
+            }
+
             _libraryTree.Nodes.Clear();
         }
 
@@ -277,14 +306,23 @@ namespace FolderTreeView
                             klient.QueryId++;
                             klient.AddSQL("select id_pliki from de_plik(:id_katalogi, :nazwa, :sha)");
                             if (folderElement.Indeks > 0)
+                            {
                                 klient.ParamByName("id_katalogi", FbDbType.Integer).Value = folderElement.Indeks;
+                            }
                             else
+                            {
                                 klient.SetNull("id_katalogi");
+                            }
+
                             klient.ParamByName("nazwa", FbDbType.VarChar).Value = element.Name;
                             if (string.IsNullOrEmpty((element as FileElement).SHA256))
+                            {
                                 klient.SetNull("sha");
+                            }
                             else
+                            {
                                 klient.ParamByName("sha", FbDbType.VarChar).Value = (element as FileElement).SHA256;
+                            }
                         }
                         #endregion
                         #region Katalogi
@@ -293,9 +331,14 @@ namespace FolderTreeView
                             klient.QueryId++;
                             klient.AddSQL("select id_katalogi from de_katalog(:id_katalogi, :nazwa)");
                             if (folderElement.Indeks > 0)
+                            {
                                 klient.ParamByName("id_katalogi", FbDbType.Integer).Value = folderElement.Indeks;
+                            }
                             else
+                            {
                                 klient.SetNull("id_katalogi");
+                            }
+
                             klient.ParamByName("nazwa", FbDbType.VarChar).Value = element.Name;
                         }
                         #endregion
@@ -316,11 +359,15 @@ namespace FolderTreeView
                             else if (element is FolderElement)
                             {
                                 if (!klient.IsDBNull("id_katalogi"))
+                                {
                                     element.Indeks = klient.GetInt32("id_katalogi");
+                                }
                             }
 
                             if (folderElement.Children.Last() != element)
+                            {
                                 klient.ResponseId++;
+                            }
                         }
 
                     }
@@ -377,14 +424,24 @@ namespace FolderTreeView
                         {
                             klient.AddSQL("select id_pliki from de_plik(:id_katalogi, :nazwa, :sha)");
                             if (folderElement.Indeks > 0)
+                            {
                                 klient.ParamByName("id_katalogi", FbDbType.Integer).Value = folderElement.Indeks;
+                            }
                             else
+                            {
                                 klient.SetNull("id_katalogi");
+                            }
+
                             klient.ParamByName("nazwa", FbDbType.VarChar).Value = element.Name;
                             if (string.IsNullOrEmpty((element as FileElement).SHA256))
+                            {
                                 klient.SetNull("sha");
+                            }
                             else
+                            {
                                 klient.ParamByName("sha", FbDbType.VarChar).Value = (element as FileElement).SHA256;
+                            }
+
                             klient.Execute();
                             if (klient.Read())
                             {
@@ -400,9 +457,14 @@ namespace FolderTreeView
                         {
                             klient.AddSQL("select id_katalogi from de_katalog(:id_katalogi, :nazwa)");
                             if (folderElement.Indeks > 0)
+                            {
                                 klient.ParamByName("id_katalogi", FbDbType.Integer).Value = folderElement.Indeks;
+                            }
                             else
+                            {
                                 klient.SetNull("id_katalogi");
+                            }
+
                             klient.ParamByName("nazwa", FbDbType.VarChar).Value = element.Name;
                             klient.Execute();
                             if (klient.Read())

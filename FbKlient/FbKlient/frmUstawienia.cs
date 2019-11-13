@@ -47,7 +47,9 @@ namespace FbKlientNameSpace
             //checkBox2.Checked = Properties.Settings.Default.Embedded;
             //chkQueriesLog.Checked = Properties.Settings.Default.LogQueries;
             if (Parametry == null)
-                return; 
+            {
+                return;
+            }
 
             textBox1.Text = Parametry.DataBasePath;
             textBox2.Text = Parametry.DbUser;
@@ -76,7 +78,9 @@ namespace FbKlientNameSpace
             }*/
             if (textBox4.Text.Length == 0
                 || textBox5.Text.Length == 0)
+            {
                 this.DialogResult = DialogResult.Cancel;
+            }
 
             Parametry = new cParametryKonfiguracyjne();
             
@@ -112,7 +116,9 @@ namespace FbKlientNameSpace
         public void ZapiszParametry(cParametryKonfiguracyjne ParametrY)
         {
             if (_nieZapisuj)
+            {
                 return;
+            }
             //ToDo: Przerobić na zapisywanie parametrów do appconfig.xml
             ConfigurationManager.AppSettings["DataBaseIp"] = ParametrY.DbServer;
             ConfigurationManager.AppSettings["Database"] = ParametrY.DataBasePath;

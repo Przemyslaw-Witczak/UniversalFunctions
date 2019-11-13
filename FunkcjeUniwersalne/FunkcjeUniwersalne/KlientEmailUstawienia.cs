@@ -33,7 +33,9 @@ namespace MojeFunkcjeUniwersalneNameSpace
                     lock (syncRoot)
                     {
                         if (instance == null)
+                        {
                             instance = new KlientEmailUstawienia();
+                        }
                     }
                 }
 

@@ -54,8 +54,7 @@ namespace FolderTreeView
                 {
                     _selectedItem = value;
                     //NotifyPropertyChanged("Members");
-                    if (OnSelectedItemChanged!=null)
-                        OnSelectedItemChanged();
+                    OnSelectedItemChanged?.Invoke();
                 }
             }
         }

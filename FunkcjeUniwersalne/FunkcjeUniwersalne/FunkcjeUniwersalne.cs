@@ -31,7 +31,9 @@ namespace MojeFunkcjeUniwersalneNameSpace
                     lock (syncRoot)
                     {
                         if (instance == null)
+                        {
                             instance = new FunkcjeUniwersalne();
+                        }
                     }
                 }
 
@@ -141,11 +143,18 @@ namespace MojeFunkcjeUniwersalneNameSpace
         private string quotString(string inputString)
         {            
             if (!String.IsNullOrEmpty(inputString))
+            {
                 inputString = System.Text.RegularExpressions.Regex.Replace(inputString, @"\r\n?|\n", "|");
+            }
+
             if (!string.IsNullOrEmpty(inputString) && inputString.Contains(";"))
+            {
                 return $"\"{inputString}\"";
+            }
             else
+            {
                 return inputString;
+            }
         }
 
         public void ExportDataGridToCSV(DataGridView DG)
@@ -223,7 +232,9 @@ namespace MojeFunkcjeUniwersalneNameSpace
         public void ZaznaczOdznaczWszystko(CheckedListBox CheckList, bool Checked)
         {
             for (int i = 0; i < CheckList.Items.Count; i++)
+            {
                 CheckList.SetItemChecked(i, Checked);
+            }
         }
 
         public void PoprawLP(DataGridView dgv, int ACol)
@@ -269,8 +280,10 @@ namespace MojeFunkcjeUniwersalneNameSpace
             s = System.Text.RegularExpressions.Regex.Replace(s.ToUpper(), "[^0-9A-F]", "");
             byte[] b = new byte[s.Length / 2];
             for (int i = 0; i < s.Length; i += 2)
+            {
                 b[i / 2] = byte.Parse(s.Substring(i, 2),
                    System.Globalization.NumberStyles.AllowHexSpecifier);
+            }
 
             return b;
         }
@@ -305,7 +318,9 @@ namespace MojeFunkcjeUniwersalneNameSpace
                     LiczbaR += TabR[i];
                 }
                 else
+                {
                     i++;
+                }
             }
             return LiczbaR;
         }
@@ -319,7 +334,9 @@ namespace MojeFunkcjeUniwersalneNameSpace
         {
             string outputString = string.Empty;
             if (string.IsNullOrEmpty(currentString))
+            {
                 currentString = "0";
+            }
 
             char[] workString = currentString.ToCharArray(0, currentString.Length);
             int charCode;
@@ -334,11 +351,15 @@ namespace MojeFunkcjeUniwersalneNameSpace
                     //|| (*WorkString.c_str())==ThousandSeparator //bez tego, bo problem przy konwersji na currency
                     || charCode == System.Globalization.CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator.ToCharArray(0, 1)[0]                    
                 )
+                {
                     outputString += workString[i];
+                }
             }
 
             if (string.IsNullOrEmpty(outputString))
+            {
                 outputString = "0";
+            }
 
             try
             {
@@ -496,7 +517,9 @@ namespace MojeFunkcjeUniwersalneNameSpace
             int length = MaxValue.ToString().Length;
 
             while (returned_string.Length < length)
+            {
                 returned_string = "0" + returned_string;
+            }
 
             return returned_string;
 
@@ -520,7 +543,10 @@ namespace MojeFunkcjeUniwersalneNameSpace
         /// is a null reference.</exception>
         public string Encrypt(string plainText)
         {
-            if (plainText == null) throw new ArgumentNullException("plainText");
+            if (plainText == null)
+            {
+                throw new ArgumentNullException("plainText");
+            }
 
             //encrypt data
             var data = Encoding.Unicode.GetBytes(plainText);
@@ -544,7 +570,10 @@ namespace MojeFunkcjeUniwersalneNameSpace
         /// is a null reference.</exception>
         public string Decrypt(string cipher)
         {
-            if (cipher == null) throw new ArgumentNullException("cipher");
+            if (cipher == null)
+            {
+                throw new ArgumentNullException("cipher");
+            }
 
             //parse base64 string
             byte[] data = Convert.FromBase64String(cipher);
@@ -567,7 +596,9 @@ namespace MojeFunkcjeUniwersalneNameSpace
         public static Bitmap ResizeImage(Image image, int width, int height)
         {
             if (image == null)
+            {
                 throw new Exception("No picture to resize!!");
+            }
             // Figure out the ratio
             double ratioX = (double)width / (double)image.Width;
             double ratioY = (double)height / (double)image.Height;

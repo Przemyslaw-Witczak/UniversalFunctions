@@ -38,7 +38,10 @@ namespace MojeFunkcjeUniwersalneNameSpace
         public void UnregisterAll()
         {            
             foreach (Control control in controls)
+            {
                 Unregister(control);
+            }
+
             controls.Clear();
 
         }
@@ -118,9 +121,13 @@ namespace MojeFunkcjeUniwersalneNameSpace
             combos.Clear();
             maskedBoxes.Clear();
             if (parentForm != null)
+            {
                 DestinationControl = parentForm.AcceptButton as Button;
+            }
             else
+            {
                 DestinationControl = null;
+            }
 
             Enabled = true;
         }
@@ -145,13 +152,17 @@ namespace MojeFunkcjeUniwersalneNameSpace
         public void Register(Control control)
         {
             if (control is TextBox)
+            {
                 RegisterTextBox(control as TextBox);
+            }
             else if (control is ComboBox)
+            {
                 RegisterComboBox(control as ComboBox);
+            }
             else if (control is MaskedTextBox)
+            {
                 RegisterMaskedTextBox(control as MaskedTextBox);
-
-            
+            }
         }
 
         /// <summary>
@@ -166,7 +177,9 @@ namespace MojeFunkcjeUniwersalneNameSpace
             for (int i = 0; i < boxes.Count;i++ )
             {
                 if (boxes[i] == tb)
+                {
                     indeks = i;
+                }
             }
             if (indeks > -1)
             {
@@ -197,13 +210,21 @@ namespace MojeFunkcjeUniwersalneNameSpace
         public void Unregister(Control control)
         {
             if (control is TextBox)
+            {
                 UnregisterTextBox(control as TextBox);
+            }
             else if (control is ComboBox)
+            {
                 UnregisterComboBox(control as ComboBox);
+            }
             else if (control is MaskedTextBox)
+            {
                 UnregisterMaskedTextBox(control as MaskedTextBox);
+            }
             else
+            {
                 throw new Exception("Nie można wyrejestrować kontrolki, ponieważ jest nieobsługiwana:" + control.Name);
+            }
         }
 
         /// <summary>
@@ -218,7 +239,9 @@ namespace MojeFunkcjeUniwersalneNameSpace
             for (int i = 0; i < combos.Count; i++)
             {
                 if (combos[i] == tb)
+                {
                     indeks = i;
+                }
             }
             if (indeks > -1)
             {
@@ -232,7 +255,11 @@ namespace MojeFunkcjeUniwersalneNameSpace
         public void Validate()
         {
             bool destinationControlValue = Enabled;
-            if (DestinationControl == null) return;
+            if (DestinationControl == null)
+            {
+                return;
+            }
+
             foreach (var t in boxes)
             {
                 if (t.Enabled)
@@ -355,10 +382,15 @@ namespace MojeFunkcjeUniwersalneNameSpace
             for (int i = 0; i < maskedBoxes.Count; i++)
             {
                 if (maskedBoxes[i] == tb)
+                {
                     indeks = i;
+                }
             }
             if (indeks > -1)
+            {
                 maskedBoxes.RemoveAt(indeks);
+            }
+
             Validate();
         }
     }

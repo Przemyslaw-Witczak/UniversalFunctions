@@ -53,7 +53,10 @@ namespace MojeFunkcjeUniwersalneNameSpace
                     // Miejsce do zwalniania zasobów zarządzalnych                               
                     //_objectToDispose.Dispose();
                     foreach (cParametr parametr in Parametry)
+                    {
                         parametr.Dispose();
+                    }
+
                     Parametry.Clear();
                     _disposed = true;
                 }

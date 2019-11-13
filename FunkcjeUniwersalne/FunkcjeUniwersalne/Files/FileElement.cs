@@ -87,6 +87,8 @@ namespace MojeFunkcjeUniwersalneNameSpace.Files
             }
         }
 
+        public int ImageIndex { get; set; } = -1;
+
         public FileElement()
         {
             Path = string.Empty;

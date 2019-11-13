@@ -191,9 +191,14 @@ namespace MojeFunkcjeUniwersalneNameSpace.FTP
                 Debug("- Weryfikuje czy na koncie FTP znajduje się plik '" + filePath + "'");                
                 string directory = Path.GetDirectoryName(filePath);
                 if (directory != null)
+                {
                     directory = directory.Replace("\\", "/");
+                }
                 else
+                {
                     throw new Exception($"Nieprawidłowa ścieżka pliku:'{filePath}'");
+                }
+
                 filePath = filePath.TrimStart('/');
                 Debug("- Pobieram zawartosc katalogu: '" + directory + "'");
                 List<string> fileList = GetFilesList(directory, false);
@@ -411,7 +416,10 @@ namespace MojeFunkcjeUniwersalneNameSpace.FTP
                     //} 
 
                     string directoryPath = Path.GetDirectoryName(caiaksPath);
-                    if (!Directory.Exists(directoryPath)) Directory.CreateDirectory(directoryPath);
+                    if (!Directory.Exists(directoryPath))
+                    {
+                        Directory.CreateDirectory(directoryPath);
+                    }
                 }
                 catch (Exception ex2)
                 {

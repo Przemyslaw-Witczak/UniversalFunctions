@@ -79,9 +79,13 @@ namespace MojeFunkcjeUniwersalneNameSpace.Files
             {
                 indeks = value;
                 foreach (IPathElement element in Children)
+                {
                     element.IdKatalogiParent = value;
+                }
             }
         }
+
+        public int ImageIndex { get; set; } = -1;
 
         public volatile ConcurrentQueue<IPathElement> Children;
 
@@ -107,12 +111,18 @@ namespace MojeFunkcjeUniwersalneNameSpace.Files
             try
             {
                 if (Children != null)
-                foreach (IPathElement element in Children)
+                {
+                    foreach (IPathElement element in Children)
                 {
                     if (element is FileElement)
-                        filesList.Add(element as FileElement);
-                    else
-                        filesList.AddRange((element as FolderElement).GetChildFilesList());
+                        {
+                            filesList.Add(element as FileElement);
+                        }
+                        else
+                        {
+                            filesList.AddRange((element as FolderElement).GetChildFilesList());
+                        }
+                    }
                 }
             }
             catch(Exception ex)
@@ -132,13 +142,15 @@ namespace MojeFunkcjeUniwersalneNameSpace.Files
             try
             {
                 if (Children!=null)
-                foreach (IPathElement element in Children)
+                {
+                    foreach (IPathElement element in Children)
                 {
                         if (element is FolderElement)
                         {
                             foldersList.Add(element as FolderElement);
                             foldersList.AddRange((element as FolderElement).GetChildFoldersList());
                         }
+                }
                 }
             }
             catch (Exception ex)
@@ -157,7 +169,9 @@ namespace MojeFunkcjeUniwersalneNameSpace.Files
             string returned_path = Name;
 
             if (ParentFolder!=null)
+            {
                 returned_path = System.IO.Path.Combine(ParentFolder.GetPathFromParent(), returned_path);
+            }
 
             return returned_path;
         }

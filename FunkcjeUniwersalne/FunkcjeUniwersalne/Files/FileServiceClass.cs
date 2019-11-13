@@ -92,13 +92,17 @@ namespace MojeFunkcjeUniwersalneNameSpace
             Parallel.ForEach(Directory.GetFiles(dirRoot.Path), (f) =>
             {
                 if (extensionsFilter == null)
+                {
                     dirRoot.Add(new FileElement() { Name = Path.GetFileName(f), Path = dirRoot.Path, ParentFolder = dirRoot });
+                }
                 else
                 {
                     foreach (string extension in extensionsFilter)
                     {
                         if (f.Trim().ToUpper().Contains(extension.Trim().ToUpper()))
+                        {
                             dirRoot.Add(new FileElement() { Name = Path.GetFileName(f), Path = dirRoot.Path, ParentFolder = dirRoot });
+                        }
                     }
                 }
             });
@@ -116,13 +120,17 @@ namespace MojeFunkcjeUniwersalneNameSpace
             foreach(var f in Directory.GetFiles(dirRoot.Path))
             {
                 if (extensionsFilter == null)
+                {
                     dirRoot.Add(new FileElement() { Name = Path.GetFileName(f), Path = dirRoot.Path, ParentFolder = dirRoot });
+                }
                 else
                 {
                     foreach (string extension in extensionsFilter)
                     {
                         if (f.Trim().ToUpper().Contains(extension.Trim().ToUpper()))
+                        {
                             dirRoot.Add(new FileElement() { Name = Path.GetFileName(f), Path = dirRoot.Path, ParentFolder = dirRoot });
+                        }
                     }
                 }
             }
@@ -196,9 +204,13 @@ namespace MojeFunkcjeUniwersalneNameSpace
             foreach (IPathElement element in dirRoot.Children)
             {
                 if (element is FileElement)
+                {
                     filesList.Add(element as FileElement);
+                }
                 else
+                {
                     filesList.AddRange(GetFilesElementList(element as FolderElement));
+                }
             }
 
             return filesList;
@@ -213,10 +225,14 @@ namespace MojeFunkcjeUniwersalneNameSpace
             try
             {
                 foreach (string file in Directory.GetFiles(pathToDelete))
+                {
                     File.Delete(file);
+                }
 
                 foreach (string directory in Directory.GetDirectories(pathToDelete))
+                {
                     Directory.Delete(directory, true);
+                }
             }
             catch (Exception ex)
             {

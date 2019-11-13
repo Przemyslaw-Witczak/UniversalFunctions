@@ -70,7 +70,9 @@ namespace MojeFunkcjeUniwersalneNameSpace.Logger
                     lock (syncRoot)
                     {
                         if (instance == null)
+                        {
                             instance = new Logger();
+                        }
                     }
                 }
 
@@ -195,7 +197,9 @@ namespace MojeFunkcjeUniwersalneNameSpace.Logger
             {
 
                 if (!EventLog.SourceExists(sSource))
+                {
                     EventLog.CreateEventSource(sSource, sLog);
+                }
 
                 EventLog.WriteEntry(sSource, komunikat);
             }

@@ -65,7 +65,9 @@ namespace MojeFunkcjeUniwersalneNameSpace
                     lock (syncRoot)
                     {
                         if (instance == null)
+                        {
                             instance = new MySetup();
+                        }
                     }
                 }
 
@@ -213,12 +215,16 @@ namespace MojeFunkcjeUniwersalneNameSpace
 			string configPath = Path.Combine(AppCurrentPath, (ConfigFileName + ".xml.tmp"));
 
             if (File.Exists(configPath))
+            {
                 fileMode = FileMode.Truncate;
+            }
 
             FileServiceClass fsc = new FileServiceClass();
 
             if (!fsc.CheckDirectoryAccess(AppCurrentPath))
+            {
                 return;
+            }
 
             using (Stream stream = new FileStream(configPath, fileMode, FileAccess.Write, FileShare.None))
             {
@@ -242,7 +248,9 @@ namespace MojeFunkcjeUniwersalneNameSpace
         public string GetParam(string Sekcja, string Parametr, string WartoscDefault)
         {
             if (string.IsNullOrEmpty(Sekcja) || string.IsNullOrEmpty(Parametr))
+            {
                 return WartoscDefault;
+            }
 
             bool Jest = false;
             string WartoscParametru = "";
@@ -303,7 +311,9 @@ namespace MojeFunkcjeUniwersalneNameSpace
         public void SetParam(string Sekcja, string Parametr, string Wartosc)
         {
             if (string.IsNullOrEmpty(Sekcja) || string.IsNullOrEmpty(Parametr))
+            {
                 return;
+            }
 
             bool Jest = false;
             cKonfiguracja konfig = null;
@@ -363,7 +373,10 @@ namespace MojeFunkcjeUniwersalneNameSpace
         public void SaveColumnsLayout(string name, DataGridView DG)
         {
             if (!string.IsNullOrEmpty(name))
+            {
                 name = "_" + name;
+            }
+
             for (int i = 0; i < DG.Columns.Count; i++)
             {                
                 SetParam(ParentForm.Name + "_" + DG.Parent.Name + "_" + DG.Name+name, "Column_"+DG.Columns[i].Name+ "_Width", DG.Columns[i].Width.ToString());
@@ -379,14 +392,19 @@ namespace MojeFunkcjeUniwersalneNameSpace
         public void ReadColumnsLayout(string name, DataGridView DG)
         {
             if (!string.IsNullOrEmpty(name))
+            {
                 name = "_" + name;
+            }
+
             try
             {
                 for (int i = 0; i < DG.Columns.Count; i++)
                 {
                     DG.Columns[i].Width = Convert.ToInt32(GetParam(ParentForm.Name + "_" + DG.Parent.Name + "_" + DG.Name+name, "Column_" + DG.Columns[i].Name + "_Width", DG.Columns[i].Width.ToString()));
                     if (DG.AllowUserToOrderColumns)
+                    {
                         DG.Columns[i].DisplayIndex = Convert.ToInt32(GetParam(ParentForm.Name + "_" + DG.Parent.Name + "_" + DG.Name+name, "Column_" + DG.Columns[i].Name + "_Index", DG.Columns[i].DisplayIndex.ToString()));
+                    }
                 }
             }
             catch
@@ -498,13 +516,21 @@ namespace MojeFunkcjeUniwersalneNameSpace
             for (int i = 0; i < ListaKontrolek.Count; i++)
             {
                 if (ListaKontrolek[i] is DataGridView)
+                {
                     ReadColumnsLayout((DataGridView)ListaKontrolek[i]);
+                }
                 else if (ListaKontrolek[i] is SplitContainer)
+                {
                     LoadSplitterData((SplitContainer)ListaKontrolek[i]);
+                }
                 else if (ListaKontrolek[i] is Splitter)
+                {
                     LoadSplitterData((Splitter)ListaKontrolek[i]);
+                }
                 else if (ListaKontrolek[i] is ComboBox)
+                {
                     SetComboBoxBehavior2((ComboBox)ListaKontrolek[i]);
+                }
             }
             //TODO: Sprawdzać czy ustawienie formularza nie wykroczy poza ekran
             if (GetParam(AParentForm.Name, "WindowState", "Normal")=="Normal")
@@ -542,11 +568,17 @@ namespace MojeFunkcjeUniwersalneNameSpace
             for (int i = 0; i < ListaKontrolek.Count; i++)
             {
                 if (ListaKontrolek[i] is DataGridView)
+                {
                     SaveColumnsLayout((DataGridView)ListaKontrolek[i]);
+                }
                 else if (ListaKontrolek[i] is SplitContainer)
+                {
                     SaveSplitterData((SplitContainer)ListaKontrolek[i]);
+                }
                 else if (ListaKontrolek[i] is Splitter)
+                {
                     SaveSplitterData(ListaKontrolek[i]);
+                }
             }
 
 
@@ -582,19 +614,31 @@ namespace MojeFunkcjeUniwersalneNameSpace
             foreach (Control kontrolka in ListaKontrolek)
             {
                 if (kontrolka is TextBox)
+                {
                     ((TextBox)kontrolka).Text = "";
+                }
                 else if (kontrolka is CheckBox)
+                {
                     ((CheckBox)kontrolka).Checked = false;
+                }
                 else if (kontrolka is RadioButton)
+                {
                     ((RadioButton)kontrolka).Checked = false;
+                }
                 else if (kontrolka is DateTimePicker)
+                {
                     ((DateTimePicker)kontrolka).Checked = false;
+                }
                 else if (kontrolka is ComboBox)
+                {
                     ((ComboBox)kontrolka).SelectedIndex = -1;
+                }
                 else if (kontrolka is CheckedListBox)
                 {
                     for (int i = 0; i < ((CheckedListBox)kontrolka).Items.Count; i++)
+                    {
                         ((CheckedListBox)kontrolka).SetItemChecked(i, false);
+                    }
                 }
             }
         }
@@ -612,17 +656,27 @@ namespace MojeFunkcjeUniwersalneNameSpace
             {
                 string name = GetControlParentName(kontrolka.Parent);
                 if (kontrolka is TextBox)
+                {
                     SetParam(name, ((TextBox)kontrolka).Name, ((TextBox)kontrolka).Text);
+                }
                 else if (kontrolka is CheckBox)
+                {
                     SetParam(name, ((CheckBox)kontrolka).Name, ((CheckBox)kontrolka).Checked.ToString());
+                }
                 else if (kontrolka is RadioButton)
+                {
                     SetParam(name, ((RadioButton)kontrolka).Name, ((RadioButton)kontrolka).Checked.ToString());
+                }
                 else if (kontrolka is DateTimePicker)
                 {
                     if (((DateTimePicker)kontrolka).Checked)
+                    {
                         SetParam(name, ((DateTimePicker)kontrolka).Name, ((DateTimePicker)kontrolka).Value.ToString());
+                    }
                     else
+                    {
                         SetParam(name, ((DateTimePicker)kontrolka).Name, "");
+                    }
                 }
             }
         }
@@ -640,15 +694,23 @@ namespace MojeFunkcjeUniwersalneNameSpace
             {
                 string name = GetControlParentName(kontrolka.Parent);
                 if (kontrolka is TextBox)
+                {
                     ((TextBox)kontrolka).Text = GetParam(name, ((TextBox)kontrolka).Name, ((TextBox)kontrolka).Text);
+                }
                 else if (kontrolka is CheckBox)
+                {
                     ((CheckBox)kontrolka).Checked = Convert.ToBoolean(GetParam(name, ((CheckBox)kontrolka).Name, ((CheckBox)kontrolka).Checked.ToString()));
+                }
                 else if (kontrolka is RadioButton)
+                {
                     ((RadioButton)kontrolka).Checked = Convert.ToBoolean(GetParam(name, ((RadioButton)kontrolka).Name, ((RadioButton)kontrolka).Checked.ToString()));
+                }
                 else if (kontrolka is DateTimePicker)
                 {
                     if (GetParam(name, ((DateTimePicker)kontrolka).Name, "").Length>0 )
+                    {
                         ((DateTimePicker)kontrolka).Value = Convert.ToDateTime(GetParam(name, ((DateTimePicker)kontrolka).Name, ((DateTimePicker)kontrolka).Value.ToString()));
+                    }
                 }
             }
         }
@@ -666,7 +728,10 @@ namespace MojeFunkcjeUniwersalneNameSpace
             ValueToSave = PoleCombo.SelectedIndex;
 
             if (ListaIndeksow != null && ValueToSave>-1 && ValueToSave<ListaIndeksow.Count)
+            {
                 ValueToSave = ListaIndeksow[ValueToSave];
+            }
+
             string name = GetControlParentName(PoleCombo.Parent);
             SetParam(name, PoleCombo.Name, ValueToSave.ToString());
         }
@@ -684,7 +749,10 @@ namespace MojeFunkcjeUniwersalneNameSpace
             ValueToSave = PoleCombo.SelectedIndex;
 
             if (ListaIndeksow != null && ValueToSave > -1 && ValueToSave < ListaIndeksow.Count)
+            {
                 ValueToSave = ListaIndeksow[ValueToSave];
+            }
+
             string name = GetControlParentName(PoleCombo.Owner);
             SetParam(name, PoleCombo.Name, ValueToSave.ToString());
         }
@@ -696,7 +764,10 @@ namespace MojeFunkcjeUniwersalneNameSpace
             if (control.Parent != null)
             {
                 if (returnedName.Length>0)
+                {
                     returnedName = "_"+returnedName;
+                }
+
                 returnedName = GetControlParentName(control.Parent) + returnedName;                
             }
             return returnedName;
@@ -719,9 +790,14 @@ namespace MojeFunkcjeUniwersalneNameSpace
                 {
                     
                     if (ListaIndeksow != null)
+                    {
                         SetParam(name, PoleListy.Name + "_"+Count.ToString(), ListaIndeksow[i].ToString());
+                    }
                     else
+                    {
                         SetParam(name, PoleListy.Name + "_" + Count.ToString(), i.ToString());
+                    }
+
                     Count++;                   
                 }
             }
@@ -744,16 +820,19 @@ namespace MojeFunkcjeUniwersalneNameSpace
             if (ListaIndeksow != null)
             {
                 for (int i = 0; i < ListaIndeksow.Count; i++)
+                {
                     if (ListaIndeksow[i] == ValueToLoad)
                     {
                         ValueToLoad = i;
                         break;
                     }
-                
+                }
             }
 
             if (PoleCombo.Items.Count>ValueToLoad)
+            {
                 PoleCombo.SelectedIndex = ValueToLoad;
+            }
         }
 
         /// <summary>
@@ -772,16 +851,19 @@ namespace MojeFunkcjeUniwersalneNameSpace
             if (ListaIndeksow != null)
             {
                 for (int i = 0; i < ListaIndeksow.Count; i++)
+                {
                     if (ListaIndeksow[i] == ValueToLoad)
                     {
                         ValueToLoad = i;
                         break;
                     }
-
+                }
             }
 
             if (PoleCombo.Items.Count > ValueToLoad)
+            {
                 PoleCombo.SelectedIndex = ValueToLoad;
+            }
         }
         /// <summary>
         /// Metoda odczytująca zaznaczenie kontrolek CheckListBox
@@ -809,18 +891,26 @@ namespace MojeFunkcjeUniwersalneNameSpace
         /// <param name="indeks">Indeks z tabeli indeksów, lub nr pozycji na liście</param>
         private void setlistboxitem(CheckedListBox PoleListy, List<int> ListaIndeksow, int indeks)
         {
-            if (indeks<0) return;
+            if (indeks<0)
+            {
+                return;
+            }
+
             if (ListaIndeksow != null)
             {
                 for (int i = 0; i < ListaIndeksow.Count; i++)
+                {
                     if (ListaIndeksow[i] == indeks)
                     {
                         PoleListy.SetItemChecked(i, true);
                         break;
                     }
+                }
             }
             else
+            {
                 PoleListy.SetItemChecked(indeks, true);
+            }
         }
 
         #endregion
@@ -855,12 +945,18 @@ namespace MojeFunkcjeUniwersalneNameSpace
 
                 bool BackSpace = (e.KeyChar == (char)Keys.Back);
                 if (BackSpace && comboBox.SelectionLength>0)
+                {
                     TmpStr = comboBox.Text.SubStringEx(0, comboBox.SelectionStart) + comboBox.Text.SubStringEx(comboBox.SelectionLength + comboBox.SelectionStart+1, 255);
-
+                }
                 else if (BackSpace) // SelLength == 0
+                {
                     TmpStr = comboBox.Text.SubStringEx(0, comboBox.SelectionStart - 1) + comboBox.Text.SubStringEx(comboBox.SelectionStart+1, 255);
+                }
                 else //Key is a visible character
+                {
                     TmpStr = comboBox.Text.SubStringEx(0, comboBox.SelectionStart) + e.KeyChar + comboBox.Text.SubStringEx(comboBox.SelectionLength + comboBox.SelectionStart+1, 255);
+                }
+
                 if (string.IsNullOrEmpty(TmpStr))
                 {
                     Debug.WriteLine($"TmpStr=isEmpty");
@@ -871,13 +967,18 @@ namespace MojeFunkcjeUniwersalneNameSpace
                 int SelSt = comboBox.SelectionStart;
 
                 if (ValueInteraction == 0) //Sprawdzenie warunku czy tylko wybór, czy również dopisywanie
+                {
                     e.KeyChar = (char)0;
-                    
+                }
 
                 if (BackSpace && SelSt > 0)
+                {
                     SelSt--;
+                }
                 else if (!BackSpace)
+                {
                     SelSt++;
+                }
 
                 if (SelSt == 0)
                 {
@@ -896,7 +997,10 @@ namespace MojeFunkcjeUniwersalneNameSpace
                     if (TmpStr.ToUpper() == value)
                     {
                         if (ValueInteraction == 1)
+                        {
                             e.KeyChar = (char)0;
+                        }
+
                         comboBox.DroppedDown = false;
                         comboBox.Text = comboBox.Items[i - 1].ToString(); // update to the match that was found
                         comboBox.SelectedIndex = i - 1;

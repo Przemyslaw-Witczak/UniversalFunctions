@@ -79,16 +79,23 @@ namespace MojeFunkcjeUniwersalneNameSpace
             };
 
             if (alignment != DataGridViewContentAlignment.NotSet)
+            {
                 kolumna.DefaultCellStyle.Alignment = alignment;
+            }
 
             //Domyślne ustawienie szerokości kolumn LP, początkowe
             if (columnText.Trim().ToUpper() == "LP")
+            {
                 kolumna.Width = 30;
+            }
 
             if (columnValueType!=DataGridViewColumnValueType.NotSet)
             {
                 if (typyKolumn.Count==0)
-                    gridKomponent.EditingControlShowing += GridKomponent_EditingControlShowing;                
+                {
+                    gridKomponent.EditingControlShowing += GridKomponent_EditingControlShowing;
+                }
+
                 typyKolumn.Add(gridKolumny.Count, columnValueType);
 
             }
@@ -149,12 +156,16 @@ namespace MojeFunkcjeUniwersalneNameSpace
         {
             var grid = sender as DataGridView;
             if (e.RowIndex < 0 || grid.Rows[e.RowIndex].Tag==null || grid.Rows[e.RowIndex].ReadOnly)
+            {
                 return;
-            
+            }
+
             if (!gridKolumny[e.ColumnIndex].ReadOnly)
             {
-                if (!(gridKolumny[e.ColumnIndex] is DataGridViewCheckBoxColumn))                
-                    grid.Rows[e.RowIndex].Cells[e.ColumnIndex].Style.BackColor = Color.Aqua;                                   
+                if (!(gridKolumny[e.ColumnIndex] is DataGridViewCheckBoxColumn))
+                {
+                    grid.Rows[e.RowIndex].Cells[e.ColumnIndex].Style.BackColor = Color.Aqua;
+                }
             }            
 
         }
@@ -188,7 +199,10 @@ namespace MojeFunkcjeUniwersalneNameSpace
                 else
                 {
                     if (!gridKolumny[i].ReadOnly)
+                    {
                         gridKomponent.ReadOnly = false;
+                    }
+
                     gridKomponent.Columns[i].ReadOnly = gridKolumny[i].ReadOnly;                    
                 }
                 gridKomponent.Columns[i].Name = gridKolumny[i].Name;

@@ -25,10 +25,16 @@ namespace MojeFunkcjeRozszerzajace
                 length = value.Length - startIndex;
             }
 
-            if (startIndex < 0) startIndex = 0;
-            if (length < 0) return string.Empty;
-            
-            
+            if (startIndex < 0)
+            {
+                startIndex = 0;
+            }
+
+            if (length < 0)
+            {
+                return string.Empty;
+            }
+
             try
             {
                 
@@ -83,16 +89,25 @@ namespace MojeFunkcjeRozszerzajace
             string formatedValue;
 
             if (value < 1024)
+            {
                 formatedValue = $"{value} B";
+            }
             else if (value / 1024 < 1024)
+            {
                 formatedValue = $"{(value / 1024)} kB";
+            }
             else if (value / 1024 / 1024 < 1024)
+            {
                 formatedValue = $"{(value / 1024f / 1024f).ToString("F")} MB";
+            }
             else if (value / 1024 / 1024 / 1024 < 1024)
+            {
                 formatedValue = $"{(value / 1024f / 1024f / 1024f).ToString("F")} GB";
-            else 
+            }
+            else
+            {
                 formatedValue = $"{(value / 1024f / 1024f / 1024f / 1024f).ToString("F")} TB";
-
+            }
 
             return formatedValue;
         }
@@ -112,9 +127,13 @@ namespace MojeFunkcjeRozszerzajace
         public static string TakNie(this bool value)
         {
             if (value)
+            {
                 return "TAK";
+            }
             else
+            {
                 return "NIE";
+            }
         }
     }
 
@@ -131,9 +150,14 @@ namespace MojeFunkcjeRozszerzajace
         public static void ShowAsMaximized(this Form forma, Form parentForm)
         {
             if (parentForm.IsMdiContainer)
+            {
                 forma.MdiParent = parentForm;
+            }
             else
+            {
                 forma.MdiParent = parentForm.MdiParent;
+            }
+
             forma.Show();        
             forma.WindowState = FormWindowState.Maximized;
         }
@@ -159,15 +183,25 @@ namespace MojeFunkcjeRozszerzajace
                   || kontrolka is ComboBox
                   || kontrolka is CheckedListBox
                      )
+                {
                     outputList.Add(kontrolka);
+                }
                 else if (kontrolka is TabPage)
+                {
                     outputList.AddRange(GetAllControls(kontrolka.Controls));
+                }
                 else if (kontrolka is TabControl)
+                {
                     outputList.AddRange(GetAllControls(kontrolka.Controls));
+                }
                 else if (kontrolka is Panel || kontrolka is SplitterPanel)
+                {
                     outputList.AddRange(GetAllControls(kontrolka.Controls));
+                }
                 else if (kontrolka is GroupBox)
+                {
                     outputList.AddRange(GetAllControls(kontrolka.Controls));
+                }
                 else if (kontrolka is SplitContainer)
                 {
                     outputList.Add(kontrolka);
@@ -179,7 +213,9 @@ namespace MojeFunkcjeRozszerzajace
                     outputList.Add(kontrolka);
                 }
                 else if (kontrolka is UserControl)
+                {
                     outputList.AddRange(GetAllControls(kontrolka.Controls));
+                }
             }
             return outputList;
         }
@@ -217,9 +253,13 @@ namespace MojeFunkcjeRozszerzajace
             int rowIndex = -1;
             rowIndex = dataGridViewRowCollection.Add(columnsValues);
             if (rowIndex > -1)
+            {
                 return dataGridViewRowCollection[rowIndex];
+            }
             else
+            {
                 return null;
+            }
         }
     }
 

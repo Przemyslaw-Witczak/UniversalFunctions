@@ -67,15 +67,19 @@
     <Compile Include="WpfTreeNode.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\FunkcjeUniwersalne\FunkcjeUniwersalne\FunkcjeUniwersalne\FunkcjeUniwersalne.csproj">
-      <Project>{22D63D77-4EF4-404D-8CBE-D5E6751A3CAB}</Project>
+    <ProjectReference Include="..\FunkcjeUniwersalne\FunkcjeUniwersalne\FunkcjeUniwersalne.csproj">
+      <Project>{22d63d77-4ef4-404d-8cbe-d5e6751a3cab}</Project>
       <Name>FunkcjeUniwersalne</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ISqlKlient\ISqlKlient.csproj">
+      <Project>{cdb5b687-e81e-4ba6-a605-9f8a7711d28e}</Project>
+      <Name>ISqlKlient</Name>
     </ProjectReference>
     <ProjectReference Include="..\MVVMClasses\MVVMClasses.csproj">
       <Project>{2a8ea2cf-3cfe-4778-89d3-a03e389e5912}</Project>
       <Name>MVVMClasses</Name>
     </ProjectReference>
-    <ProjectReference Include="..\_FIREBIRD\FbKlient\FbKlient\FbKlient.csproj">
+    <ProjectReference Include="..\FbKlient\FbKlient\FbKlient.csproj">
       <Project>{7BA21DDE-BBA3-46AB-8F00-40D5B6AAC575}</Project>
       <Name>FbKlient</Name>
     </ProjectReference>
