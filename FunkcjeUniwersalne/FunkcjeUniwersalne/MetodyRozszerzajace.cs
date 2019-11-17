@@ -298,6 +298,16 @@ namespace MojeFunkcjeRozszerzajace
             }
             return result;
         }
+
+
+
+        public static IEnumerable<TreeNode> GetAllChildren(TreeNode Parent)
+        {
+            return Parent.Nodes.Cast<TreeNode>().Concat(
+                   Parent.Nodes.Cast<TreeNode>().SelectMany(GetAllChildren));
+        }
+
+
     }
 
 }
