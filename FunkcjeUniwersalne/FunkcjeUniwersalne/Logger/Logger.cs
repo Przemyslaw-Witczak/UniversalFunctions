@@ -172,7 +172,9 @@ namespace MojeFunkcjeUniwersalneNameSpace.Logger
                 }
                 catch (Exception e)
                 {
-                    AddEventLog("Błąd zapisywania do pliku, logów: " + e.ToString());
+                    var msg = "Błąd zapisywania do pliku, logów: " + e.ToString();
+                    Debug.Write(msg);
+                    AddEventLog(msg);
                 }
                 
             }
@@ -206,6 +208,7 @@ namespace MojeFunkcjeUniwersalneNameSpace.Logger
             catch(Exception)
             {
                 //Już nie ma gdzie logować, skoro nawet tu się wysypało
+                Debug.WriteLine($"DowiSoft Logger error in AddEventlog({komunikat})");
             }
 
         }
