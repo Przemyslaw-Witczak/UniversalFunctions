@@ -584,6 +584,7 @@ namespace FbKlientNameSpace
         /// <param name="WithResponse">Czy zwraca rekordy</param>
         private void Execute(bool WithResponse)
         {
+            //ToDo: Logować problematyczne zapytanie do komunikatu błędu
             try
             {
                 ResponseClose();
