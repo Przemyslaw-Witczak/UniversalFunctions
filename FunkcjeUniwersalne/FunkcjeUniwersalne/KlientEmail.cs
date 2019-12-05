@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Net.Mail;
@@ -96,7 +97,7 @@ namespace MojeFunkcjeUniwersalneNameSpace
                     client.UseDefaultCredentials = false;
                     client.Host = serwer;
                     client.Credentials = new System.Net.NetworkCredential(login, haslo);
-                    client.EnableSsl = false;
+                    client.EnableSsl = true;
                     client.Port = port;
                     //client.Timeout = 2 * 60 * 1000;
 
@@ -108,14 +109,18 @@ namespace MojeFunkcjeUniwersalneNameSpace
                     {
                         using (System.IO.StreamWriter file = new System.IO.StreamWriter("logi_email_" + Application.ProductName + ".txt", true, System.Text.Encoding.Default))
                         {
-                            file.WriteLine(Convert.ToString(DateTime.Now) + ";" + ex.Message);
+                            file.WriteLine(Convert.ToString(DateTime.Now) + ";" + ex);
                             //file.Close();
                         }
+                        throw ex;
 
                     }
-                    catch(Exception )
+                    catch(Exception ex2)
                     {
-
+                        Debug.WriteLine($"Error in SendMail test: {ex2}");
+#if DEBUG
+                        throw ex2;
+#endif
                     }
                 }
             });

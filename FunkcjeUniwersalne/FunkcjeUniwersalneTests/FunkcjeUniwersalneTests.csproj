@@ -57,6 +57,7 @@
   </Choose>
   <ItemGroup>
     <Compile Include="FunkcjeUniwersalneTests.cs" />
+    <Compile Include="KlientEmailTests.cs" />
     <Compile Include="Logger\LoggerTests.cs" />
     <Compile Include="LongExtensionsTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
