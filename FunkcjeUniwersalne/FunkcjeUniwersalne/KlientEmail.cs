@@ -25,7 +25,7 @@ namespace MojeFunkcjeUniwersalneNameSpace
         {
             serwer_smtp = UstawieniA;
         }
-        
+
         /// <summary>
         /// Funkcja wysyłająca email
         /// </summary>
@@ -33,7 +33,7 @@ namespace MojeFunkcjeUniwersalneNameSpace
         public void SendMail(string body)
         {
             SendMail(body, "");
-			
+
         }
 
         /// <summary>
@@ -86,19 +86,22 @@ namespace MojeFunkcjeUniwersalneNameSpace
                 return;
             }
             //string body = @"Using this new feature, you can send an e-mail message from an application very easily.";
-
-            Task.Factory.StartNew(() =>
+            //http://csharp.net-informations.com/communications/csharp-smtp-mail.htm
+            //Task.Factory.StartNew(() =>            
             {
                 try
                 {
                     MailMessage message = new MailMessage(nadawca, adresat, subject, body);
+                    message.Sender = new MailAddress(nadawca);
+
                     SmtpClient client = new SmtpClient();
 
                     client.UseDefaultCredentials = false;
                     client.Host = serwer;
                     client.Credentials = new System.Net.NetworkCredential(login, haslo);
+                    client.DeliveryMethod = SmtpDeliveryMethod.Network;
                     client.EnableSsl = true;
-                    client.Port = port;
+                    client.Port = port;                    
                     //client.Timeout = 2 * 60 * 1000;
 
                     client.Send(message);
@@ -109,7 +112,7 @@ namespace MojeFunkcjeUniwersalneNameSpace
                     {
                         using (System.IO.StreamWriter file = new System.IO.StreamWriter("logi_email_" + Application.ProductName + ".txt", true, System.Text.Encoding.Default))
                         {
-                            file.WriteLine(Convert.ToString(DateTime.Now) + ";" + ex);
+                            file.WriteLine($"{DateTime.Now}; Błąd wysyłki maila przez serwer:'{serwer}', login:'{nadawca}' Ex:{ex}");
                             //file.Close();
                         }
                         throw ex;
@@ -123,9 +126,13 @@ namespace MojeFunkcjeUniwersalneNameSpace
 #endif
                     }
                 }
-            });
+            }
+            //);
 
             
         }
+    
+    
+    
     }
 }
