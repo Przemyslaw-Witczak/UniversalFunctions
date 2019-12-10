@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using AegisImplicitMail;
+using System;
+using System.ComponentModel;
 using System.Diagnostics;
-using System.Linq;
-using System.Net;
 using System.Net.Mail;
-using System.Net.Security;
-using System.Security.Cryptography.X509Certificates;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace MojeFunkcjeUniwersalneNameSpace
@@ -86,25 +81,27 @@ namespace MojeFunkcjeUniwersalneNameSpace
                 return;
             }
             //string body = @"Using this new feature, you can send an e-mail message from an application very easily.";
-            //http://csharp.net-informations.com/communications/csharp-smtp-mail.htm
+            //https://stackoverflow.com/questions/1011245/how-can-i-send-emails-through-ssl-smtp-with-the-net-framework
             //Task.Factory.StartNew(() =>            
             {
                 try
                 {
-                    MailMessage message = new MailMessage();
-                    SmtpClient client = new SmtpClient(serwer);                    
+                    var message = new MimeMailMessage();
+                    
                     message.From = new MailAddress(nadawca);
                     message.To.Add(adresat);
                     message.Subject = subject;
                     message.Body = body;
 
+                    var client = new SmtpSocketClient();
+                    client.Host = serwer;
                     client.Port = port;
-                    client.Credentials = new System.Net.NetworkCredential(login, haslo);
-                    client.UseDefaultCredentials = false;
-                    client.EnableSsl = true;
-                                       
-
-                    client.Send(message);
+                    client.SslType = SslMode.Ssl;
+                    client.User = login;
+                    client.Password = haslo;
+                    client.AuthenticationMode = AuthenticationType.Base64;
+                    client.MailMessage = message;                    
+                    client.SendMailAsync();
                 }
                 catch (Exception ex)
                 {
@@ -130,9 +127,6 @@ namespace MojeFunkcjeUniwersalneNameSpace
             //);
 
             
-        }
-    
-    
-    
+        }        
     }
 }
