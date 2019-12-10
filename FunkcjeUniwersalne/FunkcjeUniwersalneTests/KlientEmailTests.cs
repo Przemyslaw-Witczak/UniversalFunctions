@@ -22,7 +22,7 @@ namespace MojeFunkcjeUniwersalneNameSpace.Tests
                 KlientEmailUstawienia.Instance.login = "motionpi@dowisoft.masternet.pl";
                 KlientEmailUstawienia.Instance.haslo = "!Qaz@Wsx3edc";
                 KlientEmailUstawienia.Instance.serwer = "s4.masternet.pl";
-                KlientEmailUstawienia.Instance.port = 468;
+                KlientEmailUstawienia.Instance.port = 465;
 
                 KlientEmail klientEmail = new KlientEmail(KlientEmailUstawienia.Instance);
                 klientEmail.SendMail($"SendMailTest");

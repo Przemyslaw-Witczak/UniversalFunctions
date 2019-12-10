@@ -91,18 +91,17 @@ namespace MojeFunkcjeUniwersalneNameSpace
             {
                 try
                 {
-                    MailMessage message = new MailMessage(nadawca, adresat, subject, body);
-                    message.Sender = new MailAddress(nadawca);
+                    MailMessage message = new MailMessage();
+                    SmtpClient client = new SmtpClient(serwer);                    
+                    message.From = new MailAddress(nadawca);
+                    message.To.Add(adresat);
+                    message.Subject = subject;
+                    message.Body = body;
 
-                    SmtpClient client = new SmtpClient();
-
-                    client.UseDefaultCredentials = false;
-                    client.Host = serwer;
+                    client.Port = port;
                     client.Credentials = new System.Net.NetworkCredential(login, haslo);
-                    client.DeliveryMethod = SmtpDeliveryMethod.Network;
                     client.EnableSsl = true;
-                    client.Port = port;                    
-                    //client.Timeout = 2 * 60 * 1000;
+                                       
 
                     client.Send(message);
                 }
