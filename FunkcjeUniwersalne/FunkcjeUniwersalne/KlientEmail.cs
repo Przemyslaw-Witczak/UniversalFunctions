@@ -27,7 +27,7 @@ namespace MojeFunkcjeUniwersalneNameSpace
         /// <param name="body">Treść wiadomości</param>
         public void SendMail(string body)
         {
-            SendMail(body, "");
+            SendMail(body, serwer_smtp.temat);
 
         }
 
@@ -100,8 +100,8 @@ namespace MojeFunkcjeUniwersalneNameSpace
                     client.User = login;
                     client.Password = haslo;
                     client.AuthenticationMode = AuthenticationType.Base64;
-                    client.MailMessage = message;                    
-                    client.SendMailAsync();
+                    //client.MailMessage = message;                    
+                    client.SendMail(message);
                 }
                 catch (Exception ex)
                 {

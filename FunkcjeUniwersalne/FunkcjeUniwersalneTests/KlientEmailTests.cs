@@ -62,7 +62,7 @@ namespace MojeFunkcjeUniwersalneNameSpace.Tests
             try
             {
                 KlientEmailUstawienia.Instance.temat = "Mail testowy z Tlen";
-                KlientEmailUstawienia.Instance.adresat = "witczakprzemyslaw@google.com";                
+                KlientEmailUstawienia.Instance.adresat = "witczakprzemyslaw@gmail.com";                
                 KlientEmailUstawienia.Instance.nadawca = "witczakprzemyslaw@o2.pl";
                 KlientEmailUstawienia.Instance.login = "witczakprzemyslaw@o2.pl";
                 KlientEmailUstawienia.Instance.haslo = "27032002Mx";
