@@ -101,37 +101,37 @@ namespace MojeFunkcjeUniwersalneNameSpace
                     //EASendMail 
                     SmtpMail oMail = new SmtpMail("TryIt");
                     // Set sender email address, please change it to yours
-                    oMail.From = "test@emailarchitect.net";
+                    oMail.From = nadawca;
 
                     // Set recipient email address, please change it to yours
-                    oMail.To = "support@emailarchitect.net";
+                    oMail.To = adresat;
 
                     // Set email subject
-                    oMail.Subject = "test email from c#, tls 25 port";
+                    oMail.Subject = subject;
 
                     // Set email body
-                    oMail.TextBody = "this is a test email sent from c# project, do not reply";
+                    oMail.TextBody = body;
 
                     // Your SMTP server address
-                    SmtpServer oServer = new SmtpServer("smtp.emailarchitect.net");
+                    SmtpServer oServer = new SmtpServer(serwer);
 
                     // User and password for ESMTP authentication, if your server doesn't require
                     // User authentication, please remove the following codes.
-                    oServer.User = "test@emailarchitect.net";
-                    oServer.Password = "testpassword";
+                    oServer.User = login;
+                    oServer.Password = haslo;
 
                     // Set 25 or 587 port.
-                    oServer.Port = 25;
+                    oServer.Port = port;
 
                     // detect TLS connection automatically
                     oServer.ConnectType = SmtpConnectType.ConnectSSLAuto;
 
-                    Console.WriteLine("start to send email ...");
+                    Debug.WriteLine("start to send email ...");
 
                     SmtpClient oSmtp = new SmtpClient();
                     oSmtp.SendMail(oServer, oMail);
 
-                    Console.WriteLine("email was sent successfully!");
+                    Debug.WriteLine("email was sent successfully!");
 
                     #endregion
                 }
