@@ -17,7 +17,7 @@ namespace MojeFunkcjeUniwersalneNameSpace.Tests
             try
             {
                 KlientEmailUstawienia.Instance.temat = "Mail testowy z AzzureFunctions";
-                KlientEmailUstawienia.Instance.adresat = "witczakprzemyslaw@gmail.com";                
+                KlientEmailUstawienia.Instance.adresat = "zaradzisz@op.pl";                
                 KlientEmailUstawienia.Instance.nadawca = "motionpi@dowisoft.masternet.pl";
                 KlientEmailUstawienia.Instance.login = "motionpi@dowisoft.masternet.pl";
                 KlientEmailUstawienia.Instance.haslo = "!Qaz@Wsx3edc";
