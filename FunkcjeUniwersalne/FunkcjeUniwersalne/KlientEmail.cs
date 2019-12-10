@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
-using System.Net.Mail;
+//using System.Net.Mail;
 using System.Windows.Forms;
 using EASendMail;
 namespace MojeFunkcjeUniwersalneNameSpace
@@ -85,16 +85,16 @@ namespace MojeFunkcjeUniwersalneNameSpace
                 try
                 {
                     #region Default SmtpClient
-                    MailMessage message = new MailMessage();
-                    SmtpClient client = new SmtpClient(serwer);                    
-                    message.From = new MailAddress(nadawca);
-                    message.To.Add(adresat);
-                    message.Subject = subject;
-                    message.Body = body;
-                    client.Port = port;
-                    client.Credentials = new System.Net.NetworkCredential(login, haslo);
-                    client.EnableSsl = true;                                      
-                    client.Send(message);
+                    //MailMessage message = new MailMessage();
+                    //SmtpClient client = new SmtpClient(serwer);                    
+                    //message.From = new MailAddress(nadawca);
+                    //message.To.Add(adresat);
+                    //message.Subject = subject;
+                    //message.Body = body;
+                    //client.Port = port;
+                    //client.Credentials = new System.Net.NetworkCredential(login, haslo);
+                    //client.EnableSsl = true;                                      
+                    //client.Send(message);
                     #endregion
                     #region Alternative from 
                     //https://www.emailarchitect.net/easendmail/ex/c/3.aspx
