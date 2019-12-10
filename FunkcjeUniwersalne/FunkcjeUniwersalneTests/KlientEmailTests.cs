@@ -21,7 +21,7 @@ namespace MojeFunkcjeUniwersalneNameSpace.Tests
                 KlientEmailUstawienia.Instance.nadawca = "motionpi@dowisoft.masternet.pl";
                 KlientEmailUstawienia.Instance.login = "motionpi@dowisoft.masternet.pl";
                 KlientEmailUstawienia.Instance.haslo = "!Qaz@Wsx3edc";
-                KlientEmailUstawienia.Instance.serwer = "s4.masternet.pl";
+                KlientEmailUstawienia.Instance.serwer = "mx.s4.masternet.pl";
                 KlientEmailUstawienia.Instance.port = 465;
 
                 KlientEmail klientEmail = new KlientEmail(KlientEmailUstawienia.Instance);
@@ -44,8 +44,7 @@ namespace MojeFunkcjeUniwersalneNameSpace.Tests
                 KlientEmailUstawienia.Instance.login = "witczakprzemyslaw@gmail.com";
                 KlientEmailUstawienia.Instance.haslo = "27032002Mx";
                 KlientEmailUstawienia.Instance.serwer = "smtp.gmail.com";
-                
-                //KlientEmailUstawienia.Instance.port = 465;
+                                
                 KlientEmailUstawienia.Instance.port = 587;
 
                 KlientEmail klientEmail = new KlientEmail(KlientEmailUstawienia.Instance);

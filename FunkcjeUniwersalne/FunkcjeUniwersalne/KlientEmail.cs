@@ -100,6 +100,7 @@ namespace MojeFunkcjeUniwersalneNameSpace
 
                     client.Port = port;
                     client.Credentials = new System.Net.NetworkCredential(login, haslo);
+                    client.UseDefaultCredentials = false;
                     client.EnableSsl = true;
                                        
 
