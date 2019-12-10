@@ -1,15 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Net;
 using System.Net.Mail;
-using System.Net.Security;
-using System.Security.Cryptography.X509Certificates;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-
+using EASendMail;
 namespace MojeFunkcjeUniwersalneNameSpace
 {
     public class KlientEmail
@@ -91,19 +84,56 @@ namespace MojeFunkcjeUniwersalneNameSpace
             {
                 try
                 {
+                    #region Default SmtpClient
                     MailMessage message = new MailMessage();
                     SmtpClient client = new SmtpClient(serwer);                    
                     message.From = new MailAddress(nadawca);
                     message.To.Add(adresat);
                     message.Subject = subject;
                     message.Body = body;
-
                     client.Port = port;
                     client.Credentials = new System.Net.NetworkCredential(login, haslo);
-                    client.EnableSsl = true;
-                                       
-
+                    client.EnableSsl = true;                                      
                     client.Send(message);
+                    #endregion
+                    #region Alternative from 
+                    //https://www.emailarchitect.net/easendmail/ex/c/3.aspx
+                    //EASendMail 
+                    SmtpMail oMail = new SmtpMail("TryIt");
+                    // Set sender email address, please change it to yours
+                    oMail.From = "test@emailarchitect.net";
+
+                    // Set recipient email address, please change it to yours
+                    oMail.To = "support@emailarchitect.net";
+
+                    // Set email subject
+                    oMail.Subject = "test email from c#, tls 25 port";
+
+                    // Set email body
+                    oMail.TextBody = "this is a test email sent from c# project, do not reply";
+
+                    // Your SMTP server address
+                    SmtpServer oServer = new SmtpServer("smtp.emailarchitect.net");
+
+                    // User and password for ESMTP authentication, if your server doesn't require
+                    // User authentication, please remove the following codes.
+                    oServer.User = "test@emailarchitect.net";
+                    oServer.Password = "testpassword";
+
+                    // Set 25 or 587 port.
+                    oServer.Port = 25;
+
+                    // detect TLS connection automatically
+                    oServer.ConnectType = SmtpConnectType.ConnectSSLAuto;
+
+                    Console.WriteLine("start to send email ...");
+
+                    SmtpClient oSmtp = new SmtpClient();
+                    oSmtp.SendMail(oServer, oMail);
+
+                    Console.WriteLine("email was sent successfully!");
+
+                    #endregion
                 }
                 catch (Exception ex)
                 {
