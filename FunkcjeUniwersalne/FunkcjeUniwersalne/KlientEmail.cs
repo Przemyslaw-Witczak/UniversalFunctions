@@ -1,6 +1,5 @@
 ﻿using AegisImplicitMail;
 using System;
-using System.ComponentModel;
 using System.Diagnostics;
 using System.Net.Mail;
 using System.Windows.Forms;

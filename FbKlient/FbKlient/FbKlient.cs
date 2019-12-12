@@ -13,6 +13,7 @@ using System.Data.SqlClient;
 using MojeFunkcjeUniwersalneNameSpace.Logger;
 using System.Configuration;
 using ISqlKlientNameSpace;
+using System.Text.RegularExpressions;
 //using System.Data.SqlClient;
 
 namespace FbKlientNameSpace
@@ -584,7 +585,7 @@ namespace FbKlientNameSpace
         /// <param name="WithResponse">Czy zwraca rekordy</param>
         private void Execute(bool WithResponse)
         {
-            //ToDo: Logować problematyczne zapytanie do komunikatu błędu
+            StringBuilder commandString = new StringBuilder();
             try
             {
                 ResponseClose();
@@ -592,9 +593,10 @@ namespace FbKlientNameSpace
                 {
                     if (WithResponse == true)
                     {
-                        foreach (FbCommand Command in Commands)
+                        foreach (FbCommand command in Commands)
                         {
-                            Responses.Add(Command.ExecuteReader());
+                            GetCommandLog(commandString, command);
+                            Responses.Add(command.ExecuteReader());
                             //Thread.Sleep(200);
                         }
                         if (Responses.Count > 0)
@@ -604,11 +606,12 @@ namespace FbKlientNameSpace
                     }
                     else
                     {
-                        foreach (FbCommand Command in Commands)
+                        foreach (FbCommand command in Commands)
                         {
-                            if (!String.IsNullOrEmpty(Command.CommandText))
+                            if (!String.IsNullOrEmpty(command.CommandText))
                             {
-                                Command.ExecuteNonQuery();
+                                GetCommandLog(commandString, command);
+                                command.ExecuteNonQuery();
                             }
                         }
                         CommitTransaction();
@@ -624,7 +627,7 @@ namespace FbKlientNameSpace
             }
             catch (Exception ex)
             {
-                MyShowMessage($"Problem z wykonaniem {Commands.Count} zapytań(nia): {ex}");
+                MyShowMessage($"Execute: Problem z wykonaniem zapytania: {commandString}, Exception={ex}");
             }
         }
 
@@ -1119,6 +1122,45 @@ namespace FbKlientNameSpace
 
 
         #region MetodySystemowe
+        /// <summary>
+        /// Funkcja generująca log, z zapytaniem oraz parametrami przekazanymi do zapytania
+        /// </summary>
+        /// <param name="commandString">StringBuilder</param>
+        /// <param name="command">Obiekt SQL Command</param>
+        private void GetCommandLog(StringBuilder commandString, FbCommand command)
+        {
+            commandString.Append(Regex.Replace(command.CommandText, @"\s+", " ") + "|");
+            commandString.Append(getParameterValues(command));
+            commandString.Append(Environment.NewLine);
+        }
+
+        /// <summary>
+        /// Metoda zwraca nazwy parametrów przekazanych do zapytania z wartościami
+        /// </summary>
+        /// <param name="command">Obiekt SQL Command</param>
+        /// <returns>Łańcuch znaków</returns>
+        private string getParameterValues(FbCommand command)
+        {
+            var returnedValue = new StringBuilder();
+            foreach (FbParameter param in command.Parameters)
+            {
+                if (param != null)
+                {
+                    if (param.Value != null && param.Value != DBNull.Value)
+                        returnedValue.AppendFormat("{0}='{1}';", param.ParameterName,
+                            param.Value.ToString().Length > 255
+                                ? param.Value.ToString().Substring(0, 255)
+                                : param.Value.ToString());
+                    else
+                        returnedValue.AppendFormat("'{0}'=NULL;", param.ParameterName);
+                }
+
+
+            }
+
+            return returnedValue.ToString();
+        }
+
         void MyShowMessage(string message)
         {
             Loguj(message);
