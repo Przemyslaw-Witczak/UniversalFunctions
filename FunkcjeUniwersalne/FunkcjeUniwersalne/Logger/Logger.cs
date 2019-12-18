@@ -86,12 +86,12 @@ namespace MojeFunkcjeUniwersalneNameSpace.Logger
         /// </summary>
         /// <param name="Komunikat">Treść komunikatu</param>
         /// <param name="WyslijMail">Czy wysyłka maila?</param>
-        public void Loguj(string Komunikat, bool WyslijMail)
+        public void Loguj(string Komunikat, bool WyslijMail = true)
         {
             LogPositions log = new LogPositions(Komunikat);
 
             kolejkaFiFo.Enqueue(log);
-
+            Trace.WriteLine(log.GetLogValue());
             OnLogAdd(this, new LogAddedEventArgs("Dodano log"));
             string czas = string.Empty;
             DateTime czas_time = DateTime.Now;
@@ -128,14 +128,6 @@ namespace MojeFunkcjeUniwersalneNameSpace.Logger
 
         }
 
-        /// <summary>
-        /// Dodaj log
-        /// </summary>
-        /// <param name="Komunikat"></param>
-        public void Loguj(string Komunikat)
-        {
-            Loguj(Komunikat, true);
-        }
         #endregion
 
         /// <summary>
@@ -160,8 +152,8 @@ namespace MojeFunkcjeUniwersalneNameSpace.Logger
             m_oLoggerMutex.WaitOne();
             {
                 try
-                {
-                    using(StreamWriter file = new StreamWriter("logi_" + Application.ProductName + ".txt", true, System.Text.Encoding.Default))
+                {                    
+                    using (StreamWriter file = new StreamWriter("logi_" + Application.ProductName + ".txt", true, System.Text.Encoding.Default))
                     {
                         LogPositions log;
                         while (kolejkaFiFo.TryDequeue(out log))
