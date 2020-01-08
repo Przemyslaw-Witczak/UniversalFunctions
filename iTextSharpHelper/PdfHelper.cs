@@ -97,7 +97,8 @@ namespace iTextSharpHelper
             if (pageSize == PageSize.A4_LANDSCAPE)
 #pragma warning restore CS0612 // 'PageSize.A4_LANDSCAPE' is obsolete
                 pageSize = PageSize.A4.Rotate();
-            DokumentPDF = new Document(pageSize, 20, 20, 20, 20);
+            DokumentPDF = new Document(pageSize, 20, 20, 20, 30);
+            
             DokumentPDF.AddLanguage("Polski");            
             writer = PdfWriter.GetInstance(DokumentPDF, new FileStream(FileName, FileMode.Create));
             PageEventHandler = new TwoColumnHeaderFooter();
@@ -111,6 +112,7 @@ namespace iTextSharpHelper
             writer.PageEvent = PageEventHandler;
 
             DokumentPDF.Open();
+            DokumentPDF.SetMargins(20, 20, 20, 30);
         }
 
         /// <summary>
