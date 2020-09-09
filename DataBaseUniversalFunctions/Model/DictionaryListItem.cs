@@ -6,9 +6,15 @@
     public class DictionaryListItem
     {
         /// <summary>
-        /// Indeks, klucz główny z tabeli słownikowej
+        /// Indeks, klucz główny z tabeli słownikowej, zamiennie z IdentityKey
         /// </summary>
         public int Identity { get; set; }
+
+        /// <summary>
+        /// Indeks, klucz główny z tabeli słownikowej, zamiennie z Identity
+        /// </summary>
+        public string IdentityKey { get; set; }
+
         /// <summary>
         /// Wartość wyświetlana na liście w polu kombi
         /// </summary>
