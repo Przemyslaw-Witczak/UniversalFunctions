@@ -61,7 +61,18 @@ namespace MojeFunkcjeUniwersalneNameSpace
 
         }
 
-        
+        /// <summary>
+        /// Metoda wewnętrzna, dodająca kolumnę..
+        /// </summary>
+        /// <param name="kolumna"></param>
+        private void AddColumn(DataGridViewColumn kolumna)
+        {            
+
+            
+
+
+            gridKolumny.Add(kolumna);
+        }
         /// <summary>
         /// Metoda dodająca kolumnę do grida
         /// </summary>
@@ -69,10 +80,10 @@ namespace MojeFunkcjeUniwersalneNameSpace
         /// <param name="columnVisible">Czy kolumna widoczna</param>
         /// <param name="SortMode">Sposób sortowania kolumny</param>
         public void AddColumn(string columnText, bool columnVisible = true, DataGridViewColumnSortMode SortMode = DataGridViewColumnSortMode.Automatic, DataGridViewContentAlignment alignment = DataGridViewContentAlignment.NotSet, bool readOnly = true, DataGridViewColumnValueType columnValueType = DataGridViewColumnValueType.NotSet)
-        {           
+        {
             DataGridViewColumn kolumna = new DataGridViewColumn()
             {
-                Name = columnText,              
+                Name = columnText,
                 Visible = columnVisible,
                 SortMode = SortMode,
                 ReadOnly = readOnly
@@ -89,9 +100,9 @@ namespace MojeFunkcjeUniwersalneNameSpace
                 kolumna.Width = 30;
             }
 
-            if (columnValueType!=DataGridViewColumnValueType.NotSet)
+            if (columnValueType != DataGridViewColumnValueType.NotSet)
             {
-                if (typyKolumn.Count==0)
+                if (typyKolumn.Count == 0)
                 {
                     gridKomponent.EditingControlShowing += GridKomponent_EditingControlShowing;
                 }
@@ -104,10 +115,15 @@ namespace MojeFunkcjeUniwersalneNameSpace
                 gridKomponent.CellFormatting += GridKomponent_CellFormatting;
             }
 
-
-            gridKolumny.Add(kolumna);
+            AddColumn(kolumna);
         }
 
+        public void AddColumns(DataGridViewColumn[] columns)
+        {
+            foreach (var column in columns)
+                AddColumn(column);
+            EndInitialize();
+        }
         #region Zdarzenia przypinane do grida
         private void GridKomponent_EditingControlShowing(object sender, DataGridViewEditingControlShowingEventArgs e)
         {
