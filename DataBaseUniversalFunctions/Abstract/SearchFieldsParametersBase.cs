@@ -91,7 +91,11 @@ namespace DataBaseUniversalFunctions.Abstract
                 {
                     if ((control as ComboBox).SelectedIndex > -1)
                     {
-                        if (string.IsNullOrEmpty(attribute.ListOfIndexesName))
+                        if (attribute.GetStringValueOfComboBox)
+                        {
+                            newValue = (control as ComboBox).SelectedItem;
+                        }                        
+                        else if (string.IsNullOrEmpty(attribute.ListOfIndexesName))
                             newValue = (control as ComboBox).SelectedIndex;
                         else
                         {
@@ -103,7 +107,10 @@ namespace DataBaseUniversalFunctions.Abstract
                     }
                     else
                     {
-                        newValue = -1;
+                        if (attribute.GetStringValueOfComboBox)
+                            newValue = null;
+                        else
+                            newValue = -1;
                     }
                 }
                 else if (control is TextBox && !string.IsNullOrEmpty((control as TextBox).Text))
@@ -114,6 +121,7 @@ namespace DataBaseUniversalFunctions.Abstract
                 {
                     newValue = (control as DateTimePicker).Value;
                 }
+
                 if (newValue!=null)
                     searchField.SetValue(this, newValue);
             }

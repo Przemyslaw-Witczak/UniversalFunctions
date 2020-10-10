@@ -29,5 +29,34 @@
             return Value;
         }
 
+        /// <summary>
+        /// Tworzy nowy obiekt na podstawie klucza i wartości
+        /// </summary>
+        /// <param name="identity">Indeks z tabeli słownikowej</param>
+        /// <param name="value">Nazwa wartości</param>
+        /// <returns></returns>
+        public static DictionaryListItem Create(int identity, string value)
+        {
+            return new DictionaryListItem()
+            {
+                Identity = identity,
+                Value = value
+            };
+        }
+
+        /// <summary>
+        /// Tworzy nowy obiekt na podstawie klucza i wartości
+        /// </summary>
+        /// <param name="identity">Klucz będący ciągiem znaków z tabeli słownikowej</param>
+        /// <param name="value">Nazwa wartości</param>
+        /// <returns></returns>
+        public static DictionaryListItem Create(string identity, string value)
+        {
+            return new DictionaryListItem()
+            {
+                IdentityKey = identity,
+                Value = value
+            };
+        }
     }
 }
