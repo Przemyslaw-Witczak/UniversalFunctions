@@ -46,6 +46,8 @@ namespace MojeFunkcjeUniwersalneNameSpace
 
         }
 
+        
+
         /// <summary>
         /// Kontrolka docelowa, Button
         /// </summary>
@@ -329,6 +331,14 @@ namespace MojeFunkcjeUniwersalneNameSpace
         {
             txtbox.KeyPress += (s, e) => ActionKeyPressDecimalValue(s, e);
         }
+        /// <summary>
+        /// Metoda dodająca do TextBoxa zdarzenie ograniczające wprowadzanie tylko do liter
+        /// </summary>
+        /// <param name="txtbox">Pole tekstowe</param>
+        public void AllowOnlyCharValues(TextBox txtbox)
+        {
+            txtbox.KeyPress += (s, e) => ActionKeyPressCharValue(s, e);
+        }
 
         /// <summary>
         /// Zdarzenie naciśnięcia klawisza w polu tekstowym, ograniczające tylko do liczb całkowitych
@@ -355,8 +365,21 @@ namespace MojeFunkcjeUniwersalneNameSpace
                 e.KeyChar = Convert.ToChar(Keys.Back);
             }
         }
-        #endregion 
-    
+
+        /// <summary>
+        /// Zdarzenie naciśnięcia klawisza w polu tekstowym, ograniczające tylko do liczb z separatorem dziesiętnym
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void ActionKeyPressCharValue(object sender, KeyPressEventArgs e)
+        {
+            if (!((e.KeyChar > 65 && e.KeyChar < 90) || (e.KeyChar > 97 && e.KeyChar < 122)))
+            {
+                e.KeyChar = Convert.ToChar(Keys.Back);
+            }
+        }
+        #endregion
+
         /// <summary>
         /// Metoda dodająca pole hasła do listy pól wymaganych
         /// </summary>
