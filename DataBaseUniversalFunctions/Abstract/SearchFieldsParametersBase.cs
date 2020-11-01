@@ -139,10 +139,12 @@ namespace DataBaseUniversalFunctions.Abstract
             var controls = GetSearchFieldsFrom(searchForm);
             foreach(var control in controls)
             {
-                var fieldValue = GetControlValue(control, out _, out string stringValue);
-                query.Append($"{stringValue}; ");
+                var fieldValue = GetControlValue(control, out _, out string stringValue);                
+                if (!string.IsNullOrEmpty(stringValue))
+                    query.AppendLine($"{stringValue}; "); 
             }
-
+            if (query.Length == 0)
+                return "Wszystko";
             return query.ToString();
         }
 
@@ -215,8 +217,12 @@ namespace DataBaseUniversalFunctions.Abstract
             else if (control is CheckedListBox)
             {
                 newValue = new List<DictionaryListItem>();
-                (newValue as List<DictionaryListItem>).AddRange((control as CheckedListBox).CheckedItems.OfType<DictionaryListItem>());
-                displayValue = $"{attribute.QueryDisplayLabel}: {string.Join(", ",(newValue as List<DictionaryListItem>))}";
+                var checkedValues = (control as CheckedListBox).CheckedItems.OfType<DictionaryListItem>();
+                if (checkedValues.Count() > 0)
+                {
+                    (newValue as List<DictionaryListItem>).AddRange(checkedValues);
+                    displayValue = $"{attribute.QueryDisplayLabel}: {string.Join(", ", (newValue as List<DictionaryListItem>))}";
+                }
             }
             //else
             //{

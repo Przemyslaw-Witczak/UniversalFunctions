@@ -1,4 +1,5 @@
-﻿using MojeFunkcjeRozszerzajace;
+﻿using DataBaseUniversalFunctions.Model;
+using MojeFunkcjeRozszerzajace;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -657,7 +658,8 @@ namespace MojeFunkcjeUniwersalneNameSpace
                 string name = GetControlParentName(kontrolka.Parent);
                 if (kontrolka is TextBox)
                 {
-                    SetParam(name, ((TextBox)kontrolka).Name, ((TextBox)kontrolka).Text);
+                    if (!((TextBox)kontrolka).ReadOnly)
+                        SetParam(name, ((TextBox)kontrolka).Name, ((TextBox)kontrolka).Text);
                 }
                 else if (kontrolka is CheckBox)
                 {
@@ -678,6 +680,28 @@ namespace MojeFunkcjeUniwersalneNameSpace
                         SetParam(name, ((DateTimePicker)kontrolka).Name, "");
                     }
                 }
+                else if (kontrolka is CheckedListBox)
+                {
+                    var kontrolkaCheckedListBox = kontrolka as CheckedListBox;
+                    Debug.WriteLine(kontrolkaCheckedListBox.Items.GetType());
+                    int position = 0;
+                    for (int i = 0; i < kontrolkaCheckedListBox.Items.Count; i++)
+                    {
+                        if (kontrolkaCheckedListBox.GetItemChecked(i))
+                        {
+                            var item = kontrolkaCheckedListBox.Items[i];
+                            if (item is DictionaryListItem)
+                            {
+                                var identityKey = ((DictionaryListItem)item).IdentityKey;
+                                var identity = ((DictionaryListItem)item).Identity;                                
+                                SetParam(name, $"{kontrolkaCheckedListBox.Name}_{position}", string.IsNullOrEmpty(identityKey) ? identity.ToString() : identityKey);
+                                position++;
+                            }
+                        }
+                    }
+                    if (position>0)
+                        SetParam(name, $"{kontrolkaCheckedListBox.Name}_Count", position.ToString());
+                }
             }
         }
 
@@ -695,7 +719,8 @@ namespace MojeFunkcjeUniwersalneNameSpace
                 string name = GetControlParentName(kontrolka.Parent);
                 if (kontrolka is TextBox)
                 {
-                    ((TextBox)kontrolka).Text = GetParam(name, ((TextBox)kontrolka).Name, ((TextBox)kontrolka).Text);
+                    if (!((TextBox)kontrolka).ReadOnly)
+                        ((TextBox)kontrolka).Text = GetParam(name, ((TextBox)kontrolka).Name, ((TextBox)kontrolka).Text);
                 }
                 else if (kontrolka is CheckBox)
                 {
@@ -712,7 +737,46 @@ namespace MojeFunkcjeUniwersalneNameSpace
                         ((DateTimePicker)kontrolka).Value = Convert.ToDateTime(GetParam(name, ((DateTimePicker)kontrolka).Name, ((DateTimePicker)kontrolka).Value.ToString()));
                     }
                 }
+                else if (kontrolka is CheckedListBox)
+                {
+                    var kontrolkaCheckedListBox = kontrolka as CheckedListBox;                    
+                    var parentControlName = GetControlParentName(kontrolkaCheckedListBox.Parent);
+                    int count = Convert.ToInt32(GetParam(parentControlName, kontrolkaCheckedListBox.Name + "_Count", "0"));
+                    for (int i = 0; i < count; i++)
+                    {
+                        var value = GetParam(parentControlName, kontrolkaCheckedListBox.Name + "_" + i.ToString(), "-1");
+                        Setlistboxitem(kontrolkaCheckedListBox, value);
+                    }
+
+                }
             }
+        }
+
+        /// <summary>
+        /// Ustawia zaznaczone pozycje, zapisane wcześniej w konfiguracji dla pola CheckedListBox
+        /// </summary>
+        /// <param name="kontrolkaCheckedListBox"></param>
+        /// <param name="value"></param>
+        private void Setlistboxitem(CheckedListBox kontrolkaCheckedListBox, string value)
+        {
+            if (string.IsNullOrEmpty(value))
+            {
+                return;
+            }            
+            
+            for (int i = 0; i < kontrolkaCheckedListBox.Items.Count; i++)
+            {
+                if (kontrolkaCheckedListBox.Items[i] is DictionaryListItem)
+                {
+                    var dictItem = (DictionaryListItem)kontrolkaCheckedListBox.Items[i];
+                    var isIntegerValue = int.TryParse(value, out int integerValue);
+                    if (dictItem.IdentityKey == value || (isIntegerValue && dictItem.Identity == integerValue))
+                    {
+                        kontrolkaCheckedListBox.SetItemChecked(i, true);
+                        break;
+                    }                        
+                }                    
+            }            
         }
 
         /// <summary>
