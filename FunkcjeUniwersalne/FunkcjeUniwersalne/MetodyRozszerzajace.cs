@@ -1,13 +1,13 @@
-﻿using System;
+﻿using MojeFunkcjeUniwersalneNameSpace;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 
 namespace MojeFunkcjeRozszerzajace
 {
-    
+
     public static class StringExtensions
     {
         /// <summary>
@@ -142,6 +142,7 @@ namespace MojeFunkcjeRozszerzajace
     /// </summary>
     public static class FormExtensions
     {
+       
         /// <summary>
         /// Wyświetla okno jako MDI Child zmaksymalizowane
         /// </summary>
@@ -218,6 +219,59 @@ namespace MojeFunkcjeRozszerzajace
                 }
             }
             return outputList;
+        }
+
+        public static void ShowFormOnPanel(this Form forma, Panel destination)
+        {
+            forma.FormBorderStyle = FormBorderStyle.None;
+            var formHandle = forma.Handle;
+            SafeNativeMethods.SetParent(formHandle, destination.Handle);
+            RefreshSizeCppForm(formHandle, destination);
+            SetWindowParameters(formHandle, destination);
+            forma.Show();
+        }
+
+        /// <summary>
+        /// Dostosowuje rozmiar okna modułu C++ do kontrolki, w której jest wyświetlane.
+        /// </summary>
+        /// <param name="cppFormHWND">Uchyt do okna modułu C++.</param>
+        /// <param name="parentControl">Konrolka typu panel, w której wyświetlane jest okno C++.</param>
+        /// <remarks>W przypadku osadzenia okna borland C++ oraz zmiany wielkości okna Shell aplikacji
+        /// metoda powoduje dostosowanie wielkości okna borlandowego do bierzącego rozmiaru okna Shell.</remarks>
+        public static void RefreshSizeCppForm(IntPtr cppFormHWND, object parentControl)
+        {
+            Panel panel = (Panel)parentControl;
+            SafeNativeMethods.SetWindowPos(cppFormHWND, new IntPtr(0), 0, 0, panel.Width, panel.Height, 0);
+        }
+
+        /// <summary>
+        /// Metoda ustawia parametry okna w celu poprawy odblokowywania głownego okna i przechwytywania zdarzeń
+        /// </summary>
+        /// <param name="cppFormHandle">Uchwyt do okna modułu C++</param>
+        /// <param name="panel">Kontrolka typu panel w której wyświetlane jest okno C++</param>
+        private static unsafe void SetWindowParameters(IntPtr cppFormHandle, Panel panel)
+        {
+            const Int32 GWL_EXSTYLE = 0x14;
+            const Int32 WS_EX_CONTROLPARENT = 0x00010000;
+
+            const int GWL_STYLE = -16;
+            const uint WS_POPUP = 0x80000000;
+            const uint WS_CHILD = 0x40000000;
+            const uint WS_TABSTOP = 0x00010000;
+
+            uint style = (uint)SafeNativeMethods.GetWindowLong(cppFormHandle, GWL_STYLE);
+            if (style == 0)
+            {
+                throw new Exception("Error in SetWindowParameters");
+            }
+
+            style = (style & ~WS_POPUP) | WS_CHILD | WS_TABSTOP;
+            SafeNativeMethods.SetWindowLong(cppFormHandle, GWL_STYLE, (int)style);
+
+            //Nie dokońca wiadomo po co to
+            uint style2 = (uint)SafeNativeMethods.GetWindowLong(panel.Handle, GWL_EXSTYLE);
+            style2 = style2 | WS_EX_CONTROLPARENT;
+            SafeNativeMethods.SetWindowLong(panel.Handle, GWL_EXSTYLE, (int)style2);
         }
     }
 

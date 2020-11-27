@@ -43,6 +43,32 @@ namespace MojeFunkcjeUniwersalneNameSpace
         [DllImport("user32.dll")]
         public static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
 
+        /// <summary>
+        /// Biblioteka systemowa ustawiająca ustawienie pozycji okna.
+        /// </summary>
+        /// <param name="hWnd">Uchwyt do okna, które należy przemieścić.</param>
+        /// <param name="hWndInsertAfter">?</param>
+        /// <param name="X">Punkt X rozpoczęcia osadzania okna (lewa krawędź okna).</param>
+        /// <param name="Y">Punkt Y rozpoczęcia osadzania okna (górna krawędź okna).</param>
+        /// <param name="cx">Szerokość okna.</param>
+        /// <param name="cy">Wysokość okna.</param>
+        /// <param name="uFlags">Flaga.</param>
+        /// <returns>Czy udało się wykonać operację.</returns>
+        /// <remarks>
+        /// Należy brać pod uwagę, że pozycja okna ustawia się w odniesieniu do rodzica, do którego uchwyt został podany przy
+        /// osadzaniu okna. Zatem jeśli okno jest wyświetlane wewnątrz jakiejś kontrolki to punkty X i Y odnoszą się do tej kontrolki
+        /// (nie zaś do całego ekranu komputera).
+        /// </remarks>
+        [DllImport("user32.dll")]
+        public static extern bool SetWindowPos(IntPtr hWnd, IntPtr hWndInsertAfter, int X,
+           int Y, int cx, int cy, uint uFlags);
+
+        [DllImport("user32.dll", SetLastError = true)]
+        public static extern int GetWindowLong(IntPtr hWnd, int nIndex);
+
+        [DllImport("user32.dll")]
+        public static extern int SetWindowLong(IntPtr hWnd, int nIndex, int dwNewLong);
+
         public static readonly IntPtr InvalidHandleValue = IntPtr.Zero;
         public const int SW_MAXIMIZE = 3;
 
