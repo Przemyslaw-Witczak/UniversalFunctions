@@ -1,4 +1,5 @@
 ﻿using MojeFunkcjeUniwersalneNameSpace;
+using MojeFunkcjeUniwersalneNameSpace.Forms;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -228,7 +229,9 @@ namespace MojeFunkcjeRozszerzajace
             SafeNativeMethods.SetParent(formHandle, destination.Handle);
             RefreshSizeCppForm(formHandle, destination);
             SetWindowParameters(formHandle, destination);
+            (forma as MdiChildFormBase).menuStrip.Visible = false;
             forma.Show();
+            FormExtensions.RefreshSizeCppForm(forma.Handle, destination);
         }
 
         /// <summary>
