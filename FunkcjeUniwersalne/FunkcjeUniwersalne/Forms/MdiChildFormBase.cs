@@ -1,14 +1,22 @@
-﻿using System.Windows.Forms;
+﻿using System;
+using System.Windows.Forms;
 
 namespace MojeFunkcjeUniwersalneNameSpace.Forms
 {
+    /// <summary>
+    /// Klasa bazowa w celu ułatwienia rzutowań i odnajnowania menu głównego
+    /// </summary>
     public class MdiChildFormBase : Form
     {
-        public MenuStrip menuStrip;
+        /// <summary>
+        /// Menu okna
+        /// </summary>
+        public MenuStrip MenuStripPointer;
 
-        public MdiChildFormBase()
-        {
-            menuStrip = new MenuStrip();
-        }
+        /// <summary>
+        /// Action znajdź do wykorzystania w panelu osadzającym
+        /// </summary>
+        public Action ZnajdzAction;
+      
     }
 }
