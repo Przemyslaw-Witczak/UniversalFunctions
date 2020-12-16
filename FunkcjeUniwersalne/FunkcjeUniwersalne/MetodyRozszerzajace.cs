@@ -232,6 +232,7 @@ namespace MojeFunkcjeRozszerzajace
             (forma as MdiChildFormBase).MenuStripPointer.Visible = false;
             forma.Show();
             FormExtensions.RefreshSizeCppForm(forma.Handle, destination);
+            destination.Focus();
         }
 
         /// <summary>

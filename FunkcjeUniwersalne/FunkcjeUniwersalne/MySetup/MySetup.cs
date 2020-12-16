@@ -680,6 +680,22 @@ namespace MojeFunkcjeUniwersalneNameSpace
                         SetParam(name, ((DateTimePicker)kontrolka).Name, "");
                     }
                 }
+                else if (kontrolka is ComboBox)
+                {
+                    var kontrolkaComboBox = kontrolka as ComboBox;
+                    Debug.WriteLine(kontrolkaComboBox.Items.GetType());
+                    var position = kontrolkaComboBox.SelectedItem;
+                    if (position!=null && position is DictionaryListItem)                                                                                            
+                    {
+                        var identityKey = ((DictionaryListItem)position).IdentityKey;
+                        var identity = ((DictionaryListItem)position).Identity;
+                        SetParam(name, $"{kontrolkaComboBox.Name}", string.IsNullOrEmpty(identityKey) ? identity.ToString() : identityKey);                                
+                    }   
+                    else
+                    {
+                        SetParam(name, $"{kontrolkaComboBox.Name}", "-1");
+                    }
+                }
                 else if (kontrolka is CheckedListBox)
                 {
                     var kontrolkaCheckedListBox = kontrolka as CheckedListBox;
@@ -737,6 +753,26 @@ namespace MojeFunkcjeUniwersalneNameSpace
                         ((DateTimePicker)kontrolka).Value = Convert.ToDateTime(GetParam(name, ((DateTimePicker)kontrolka).Name, ((DateTimePicker)kontrolka).Value.ToString()));
                     }
                 }
+                else if (kontrolka is ComboBox)
+                {
+                    var kontrolkaComboBox = kontrolka as ComboBox;
+                    var parentControlName = GetControlParentName(kontrolkaComboBox.Parent);
+                    var value = GetParam(parentControlName, kontrolkaComboBox.Name, "-1");
+                    bool toIntConvResult = Int32.TryParse(value, out int valueInt);
+                    if (toIntConvResult && valueInt>-1)
+                        SetComboBoxitem(kontrolkaComboBox, valueInt);
+                    else if (!toIntConvResult && value!="-1")
+                    {
+                        foreach (var item in kontrolkaComboBox.Items)
+                        {
+                            if (item is DictionaryListItem && (item as DictionaryListItem).IdentityKey == value)
+                            { 
+                                kontrolkaComboBox.SelectedItem = item;
+                                break;
+                            }
+                        }
+                    }
+                }
                 else if (kontrolka is CheckedListBox)
                 {
                     var kontrolkaCheckedListBox = kontrolka as CheckedListBox;                    
@@ -749,6 +785,32 @@ namespace MojeFunkcjeUniwersalneNameSpace
                     }
 
                 }
+            }
+        }
+
+        /// <summary>
+        /// Ustatiwa wartość pola wyszukiwania typu ComboBox
+        /// </summary>
+        /// <param name="kontrolkaComboBox">Kontrolka formularza znajdź</param>
+        /// <param name="value">Jeżeli wartość odczytana -1, to nie przypisuje</param>
+        private void SetComboBoxitem(ComboBox kontrolkaComboBox, int value)
+        {
+            if (value < 0)
+                return;
+
+            for(int i=0;i<kontrolkaComboBox.Items.Count;i++)
+            {
+                if (kontrolkaComboBox.Items[i] is DictionaryListItem)
+                {
+                    var item = kontrolkaComboBox.Items[i] as DictionaryListItem;
+                    if (item.Identity==value)
+                    {
+                        kontrolkaComboBox.SelectedIndex = i;
+                        break;
+                    }
+
+                }
+
             }
         }
 

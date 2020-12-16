@@ -373,7 +373,7 @@ namespace MojeFunkcjeUniwersalneNameSpace
         /// <param name="e"></param>
         private void ActionKeyPressCharValue(object sender, KeyPressEventArgs e)
         {
-            if (!((e.KeyChar > 65 && e.KeyChar < 90) || (e.KeyChar > 97 && e.KeyChar < 122)))
+            if (!((e.KeyChar >= 65 && e.KeyChar <= 90) || (e.KeyChar >= 97 && e.KeyChar <= 122)))
             {
                 e.KeyChar = Convert.ToChar(Keys.Back);
             }

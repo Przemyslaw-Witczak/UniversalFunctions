@@ -100,7 +100,12 @@ namespace DataBaseUniversalFunctions.Abstract
                 if (newValue != null)
                 {
                     if (searchField.FieldType == typeof(int))
-                        searchField.SetValue(this, Convert.ToInt32(newValue));
+                    {
+                        if (newValue.GetType() == typeof(DictionaryListItem) && searchField.FieldType == typeof(int))
+                            searchField.SetValue(this, (newValue as DictionaryListItem).Identity);
+                        else
+                            searchField.SetValue(this, Convert.ToInt32(newValue));
+                    }                                            
                     else
                         searchField.SetValue(this, newValue);
                 }
