@@ -36,6 +36,7 @@
       <HintPath>..\..\..\Zlotnik\packages\AIM.1.0.3\lib\AegisImplicitMail.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Security" />
