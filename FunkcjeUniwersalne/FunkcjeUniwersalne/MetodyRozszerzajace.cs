@@ -229,7 +229,8 @@ namespace MojeFunkcjeRozszerzajace
             SafeNativeMethods.SetParent(formHandle, destination.Handle);
             RefreshSizeCppForm(formHandle, destination);
             SetWindowParameters(formHandle, destination);
-            (forma as MdiChildFormBase).MenuStripPointer.Visible = false;
+            if (forma is MdiChildFormBase)
+                (forma as MdiChildFormBase).MenuStripPointer.Visible = false;
             forma.Show();
             FormExtensions.RefreshSizeCppForm(forma.Handle, destination);
             destination.Focus();
