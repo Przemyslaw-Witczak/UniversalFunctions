@@ -86,7 +86,7 @@ namespace MojeFunkcjeUniwersalneNameSpace.Logger
         /// </summary>
         /// <param name="Komunikat">Treść komunikatu</param>
         /// <param name="WyslijMail">Czy wysyłka maila?</param>
-        public void Loguj(string Komunikat, bool WyslijMail)
+        public void Loguj(string Komunikat, bool WyslijMail=false)
         {
             LogPositions log = new LogPositions(Komunikat);
 
@@ -123,20 +123,15 @@ namespace MojeFunkcjeUniwersalneNameSpace.Logger
             }
             catch (Exception e)
             {
+#if DEBUG
+                Console.WriteLine($"Błąd logowania '{Komunikat}'. {e}");
+#endif
                 AddEventLog("Błąd podczas zapisywania do kolejki " + e.ToString());
             }
 
         }
-
-        /// <summary>
-        /// Dodaj log
-        /// </summary>
-        /// <param name="Komunikat"></param>
-        public void Loguj(string Komunikat)
-        {
-            Loguj(Komunikat, true);
-        }
-        #endregion
+       
+#endregion
 
         /// <summary>
         /// Metoda wywoływana podczas zdarzenia dodania logów do kolejki
@@ -213,7 +208,7 @@ namespace MojeFunkcjeUniwersalneNameSpace.Logger
 
         }
 
-        #region IDisposable Support
+#region IDisposable Support
         private bool disposedValue; // To detect redundant calls
 
         void Dispose(bool disposing)
@@ -238,6 +233,6 @@ namespace MojeFunkcjeUniwersalneNameSpace.Logger
             
             // GC.SuppressFinalize(this);
         }
-        #endregion
+#endregion
     }
 }
