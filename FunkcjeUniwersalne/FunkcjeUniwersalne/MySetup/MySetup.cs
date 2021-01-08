@@ -540,8 +540,11 @@ namespace MojeFunkcjeUniwersalneNameSpace
                 {
                     AParentForm.Left = Convert.ToInt32(GetParam(AParentForm.Name, "Left", AParentForm.Left.ToString()));
                     AParentForm.Top = Convert.ToInt32(GetParam(AParentForm.Name, "Top", AParentForm.Top.ToString()));
-                    AParentForm.Width = Convert.ToInt32(GetParam(AParentForm.Name, "Width", AParentForm.Width.ToString()));
-                    AParentForm.Height = Convert.ToInt32(GetParam(AParentForm.Name, "Height", AParentForm.Height.ToString()));
+                    if (AParentForm.FormBorderStyle == FormBorderStyle.Sizable || AParentForm.FormBorderStyle == FormBorderStyle.SizableToolWindow)
+                    {
+                        AParentForm.Width = Convert.ToInt32(GetParam(AParentForm.Name, "Width", AParentForm.Width.ToString()));
+                        AParentForm.Height = Convert.ToInt32(GetParam(AParentForm.Name, "Height", AParentForm.Height.ToString()));
+                    }
                 }
                 catch
                 {
@@ -590,8 +593,11 @@ namespace MojeFunkcjeUniwersalneNameSpace
             else
             {
                 SetParam(AParentForm.Name, "WindowState", "Normal");
-                SetParam(AParentForm.Name, "Width", AParentForm.Width.ToString());
-                SetParam(AParentForm.Name, "Height", AParentForm.Height.ToString());
+                if (AParentForm.FormBorderStyle == FormBorderStyle.Sizable || AParentForm.FormBorderStyle == FormBorderStyle.SizableToolWindow)
+                {
+                    SetParam(AParentForm.Name, "Width", AParentForm.Width.ToString());
+                    SetParam(AParentForm.Name, "Height", AParentForm.Height.ToString());
+                }
                 SetParam(AParentForm.Name, "Left", AParentForm.Left.ToString());
                 SetParam(AParentForm.Name, "Top", AParentForm.Top.ToString());
             }
