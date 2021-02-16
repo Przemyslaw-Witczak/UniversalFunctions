@@ -146,7 +146,7 @@ namespace DataBaseUniversalFunctions.Abstract
             {
                 var fieldValue = GetControlValue(control, out _, out string stringValue);                
                 if (!string.IsNullOrEmpty(stringValue))
-                    query.AppendLine($"{stringValue}; "); 
+                    query.Append($"{stringValue}; "); 
             }
             if (query.Length == 0)
                 return "Wszystko";
