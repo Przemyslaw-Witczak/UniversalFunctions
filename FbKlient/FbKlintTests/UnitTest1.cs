@@ -29,7 +29,7 @@ namespace FbKlintTests
             klient.ConfigureDataBase(konfig);
         }
         [TestMethod]
-        public void TestMethod1()
+        public void MultipleInserts()
         {
             ConfigureConnection();
             using (FbKlient client = new FbKlient())
@@ -43,6 +43,45 @@ namespace FbKlintTests
                     client.ParamByName("komunikat", FbDbType.VarChar).Value = komunikat;
                 }
                 client.ExecuteNonQuery();
+            }
+        }
+
+        [TestMethod]
+        public void DeleteInserts()
+        {
+            ConfigureConnection();
+            using (FbKlient client = new FbKlient())
+            {                
+                client.AddSQL("delete from tabela_insertow");                                    
+                client.ExecuteNonQuery();
+            }
+        }
+
+        [TestMethod]
+        public void MultipleProcedureExecutesWithReturningValues()
+        {
+            ConfigureConnection();
+            using (FbKlient client = new FbKlient())
+            {
+                for (int queryId = 0; queryId < 100; queryId++)
+                {
+                    client.QueryId = queryId;
+                    client.AddSQL("SELECT * FROM PROC_RETURN_STRING(:komunikat_we)");
+                    var komunikat = $"Wykonuję procedurę w queryId={queryId}";                    
+                    client.ParamByName("komunikat_we", FbDbType.VarChar).Value = komunikat;
+                }
+                client.Execute();
+                
+                for (int responseId = 0; responseId < 100; responseId++)
+                {
+                    client.ResponseId = responseId;
+                    while(client.Read())
+                    {
+                        var odpowiedzZBazyDanych = client.GetString("wyjscie");
+                        var dataOdpowiedzi = client.GetDateTime("data_wy");
+                        Console.WriteLine($"[{dataOdpowiedzi}]: Odpowiedź z bazy danych :{odpowiedzZBazyDanych}");
+                    }
+                }
             }
         }
     }
