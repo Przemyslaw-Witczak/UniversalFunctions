@@ -208,7 +208,7 @@ namespace DataBaseUniversalFunctions.Abstract
                 newValue = (control as TextBox).Text.Trim().ToUpper();
                 displayValue = $"{attribute.QueryDisplayLabel}: {newValue}";
             }
-            else if (control is DateTimePicker && (control as DateTimePicker).Checked)
+            else if (control is DateTimePicker && (((control as DateTimePicker).ShowCheckBox && (control as DateTimePicker).Checked) || !(control as DateTimePicker).ShowCheckBox))
             {
                 newValue = (control as DateTimePicker).Value;                
                 displayValue = $"{attribute.QueryDisplayLabel}: {(control as DateTimePicker).Value.ToShortDateString()}";
