@@ -19,9 +19,9 @@
                 <ColumnDefinition></ColumnDefinition>
                 <ColumnDefinition></ColumnDefinition>
             </Grid.ColumnDefinitions>
-            <Button Grid.Column="0" Content="TAK" Command="{Binding ReturnTrue}" Visibility="{Binding BtnYesNoVisible}"></Button>
-            <Button Grid.Column="2" Content="NIE" Command="{Binding ReturnFalse}" Visibility="{Binding BtnYesNoVisible}"></Button>
-            <Button Grid.Column="1" Content="OK" Command="{Binding ReturnTrue}" Visibility="{Binding BtnOkVisible}"></Button>
+            <Button Grid.Column="0" Content="TAK" Command="{Binding ReturnTrue}" Visibility="{Binding BtnYesNoVisible}" IsDefault="True"></Button>
+            <Button Grid.Column="2" Content="NIE" Command="{Binding ReturnFalse}" Visibility="{Binding BtnYesNoVisible}" IsCancel="True"></Button>
+            <Button Grid.Column="1" Content="OK" Command="{Binding ReturnTrue}" Visibility="{Binding BtnOkVisible}" IsDefault="True"></Button>
         </Grid>
     </Grid>
     

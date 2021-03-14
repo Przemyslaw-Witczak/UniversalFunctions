@@ -26,9 +26,9 @@ namespace MVVMClasses
             InitializeComponent();            
         }
 
-        public MvvmMessageBoxModel ViewModel
+        public MvvmMessageBoxViewModel ViewModel
         {
-            get { return (MvvmMessageBoxModel) this.DataContext; }
+            get { return (MvvmMessageBoxViewModel) this.DataContext; }
             set
             {
                 DataContext = value;

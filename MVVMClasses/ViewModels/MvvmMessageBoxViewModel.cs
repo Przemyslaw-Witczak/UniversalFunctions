@@ -21,12 +21,12 @@ namespace MVVMClasses.Models
     /// <summary>
     /// Model danych dla okna komunikatu TAK/NIE/OK
     /// </summary>
-    public class MvvmMessageBoxModel : ModelBase
+    public class MvvmMessageBoxViewModel : ModelBase
     {
         /// <summary>
         /// Konstruktor modelu
         /// </summary>
-        public MvvmMessageBoxModel()
+        public MvvmMessageBoxViewModel()
         {
             _messageBoxType = MvvmMessageBoxTypeEnum.Confirmation;  
             KomunikatLinia1 = String.Empty;

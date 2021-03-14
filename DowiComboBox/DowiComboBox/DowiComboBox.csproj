@@ -57,10 +57,6 @@
     <Service Include="{94E38DFF-614B-4cbd-B67C-F211BB35CE8B}" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\FunkcjeUniwersalne\FunkcjeUniwersalne\FunkcjeUniwersalne.csproj">
-      <Project>{22D63D77-4EF4-404D-8CBE-D5E6751A3CAB}</Project>
-      <Name>FunkcjeUniwersalne</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\IDowiComponent\IDowiComponent.csproj">
       <Project>{63641b52-c9f0-4973-87b3-cfee72a1658a}</Project>
       <Name>IDowiComponent</Name>

@@ -49,14 +49,22 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ModelBase.cs" />
-    <Compile Include="Models\MvvmMessageBoxModel.cs" />
+    <Compile Include="ViewModels\MvvmMessageBoxViewModel.cs" />
     <Compile Include="MvvmCommand.cs" />
+    <Compile Include="ViewModels\ViewModelBase.cs" />
+    <Compile Include="Views\CommitCancelView.xaml.cs">
+      <DependentUpon>CommitCancelView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\MvvmMessageBox.xaml.cs">
       <DependentUpon>MvvmMessageBox.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Views\CommitCancelView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\MvvmMessageBox.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

@@ -4,9 +4,13 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Windows;
+using FunkcjeUniwersalne.Wpf;
 using System.Windows.Forms;
 using System.Xml;
 using System.Xml.Serialization;
+//using Control = System.Windows.Forms.Control;
+//using WpfTextBox = System.Windows.Controls.TextBox;
 
 namespace MojeFunkcjeUniwersalneNameSpace
 {
@@ -48,6 +52,8 @@ namespace MojeFunkcjeUniwersalneNameSpace
         /// Lista kontrolek, generowana automatycznie, dla metod wewnętrznych w celu zapisu i odczytu wartosci
         /// </summary>
         private List<Control> ListaKontrolek;
+
+        private List<System.Windows.Controls.Control> ListaKontrolekWpf;
         #endregion
         #region Konstruktor i destruktor
 
@@ -98,7 +104,8 @@ namespace MojeFunkcjeUniwersalneNameSpace
             Konfiguracja = new List<cKonfiguracja>();
             GetParamFromDatabase();
             ParentForm = null;
-            ListaKontrolek = new List<Control>();           
+            ListaKontrolek = new List<Control>();
+            ListaKontrolekWpf = new List<System.Windows.Controls.Control>();
         }
 
         /// <summary>
@@ -131,6 +138,14 @@ namespace MojeFunkcjeUniwersalneNameSpace
             ParentForm = AParentForm;
         }
 
+        /// <summary>
+        /// Metoda wyszukuje komponenty WPF
+        /// </summary>
+        /// <param name="depObj"></param>
+        private void ZnajdzKomponentyWpf(Window depObj)
+        {
+            ListaKontrolekWpf = (depObj as DependencyObject).GetAllControlsRecursive();
+        }
         /// <summary>
         /// Metoda przeszukująca kontener
         /// </summary>
