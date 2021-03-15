@@ -1,5 +1,4 @@
-﻿using MojeFunkcjeUniwersalneNameSpace;
-using MojeFunkcjeUniwersalneNameSpace.Forms;
+﻿using MojeFunkcjeUniwersalneNameSpace.Forms;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -7,7 +6,7 @@ using System.Globalization;
 using System.Linq;
 using System.Windows.Forms;
 
-namespace MojeFunkcjeRozszerzajace
+namespace MojeFunkcjeUniwersalneNameSpace.Extensions
 {
 
     public static class StringExtensions
@@ -39,7 +38,7 @@ namespace MojeFunkcjeRozszerzajace
 
             try
             {
-                
+
 
                 return value.Substring(startIndex, length);
 
@@ -57,7 +56,7 @@ namespace MojeFunkcjeRozszerzajace
         public static string ToString2(this byte[] bytes)
         {
             char[] chars = new char[bytes.Length / sizeof(char)];
-            System.Buffer.BlockCopy(bytes, 0, chars, 0, bytes.Length);
+            Buffer.BlockCopy(bytes, 0, chars, 0, bytes.Length);
             return new string(chars);
         }
 
@@ -71,7 +70,7 @@ namespace MojeFunkcjeRozszerzajace
             //strValue = String.Format("{0:#,#.000}",  value);
             string decimalSeparator = CultureInfo.CurrentUICulture.NumberFormat.NumberDecimalSeparator; ;
             //strValue = string.Format("{0:#,0.000}", value);
-            strValue = string.Format("{0:#"+ decimalSeparator + "0.000}", value);
+            strValue = string.Format("{0:#" + decimalSeparator + "0.000}", value);
             return strValue;
         }
 
@@ -96,7 +95,7 @@ namespace MojeFunkcjeRozszerzajace
             }
             else if (value / 1024 < 1024)
             {
-                formatedValue = $"{(value / 1024)} kB";
+                formatedValue = $"{value / 1024} kB";
             }
             else if (value / 1024 / 1024 < 1024)
             {
@@ -144,7 +143,7 @@ namespace MojeFunkcjeRozszerzajace
     /// </summary>
     public static class FormExtensions
     {
-       
+
         /// <summary>
         /// Wyświetla okno jako MDI Child zmaksymalizowane
         /// </summary>
@@ -161,11 +160,11 @@ namespace MojeFunkcjeRozszerzajace
                 forma.MdiParent = parentForm.MdiParent;
             }
 
-            forma.Show();        
+            forma.Show();
             forma.WindowState = FormWindowState.Maximized;
         }
 
-        public static List<Control>GetAllControlsRecursive(this Form form)
+        public static List<Control> GetAllControlsRecursive(this Form form)
         {
             var outputList = new List<Control>();
             outputList.AddRange(GetAllControls(form.Controls));
@@ -233,7 +232,7 @@ namespace MojeFunkcjeRozszerzajace
             if (forma is MdiChildFormBase)
                 (forma as MdiChildFormBase).MenuStripPointer.Visible = false;
             forma.Show();
-            FormExtensions.RefreshSizeCppForm(forma.Handle, destination);
+            RefreshSizeCppForm(forma.Handle, destination);
             destination.Focus();
         }
 
@@ -257,8 +256,8 @@ namespace MojeFunkcjeRozszerzajace
         /// <param name="panel">Kontrolka typu panel w której wyświetlane jest okno C++</param>
         private static unsafe void SetWindowParameters(IntPtr cppFormHandle, Panel panel)
         {
-            const Int32 GWL_EXSTYLE = 0x14;
-            const Int32 WS_EX_CONTROLPARENT = 0x00010000;
+            const int GWL_EXSTYLE = 0x14;
+            const int WS_EX_CONTROLPARENT = 0x00010000;
 
             const int GWL_STYLE = -16;
             const uint WS_POPUP = 0x80000000;
@@ -271,7 +270,7 @@ namespace MojeFunkcjeRozszerzajace
                 throw new Exception("Error in SetWindowParameters");
             }
 
-            style = (style & ~WS_POPUP) | WS_CHILD | WS_TABSTOP;
+            style = style & ~WS_POPUP | WS_CHILD | WS_TABSTOP;
             SafeNativeMethods.SetWindowLong(cppFormHandle, GWL_STYLE, (int)style);
 
             //Nie dokońca wiadomo po co to
@@ -294,10 +293,10 @@ namespace MojeFunkcjeRozszerzajace
         /// <param name="dataGridView"></param>
         public static void ScrollGrid(this DataGridView dataGridView)
         {
-            int halfWay = (dataGridView.DisplayedRowCount(false) / 2);
-            if (dataGridView.SelectedRows.Count>0 &&                 
+            int halfWay = dataGridView.DisplayedRowCount(false) / 2;
+            if (dataGridView.SelectedRows.Count > 0 &&
                 (dataGridView.FirstDisplayedScrollingRowIndex + halfWay > dataGridView.SelectedRows[0].Index ||
-                (dataGridView.FirstDisplayedScrollingRowIndex + dataGridView.DisplayedRowCount(false) - halfWay) <= dataGridView.SelectedRows[0].Index))
+                dataGridView.FirstDisplayedScrollingRowIndex + dataGridView.DisplayedRowCount(false) - halfWay <= dataGridView.SelectedRows[0].Index))
             {
                 int targetRow = dataGridView.SelectedRows[0].Index;
 
@@ -308,7 +307,7 @@ namespace MojeFunkcjeRozszerzajace
         }
 
 
-        public static DataGridViewRow AddRow(this DataGridViewRowCollection dataGridViewRowCollection, params string [] columnsValues)
+        public static DataGridViewRow AddRow(this DataGridViewRowCollection dataGridViewRowCollection, params string[] columnsValues)
         {
             int rowIndex = -1;
             rowIndex = dataGridViewRowCollection.Add(columnsValues);
@@ -391,7 +390,7 @@ namespace MojeFunkcjeRozszerzajace
             {
                 collection[key].Value = value.Trim();
             }
-        }        
+        }
     }
 
 }

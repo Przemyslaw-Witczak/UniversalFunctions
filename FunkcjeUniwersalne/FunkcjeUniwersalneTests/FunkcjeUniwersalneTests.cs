@@ -10,7 +10,7 @@ namespace MojeFunkcjeUniwersalneNameSpace.Tests
         public void FormatujDecimalSeparatorTest()
         {
             string finalDecimalValue = $"1{System.Globalization.CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator}23";
-            Assert.AreEqual(finalDecimalValue, MojeFunkcjeUniwersalneNameSpace.FunkcjeUniwersalne.Instance.FormatujDecimalSeparator("1.23"));
+            Assert.AreEqual(finalDecimalValue, FunkcjeUniwersalne.Instance.FormatujDecimalSeparator("1.23"));
 
             Assert.AreEqual(finalDecimalValue, FunkcjeUniwersalne.Instance.FormatujDecimalSeparator("1,23"));
         }

@@ -8,7 +8,7 @@ using System.Text;
 using System.Windows.Forms;
 using System.IO;
 using System.Configuration;
-using MojeFunkcjeRozszerzajace;
+using MojeFunkcjeUniwersalneNameSpace.Extensions;
 
 namespace FbKlientNameSpace
 {

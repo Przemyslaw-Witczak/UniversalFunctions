@@ -9,11 +9,12 @@ using System.Text;
 using System.Windows.Forms;
 
 namespace MojeFunkcjeUniwersalneNameSpace
+
 {
     public sealed class FunkcjeUniwersalne
     {
         private static volatile FunkcjeUniwersalne instance;
-        private static object syncRoot = new Object();
+        private static object syncRoot = new object();
         private readonly DataProtectionScope scope = DataProtectionScope.CurrentUser;
 
         private FunkcjeUniwersalne()
@@ -91,7 +92,7 @@ namespace MojeFunkcjeUniwersalneNameSpace
 
             try
             {
-                using (System.IO.StreamWriter file = new System.IO.StreamWriter(PathToTmpFile/*, false, Encoding.ASCII*/))
+                using (StreamWriter file = new StreamWriter(PathToTmpFile/*, false, Encoding.ASCII*/))
                 {
                     file.Write(DataGridtoHTML(DG));
                 }
@@ -141,8 +142,8 @@ namespace MojeFunkcjeUniwersalneNameSpace
         /// <param name="inputString">Łańcuch znaków wejściowy</param>
         /// <returns>Wyjściowy opakowany łańcuch znaków</returns>
         private string quotString(string inputString)
-        {            
-            if (!String.IsNullOrEmpty(inputString))
+        {
+            if (!string.IsNullOrEmpty(inputString))
             {
                 inputString = System.Text.RegularExpressions.Regex.Replace(inputString, @"\r\n?|\n", "|");
             }
@@ -169,7 +170,7 @@ namespace MojeFunkcjeUniwersalneNameSpace
                     SaveDialog.FileName = "";
                     if (SaveDialog.ShowDialog() == DialogResult.OK)
                     {
-                        using (System.IO.StreamWriter file = new System.IO.StreamWriter(SaveDialog.FileName, false, Encoding.Default))
+                        using (StreamWriter file = new StreamWriter(SaveDialog.FileName, false, Encoding.Default))
                         {
                             file.Write(DataGridtoCSV(DG));
                         }
@@ -177,7 +178,7 @@ namespace MojeFunkcjeUniwersalneNameSpace
                     MessageBox.Show("Zakończono eksport do pliku");
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 MessageBox.Show($"Eksport się nie powiódł: {ex}");
             }
@@ -251,7 +252,7 @@ namespace MojeFunkcjeUniwersalneNameSpace
         public static byte[] GetBytes(string str)
         {
             byte[] bytes = new byte[str.Length * sizeof(char)];
-            System.Buffer.BlockCopy(str.ToCharArray(), 0, bytes, 0, bytes.Length);
+            Buffer.BlockCopy(str.ToCharArray(), 0, bytes, 0, bytes.Length);
             return bytes;
         }
 
@@ -259,13 +260,13 @@ namespace MojeFunkcjeUniwersalneNameSpace
         {
             int tableSize = bytes.Length / sizeof(char);
             char[] chars = new char[tableSize];
-            System.Buffer.BlockCopy(bytes, 0, chars, 0, tableSize);
+            Buffer.BlockCopy(bytes, 0, chars, 0, tableSize);
             return new string(chars);
         }
 
         public string ToHex(byte[] buff, int off, int len)
         {
-            System.Text.StringBuilder sb = new System.Text.StringBuilder(buff.Length * 3);
+            StringBuilder sb = new StringBuilder(buff.Length * 3);
             sb.Append(buff[off].ToString("X2"));
             for (int i = 1; i < len; i++)
             {
@@ -343,13 +344,13 @@ namespace MojeFunkcjeUniwersalneNameSpace
 
             for (int i = 0; i < currentString.Length; i++)
             {
-                charCode = (int)workString[i];
+                charCode = workString[i];
 
-                if ((charCode >= 48 && charCode <= 57) /*0 - 9*/
-                                                       //|| (Kod >= 43 && Kod <= 45) /* + , -*/
+                if (charCode >= 48 && charCode <= 57 /*0 - 9*/
+                    //|| (Kod >= 43 && Kod <= 45) /* + , -*/
                     || charCode == 43 || charCode == 45
                     //|| (*WorkString.c_str())==ThousandSeparator //bez tego, bo problem przy konwersji na currency
-                    || charCode == System.Globalization.CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator.ToCharArray(0, 1)[0]                    
+                    || charCode == System.Globalization.CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator.ToCharArray(0, 1)[0]
                 )
                 {
                     outputString += workString[i];
@@ -370,7 +371,7 @@ namespace MojeFunkcjeUniwersalneNameSpace
                 outputString = "0";
             }
 
-            return (Convert.ToDecimal(outputString));
+            return Convert.ToDecimal(outputString);
         }
 
         public string FormatujDecimalSeparator(string currentString)
@@ -463,7 +464,7 @@ namespace MojeFunkcjeUniwersalneNameSpace
         {
             try
             {
-                SHA256 mySHA256 = SHA256Managed.Create();
+                SHA256 mySHA256 = SHA256.Create();
                 byte[] hashValue;
                 fromStream.Position = 0;
                 hashValue = mySHA256.ComputeHash(fromStream);
@@ -550,7 +551,7 @@ namespace MojeFunkcjeUniwersalneNameSpace
 
             //encrypt data
             var data = Encoding.Unicode.GetBytes(plainText);
-            byte[] encrypted = System.Security.Cryptography.ProtectedData.Protect(data, null, scope);
+            byte[] encrypted = ProtectedData.Protect(data, null, scope);
 
             //return as base64 string
             return Convert.ToBase64String(encrypted);
@@ -600,8 +601,8 @@ namespace MojeFunkcjeUniwersalneNameSpace
                 throw new Exception("No picture to resize!!");
             }
             // Figure out the ratio
-            double ratioX = (double)width / (double)image.Width;
-            double ratioY = (double)height / (double)image.Height;
+            double ratioX = width / (double)image.Width;
+            double ratioY = height / (double)image.Height;
             // use whichever multiplier is smaller
             double ratio = ratioX < ratioY ? ratioX : ratioY;
 

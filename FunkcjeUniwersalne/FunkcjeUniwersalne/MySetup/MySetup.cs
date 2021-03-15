@@ -1,16 +1,16 @@
 ﻿using DataBaseUniversalFunctions.Model;
-using MojeFunkcjeRozszerzajace;
+using MojeFunkcjeUniwersalneNameSpace.Extensions;
+using MojeFunkcjeUniwersalneNameSpace.Wpf;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Windows;
-using FunkcjeUniwersalne.Wpf;
 using System.Windows.Forms;
 using System.Xml;
 using System.Xml.Serialization;
-//using Control = System.Windows.Forms.Control;
-//using WpfTextBox = System.Windows.Controls.TextBox;
+using WpfControl = System.Windows.Controls.Control;
+using WpfTextBox = System.Windows.Controls.TextBox;
 
 namespace MojeFunkcjeUniwersalneNameSpace
 {
@@ -53,7 +53,7 @@ namespace MojeFunkcjeUniwersalneNameSpace
         /// </summary>
         private List<Control> ListaKontrolek;
 
-        private List<System.Windows.Controls.Control> ListaKontrolekWpf;
+        private List<WpfControl> ListaKontrolekWpf;
         #endregion
         #region Konstruktor i destruktor
 
@@ -142,7 +142,7 @@ namespace MojeFunkcjeUniwersalneNameSpace
         /// Metoda wyszukuje komponenty WPF
         /// </summary>
         /// <param name="depObj"></param>
-        private void ZnajdzKomponentyWpf(Window depObj)
+        private void ZnajdzKomponenty(Window depObj)
         {
             ListaKontrolekWpf = (depObj as DependencyObject).GetAllControlsRecursive();
         }
@@ -809,6 +809,89 @@ namespace MojeFunkcjeUniwersalneNameSpace
             }
         }
 
+        /// <summary>
+        /// Inicjalizacja formularza znadź w WPF
+        /// </summary>
+        /// <param name="window"></param>
+        public void LoadSearchFields(Window window)
+        {
+            ZnajdzKomponenty(window);
+            foreach (WpfControl kontrolka in ListaKontrolekWpf)
+            {
+                string parentName = (kontrolka.Parent as System.Windows.Controls.Control)?.Name;
+                if (kontrolka is WpfTextBox)
+                {
+                    if (!((WpfTextBox)kontrolka).IsReadOnly)
+                        ((WpfTextBox)kontrolka).Text = GetParam(parentName, ((WpfTextBox)kontrolka).Name, ((WpfTextBox)kontrolka).Text);
+                }
+                //else if (kontrolka is CheckBox)
+                //{
+                //    ((CheckBox)kontrolka).Checked = Convert.ToBoolean(GetParam(name, ((CheckBox)kontrolka).Name, ((CheckBox)kontrolka).Checked.ToString()));
+                //}
+                //else if (kontrolka is RadioButton)
+                //{
+                //    ((RadioButton)kontrolka).Checked = Convert.ToBoolean(GetParam(name, ((RadioButton)kontrolka).Name, ((RadioButton)kontrolka).Checked.ToString()));
+                //}
+                //else if (kontrolka is DateTimePicker)
+                //{
+                //    if (GetParam(name, ((DateTimePicker)kontrolka).Name, "").Length > 0)
+                //    {
+                //        ((DateTimePicker)kontrolka).Value = Convert.ToDateTime(GetParam(name, ((DateTimePicker)kontrolka).Name, ((DateTimePicker)kontrolka).Value.ToString()));
+                //    }
+                //}
+                //else if (kontrolka is ComboBox)
+                //{
+                //    var kontrolkaComboBox = kontrolka as ComboBox;
+                //    var parentControlName = GetControlParentName(kontrolkaComboBox.Parent);
+                //    var value = GetParam(parentControlName, kontrolkaComboBox.Name, "-1");
+                //    bool toIntConvResult = Int32.TryParse(value, out int valueInt);
+                //    if (toIntConvResult && valueInt > -1)
+                //        SetComboBoxitem(kontrolkaComboBox, valueInt);
+                //    else if (!toIntConvResult && value != "-1")
+                //    {
+                //        foreach (var item in kontrolkaComboBox.Items)
+                //        {
+                //            if (item is DictionaryListItem && (item as DictionaryListItem).IdentityKey == value)
+                //            {
+                //                kontrolkaComboBox.SelectedItem = item;
+                //                break;
+                //            }
+                //        }
+                //    }
+                //}
+                //else if (kontrolka is CheckedListBox)
+                //{
+                //    var kontrolkaCheckedListBox = kontrolka as CheckedListBox;
+                //    var parentControlName = GetControlParentName(kontrolkaCheckedListBox.Parent);
+                //    int count = Convert.ToInt32(GetParam(parentControlName, kontrolkaCheckedListBox.Name + "_Count", "0"));
+                //    for (int i = 0; i < count; i++)
+                //    {
+                //        var value = GetParam(parentControlName, kontrolkaCheckedListBox.Name + "_" + i.ToString(), "-1");
+                //        Setlistboxitem(kontrolkaCheckedListBox, value);
+                //    }
+
+                //}
+            }
+        }
+
+        /// <summary>
+        /// Zapisz parametry wyszukiwania okna WPF
+        /// </summary>
+        /// <param name="window"></param>
+        public void SaveSearchFields(Window window)
+        {
+            ZnajdzKomponenty(window);
+            foreach (WpfControl kontrolka in ListaKontrolekWpf)
+            {
+                string parentName = (kontrolka.Parent as WpfControl)?.Name;
+                if (kontrolka is WpfTextBox)
+                {
+                    if (!((WpfTextBox)kontrolka).IsReadOnly)                        
+                            SetParam(parentName, ((WpfTextBox)kontrolka).Name, ((WpfTextBox)kontrolka).Text);                    
+                }
+
+            }
+        }
         /// <summary>
         /// Ustatiwa wartość pola wyszukiwania typu ComboBox
         /// </summary>

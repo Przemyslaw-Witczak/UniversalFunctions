@@ -3,7 +3,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 
-namespace FunkcjeUniwersalne.Wpf
+namespace MojeFunkcjeUniwersalneNameSpace.Wpf
 {
     /// <summary>
     /// Metody rozszerzające okna WPF

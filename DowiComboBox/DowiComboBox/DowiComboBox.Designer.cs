@@ -1,6 +1,6 @@
 ﻿using IDowiComponentNamespace;
 using IInputValidiatorNamespace;
-using MojeFunkcjeRozszerzajace;
+using MojeFunkcjeUniwersalneNameSpace.Extensions;
 using System;
 using System.Diagnostics;
 using System.Windows.Forms;
