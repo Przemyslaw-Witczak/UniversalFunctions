@@ -111,6 +111,10 @@
       <Project>{043458c6-44e6-475c-aa29-273f2b3967bf}</Project>
       <Name>IInputValidiator</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\MVVMClasses\MVVMClasses.csproj">
+      <Project>{2A8EA2CF-3CFE-4778-89D3-A03E389E5912}</Project>
+      <Name>MVVMClasses</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

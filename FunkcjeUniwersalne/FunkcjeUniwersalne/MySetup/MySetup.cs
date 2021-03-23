@@ -1,16 +1,21 @@
-﻿using DataBaseUniversalFunctions.Model;
+﻿using DataBaseUniversalFunctions;
+using DataBaseUniversalFunctions.Model;
 using MojeFunkcjeUniwersalneNameSpace.Extensions;
 using MojeFunkcjeUniwersalneNameSpace.Wpf;
+using MVVMClasses;
+using MVVMClasses.ViewModels;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
+using System.Reflection;
 using System.Windows;
+using System.Windows.Documents;
 using System.Windows.Forms;
 using System.Xml;
 using System.Xml.Serialization;
-using WpfControl = System.Windows.Controls.Control;
-using WpfTextBox = System.Windows.Controls.TextBox;
 
 namespace MojeFunkcjeUniwersalneNameSpace
 {
@@ -52,8 +57,7 @@ namespace MojeFunkcjeUniwersalneNameSpace
         /// Lista kontrolek, generowana automatycznie, dla metod wewnętrznych w celu zapisu i odczytu wartosci
         /// </summary>
         private List<Control> ListaKontrolek;
-
-        private List<WpfControl> ListaKontrolekWpf;
+        
         #endregion
         #region Konstruktor i destruktor
 
@@ -104,8 +108,7 @@ namespace MojeFunkcjeUniwersalneNameSpace
             Konfiguracja = new List<cKonfiguracja>();
             GetParamFromDatabase();
             ParentForm = null;
-            ListaKontrolek = new List<Control>();
-            ListaKontrolekWpf = new List<System.Windows.Controls.Control>();
+            ListaKontrolek = new List<Control>();            
         }
 
         /// <summary>
@@ -137,15 +140,7 @@ namespace MojeFunkcjeUniwersalneNameSpace
             }
             ParentForm = AParentForm;
         }
-
-        /// <summary>
-        /// Metoda wyszukuje komponenty WPF
-        /// </summary>
-        /// <param name="depObj"></param>
-        private void ZnajdzKomponenty(Window depObj)
-        {
-            ListaKontrolekWpf = (depObj as DependencyObject).GetAllControlsRecursive();
-        }
+        
         /// <summary>
         /// Metoda przeszukująca kontener
         /// </summary>
@@ -810,86 +805,120 @@ namespace MojeFunkcjeUniwersalneNameSpace
         }
 
         /// <summary>
+        /// Zwraca wszystkie właściwości modelu dziedziczącego bo bazowym modelu typu ModelBase, bedącego w DataContexcie okna
+        /// </summary>
+        /// <param name="window">Okno z którego dataContextu pobrać filrty jako ModelBase</param>
+        /// <returns></returns>
+        public PropertyInfo[] GetModelProperties(Window window, out ModelBase modelBase)
+        {            
+            var windowName = nameof(window);
+            Debug.WriteLine($"Odczyt parametrów filtrów dataContext okna {windowName}");
+            var viewModel = window.DataContext;
+            var dataContextType = viewModel.GetType();
+            var allProperties = dataContextType.GetProperties();
+            var modelBaseProperty = allProperties.Where(prop => prop.PropertyType.IsSubclassOf(typeof(ModelBase)))?.FirstOrDefault();
+            modelBase = (ModelBase)modelBaseProperty?.GetValue(viewModel);
+            allProperties = modelBase?.GetType().GetProperties();
+            return allProperties;
+        }
+
+        /// <summary>
         /// Inicjalizacja formularza znadź w WPF
         /// </summary>
         /// <param name="window"></param>
         public void LoadSearchFields(Window window)
         {
-            ZnajdzKomponenty(window);
-            foreach (WpfControl kontrolka in ListaKontrolekWpf)
+            var allProperties = GetModelProperties(window, out ModelBase modelBase);
+            if (allProperties == null)
+                return;
+            foreach (var property in allProperties)
             {
-                string parentName = (kontrolka.Parent as System.Windows.Controls.Control)?.Name;
-                if (kontrolka is WpfTextBox)
+                var propertyName = property.Name;
+                var savedStringValue = GetParam(nameof(window), propertyName, "");
+                Debug.WriteLine($"{property}='{savedStringValue}'");
+                if (!string.IsNullOrEmpty(savedStringValue))
                 {
-                    if (!((WpfTextBox)kontrolka).IsReadOnly)
-                        ((WpfTextBox)kontrolka).Text = GetParam(parentName, ((WpfTextBox)kontrolka).Name, ((WpfTextBox)kontrolka).Text);
+                    if (property.PropertyType == typeof(DictionaryListItem))
+                    {
+                        var dictionaryList = GetDictionaryListValues(window, modelBase, property);
+                        //ToDo: Wyszukiwanie na liście
+                        //Wyszukiwanie po intach
+                        //wyszukiwanie po kodach
+                        //wyszukiwanie po stringach
+                        foreach (var dictItem in dictionaryList)
+                        {
+                            if ((string.IsNullOrEmpty(dictItem.IdentityKey) && dictItem.Identity.ToString() == savedStringValue)
+                                || dictItem.IdentityKey == savedStringValue)
+                            {
+                                property.SetValue(modelBase, dictItem, null);
+                                break;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        property.SetValue(modelBase, Convert.ChangeType(savedStringValue, property.PropertyType), null);
+                    }
                 }
-                //else if (kontrolka is CheckBox)
-                //{
-                //    ((CheckBox)kontrolka).Checked = Convert.ToBoolean(GetParam(name, ((CheckBox)kontrolka).Name, ((CheckBox)kontrolka).Checked.ToString()));
-                //}
-                //else if (kontrolka is RadioButton)
-                //{
-                //    ((RadioButton)kontrolka).Checked = Convert.ToBoolean(GetParam(name, ((RadioButton)kontrolka).Name, ((RadioButton)kontrolka).Checked.ToString()));
-                //}
-                //else if (kontrolka is DateTimePicker)
-                //{
-                //    if (GetParam(name, ((DateTimePicker)kontrolka).Name, "").Length > 0)
-                //    {
-                //        ((DateTimePicker)kontrolka).Value = Convert.ToDateTime(GetParam(name, ((DateTimePicker)kontrolka).Name, ((DateTimePicker)kontrolka).Value.ToString()));
-                //    }
-                //}
-                //else if (kontrolka is ComboBox)
-                //{
-                //    var kontrolkaComboBox = kontrolka as ComboBox;
-                //    var parentControlName = GetControlParentName(kontrolkaComboBox.Parent);
-                //    var value = GetParam(parentControlName, kontrolkaComboBox.Name, "-1");
-                //    bool toIntConvResult = Int32.TryParse(value, out int valueInt);
-                //    if (toIntConvResult && valueInt > -1)
-                //        SetComboBoxitem(kontrolkaComboBox, valueInt);
-                //    else if (!toIntConvResult && value != "-1")
-                //    {
-                //        foreach (var item in kontrolkaComboBox.Items)
-                //        {
-                //            if (item is DictionaryListItem && (item as DictionaryListItem).IdentityKey == value)
-                //            {
-                //                kontrolkaComboBox.SelectedItem = item;
-                //                break;
-                //            }
-                //        }
-                //    }
-                //}
-                //else if (kontrolka is CheckedListBox)
-                //{
-                //    var kontrolkaCheckedListBox = kontrolka as CheckedListBox;
-                //    var parentControlName = GetControlParentName(kontrolkaCheckedListBox.Parent);
-                //    int count = Convert.ToInt32(GetParam(parentControlName, kontrolkaCheckedListBox.Name + "_Count", "0"));
-                //    for (int i = 0; i < count; i++)
-                //    {
-                //        var value = GetParam(parentControlName, kontrolkaCheckedListBox.Name + "_" + i.ToString(), "-1");
-                //        Setlistboxitem(kontrolkaCheckedListBox, value);
-                //    }
-
-                //}
             }
+        
         }
-
+        
+        /// <summary>
+        /// Metoda zwraca listę typu DictionaryListItem dla właściwości podanej w parametrze, 
+        /// słownika szuka w ViewModelu
+        /// </summary>
+        /// <param name="window">Okno którego viewModel szukamy</param>
+        /// <param name="modelBase">Model danych</param>
+        /// <param name="property">Właściwośc</param>
+        /// <returns></returns>
+        private ObservableCollection<DictionaryListItem> GetDictionaryListValues(Window window, ModelBase modelBase, PropertyInfo property)
+        {
+            var viewModel = window.DataContext;
+            var attributes = property.GetCustomAttributes(typeof(DictionaryListItemValuesAttribute), false);
+            if (attributes != null && attributes.Count() == 1)
+            {
+                var dictionaryListItemValuesAttribute = (attributes.First() as DictionaryListItemValuesAttribute);
+                var dictionaryListItemName = dictionaryListItemValuesAttribute.DictionaryListName;
+                var dataContextType = viewModel.GetType();
+                var allProperties = dataContextType.GetProperties();
+                var dictionaryList = allProperties.Where(prop => prop.Name==dictionaryListItemName)?.FirstOrDefault();
+                if (dictionaryList!=null)
+                {
+                    var dictionaryListValue = dictionaryList.GetValue(viewModel);
+                    return dictionaryListValue as ObservableCollection<DictionaryListItem>;
+                }
+                
+            }
+            return null;
+        }
         /// <summary>
         /// Zapisz parametry wyszukiwania okna WPF
         /// </summary>
         /// <param name="window"></param>
         public void SaveSearchFields(Window window)
         {
-            ZnajdzKomponenty(window);
-            foreach (WpfControl kontrolka in ListaKontrolekWpf)
+            var windowName = nameof(window);            
+            var allProperties = GetModelProperties(window, out ModelBase model);
+            if (allProperties == null)
+                return;
+            foreach (var property in allProperties)
             {
-                string parentName = (kontrolka.Parent as WpfControl)?.Name;
-                if (kontrolka is WpfTextBox)
+                var propertyName = property.Name;
+                var propertyValue = property.GetValue(model);
+                Debug.WriteLine($"{property}={propertyValue}");
+                if (property.PropertyType == typeof(DictionaryListItem))
                 {
-                    if (!((WpfTextBox)kontrolka).IsReadOnly)                        
-                            SetParam(parentName, ((WpfTextBox)kontrolka).Name, ((WpfTextBox)kontrolka).Text);                    
+                    var dictItem = propertyValue as DictionaryListItem;
+                    if (string.IsNullOrEmpty(dictItem?.IdentityKey))
+                        SetParam(windowName, propertyName, $"{dictItem?.Identity}");
+                    else
+                        SetParam(windowName, propertyName, $"{dictItem?.IdentityKey}");
                 }
-
+                else
+                {
+                    SetParam(windowName, propertyName, $"{propertyValue}");
+                }
             }
         }
         /// <summary>

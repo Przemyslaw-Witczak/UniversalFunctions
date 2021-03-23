@@ -1,4 +1,6 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
+using System.Reflection;
 
 namespace MVVMClasses
 {
@@ -15,6 +17,11 @@ namespace MVVMClasses
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
+
+        public static explicit operator ModelBase(PropertyInfo v)
+        {
+            throw new NotImplementedException();
+        }
         #endregion
     }
 }
