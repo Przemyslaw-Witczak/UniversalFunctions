@@ -3,6 +3,7 @@ using DataBaseUniversalFunctions.Model;
 using MojeFunkcjeUniwersalneNameSpace.Extensions;
 using MojeFunkcjeUniwersalneNameSpace.Wpf;
 using MVVMClasses;
+using MVVMClasses.Models;
 using MVVMClasses.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -822,6 +823,12 @@ namespace MojeFunkcjeUniwersalneNameSpace
             return allProperties;
         }
 
+        private string GetWindowName(Window window)
+        {
+            //ToDo: Tu dokleić.. nazwę klasy??
+            return $"{(window as Object).GetType()}";
+        }
+
         /// <summary>
         /// Inicjalizacja formularza znadź w WPF
         /// </summary>
@@ -831,29 +838,47 @@ namespace MojeFunkcjeUniwersalneNameSpace
             var allProperties = GetModelProperties(window, out ModelBase modelBase);
             if (allProperties == null)
                 return;
+            var windowName = GetWindowName(window);
             foreach (var property in allProperties)
             {
                 var propertyName = property.Name;
-                var savedStringValue = GetParam(nameof(window), propertyName, "");
+                var savedStringValue = GetParam(windowName, propertyName, "");
                 Debug.WriteLine($"{property}='{savedStringValue}'");
                 if (!string.IsNullOrEmpty(savedStringValue))
                 {
                     if (property.PropertyType == typeof(DictionaryListItem))
                     {
                         var dictionaryList = GetDictionaryListValues(window, modelBase, property);
-                        //ToDo: Wyszukiwanie na liście
-                        //Wyszukiwanie po intach
-                        //wyszukiwanie po kodach
-                        //wyszukiwanie po stringach
-                        foreach (var dictItem in dictionaryList)
+                        var found = GetDictionaryListItemParam(savedStringValue, dictionaryList);
+                        if (found!=null)                        
                         {
-                            if ((string.IsNullOrEmpty(dictItem.IdentityKey) && dictItem.Identity.ToString() == savedStringValue)
-                                || dictItem.IdentityKey == savedStringValue)
-                            {
-                                property.SetValue(modelBase, dictItem, null);
-                                break;
-                            }
+                            property.SetValue(modelBase, found, null);
+                            break;
                         }
+                        
+                    }
+                    else if (property.PropertyType == typeof(DateTimeFilter))
+                    {
+                        var newDateFimeFilter = new DateTimeFilter()
+                        {
+                            SelectedValue = Convert.ToDateTime(savedStringValue)
+                        };
+                        property.SetValue(modelBase, newDateFimeFilter, null);
+                    }
+                    else if (property.PropertyType == typeof(ObservableCollection<DictionaryListItem>))
+                    {                        
+                        var propertyValue = property.GetValue(modelBase);
+                        var observableCollection = propertyValue as ObservableCollection<DictionaryListItem>;
+                        int count = Convert.ToInt32(savedStringValue); //ile pozycji do zaznacenia
+                        for (int i=1;i<=count;i++)
+                        {
+                            var positionToFind = GetParam(windowName, $"{propertyName}_{i}", "");
+                            var found = GetDictionaryListItemParam(positionToFind, observableCollection);
+                            if (found!=null)
+                            {
+                                found.IsChecked = true;
+                            }
+                        }                        
                     }
                     else
                     {
@@ -863,7 +888,25 @@ namespace MojeFunkcjeUniwersalneNameSpace
             }
         
         }
-        
+
+        /// <summary>
+        /// Metoda wyszukująca element na liście słownikowej, do zaznaczenia lub ustawienia w polu ComboBox, wyszukuje po kluczu lub Id
+        /// </summary>        
+        /// <param name="savedStringValue"></param>
+        /// <param name="dictionaryList"></param>
+        private DictionaryListItem GetDictionaryListItemParam(string savedStringValue, ObservableCollection<DictionaryListItem> dictionaryList)
+        {
+            foreach (var dictItem in dictionaryList)
+            {
+                if ((string.IsNullOrEmpty(dictItem.IdentityKey) && dictItem.Identity.ToString() == savedStringValue)
+                    || dictItem.IdentityKey == savedStringValue)
+                {
+                    return dictItem;                    
+                }
+            }
+            return null;
+        }
+
         /// <summary>
         /// Metoda zwraca listę typu DictionaryListItem dla właściwości podanej w parametrze, 
         /// słownika szuka w ViewModelu
@@ -898,7 +941,7 @@ namespace MojeFunkcjeUniwersalneNameSpace
         /// <param name="window"></param>
         public void SaveSearchFields(Window window)
         {
-            var windowName = nameof(window);            
+            var windowName = GetWindowName(window);            
             var allProperties = GetModelProperties(window, out ModelBase model);
             if (allProperties == null)
                 return;
@@ -910,10 +953,29 @@ namespace MojeFunkcjeUniwersalneNameSpace
                 if (property.PropertyType == typeof(DictionaryListItem))
                 {
                     var dictItem = propertyValue as DictionaryListItem;
-                    if (string.IsNullOrEmpty(dictItem?.IdentityKey))
-                        SetParam(windowName, propertyName, $"{dictItem?.Identity}");
-                    else
-                        SetParam(windowName, propertyName, $"{dictItem?.IdentityKey}");
+                    SetDictionaryListItemParam(windowName, propertyName, dictItem);
+                }
+                else if (property.PropertyType == typeof(DateTimeFilter))
+                {
+                    var dateTimeFilter = propertyValue as DateTimeFilter;
+                    if (dateTimeFilter.IsChecked)
+                    {
+                        SetParam(windowName, propertyName, $"{dateTimeFilter.SelectedValue}");
+                    }                                      
+                }
+                else if (property.PropertyType == typeof(ObservableCollection<DictionaryListItem>))
+                {                    
+                    var observableCollection = propertyValue as ObservableCollection<DictionaryListItem>;
+                    int count=0;
+                    foreach(var dictionaryListItem in observableCollection)
+                    {
+                        if (dictionaryListItem.IsChecked)
+                        {
+                            count++;
+                            SetDictionaryListItemParam(windowName, $"{propertyName}_{count}", dictionaryListItem);
+                        }
+                    }
+                    SetParam(windowName, $"{propertyName}", $"{count}");
                 }
                 else
                 {
@@ -921,6 +983,21 @@ namespace MojeFunkcjeUniwersalneNameSpace
                 }
             }
         }
+
+        /// <summary>
+        /// Metoda zapisująca zaznaczoną pozycję DictionaryListItem.. rozwiązuje problem czy pozycja słownikowa ma klucz czy Id
+        /// </summary>
+        /// <param name="windowName">Nazwa okna</param>
+        /// <param name="propertyName">Nazwa właściwości-filtru</param>
+        /// <param name="dictItem">Pozycja słownikowa</param>
+        private void SetDictionaryListItemParam(string windowName, string propertyName, DictionaryListItem dictItem)
+        {
+            if (string.IsNullOrEmpty(dictItem?.IdentityKey))
+                SetParam(windowName, propertyName, $"{dictItem?.Identity}");
+            else
+                SetParam(windowName, propertyName, $"{dictItem?.IdentityKey}");
+        }
+
         /// <summary>
         /// Ustatiwa wartość pola wyszukiwania typu ComboBox
         /// </summary>

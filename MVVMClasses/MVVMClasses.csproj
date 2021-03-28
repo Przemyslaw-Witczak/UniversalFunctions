@@ -49,6 +49,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ModelBase.cs" />
+    <Compile Include="Models\DateTimeFilter.cs" />
     <Compile Include="ViewModels\MvvmMessageBoxViewModel.cs" />
     <Compile Include="MvvmCommand.cs" />
     <Compile Include="ViewModels\ViewModelBase.cs" />
