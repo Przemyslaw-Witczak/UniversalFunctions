@@ -5,8 +5,9 @@
     /// </summary>
     public abstract class ViewModelBase : ModelBase
     {
+
         /// <summary>
-        /// Inicjalizacja formularza
+        /// Inicjalizacja formularza, tu inicjalizować Filtry
         /// </summary>
         public abstract void AkcjaStartowa();
 
