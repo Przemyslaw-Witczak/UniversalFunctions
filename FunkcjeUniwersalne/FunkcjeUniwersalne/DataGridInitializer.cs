@@ -55,7 +55,7 @@ namespace MojeFunkcjeUniwersalneNameSpace
             gridKomponent.ColumnHeadersVisible = true;          
             DataGridViewCellStyle columnHeaderStyle = new DataGridViewCellStyle();
             columnHeaderStyle.BackColor = Color.Beige;
-            columnHeaderStyle.Font = new Font("Verdana", 8, FontStyle.Bold);
+            columnHeaderStyle.Font = new Font("Verdana", 7, FontStyle.Bold);
             gridKomponent.ColumnHeadersDefaultCellStyle = columnHeaderStyle;
             //ukryj boczną kolumnę, wskaźnik wiersza
             gridKomponent.RowHeadersVisible = showRowNumbers;
