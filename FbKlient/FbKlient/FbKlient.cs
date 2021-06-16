@@ -199,7 +199,7 @@ namespace FbKlientNameSpace
             Loguj("FbKlient__Konstruktor");
         }
         /// <summary>
-        /// Konstruktor obiektu do komunikacji z bazą danych Firebird SQL Server
+        /// Konstruktor obiektu do komunikacji z bazą danych Firebird SQL Server, może być wykorzystywany w aplikacjach wielowątkowych i asynchronicznych
         /// </summary>
         public FbKlient()  //konstruktor
         {
@@ -208,7 +208,7 @@ namespace FbKlientNameSpace
         }
 
         /// <summary>
-        /// Konstruktor obiektu do komunikacji z bazą danych Firebird SQL Server
+        /// Konstruktor obiektu do komunikacji z bazą danych Firebird SQL Server, dla okien nie asynchroniczny
         /// </summary>
         /// <param name="ParentForM">Rodzic, do wyświetlania komunikatów</param>
         public FbKlient(Form ParentForM)  //konstruktor
@@ -299,6 +299,10 @@ namespace FbKlientNameSpace
             ParentForm.Refresh();
         }
 
+        /// <summary>
+        /// Ta metoda ze względu na wskaźnik do formularza może generować problemy w aplikacjach wielowątkowych podczas odwoływania się do formularza i zmiany kursora.
+        /// </summary>
+        /// <returns></returns>
         private bool PodlaczDoBazy()
         {
             Loguj("FbKlient__PodlaczDoBazy");
@@ -313,7 +317,7 @@ namespace FbKlientNameSpace
             {
                 if (ParentForm.IsHandleCreated)
                 {
-                    ParentForm.Invoke(new setMainFormCursorDelegate(setMainFormCursor), Cursors.WaitCursor); //TODO: To generuje problem w aplikacjach wielowątkowych
+                    ParentForm.Invoke(new setMainFormCursorDelegate(setMainFormCursor), Cursors.WaitCursor); //To generuje problem w aplikacjach wielowątkowych
                 }
             }
 

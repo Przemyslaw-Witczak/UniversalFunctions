@@ -9,9 +9,11 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Documents;
 using System.Windows.Forms;
@@ -544,17 +546,28 @@ namespace MojeFunkcjeUniwersalneNameSpace
                     SetComboBoxBehavior2((ComboBox)ListaKontrolek[i]);
                 }
             }
-            //TODO: Sprawdzać czy ustawienie formularza nie wykroczy poza ekran
+            
             if (GetParam(AParentForm.Name, "WindowState", "Normal")=="Normal")
             {
                 try
                 {
-                    AParentForm.Left = Convert.ToInt32(GetParam(AParentForm.Name, "Left", AParentForm.Left.ToString()));
-                    AParentForm.Top = Convert.ToInt32(GetParam(AParentForm.Name, "Top", AParentForm.Top.ToString()));
+                    int x = Convert.ToInt32(GetParam(AParentForm.Name, "Left", AParentForm.Left.ToString()));
+                    int y = Convert.ToInt32(GetParam(AParentForm.Name, "Top", AParentForm.Top.ToString()));
+                    if (CheckIfPointWillBeVisible(x, y))
+                    { 
+                        AParentForm.Left = x;
+                        AParentForm.Top = y;
+                    }
+                   
                     if (AParentForm.FormBorderStyle == FormBorderStyle.Sizable || AParentForm.FormBorderStyle == FormBorderStyle.SizableToolWindow)
                     {
-                        AParentForm.Width = Convert.ToInt32(GetParam(AParentForm.Name, "Width", AParentForm.Width.ToString()));
-                        AParentForm.Height = Convert.ToInt32(GetParam(AParentForm.Name, "Height", AParentForm.Height.ToString()));
+                        int w = Convert.ToInt32(GetParam(AParentForm.Name, "Width", AParentForm.Left.ToString()));
+                        int h = Convert.ToInt32(GetParam(AParentForm.Name, "Height", AParentForm.Top.ToString()));
+                        if (CheckIfPointWillBeVisible(w, h))
+                        {
+                            AParentForm.Width = w;
+                            AParentForm.Height = h;
+                        }
                     }
                 }
                 catch
@@ -570,7 +583,29 @@ namespace MojeFunkcjeUniwersalneNameSpace
             
         }
 
-       
+        
+
+        /// <summary>
+        /// Zbitka metod z 
+        /// https://www.pinvoke.net/default.aspx/user32/MonitorFromPoint.html
+        /// https://stackoverflow.com/questions/4681738/how-do-i-determine-if-a-window-is-off-screen
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <returns></returns>
+        bool CheckIfPointWillBeVisible(int x, int y)
+        {
+            POINT p;
+            p.X = x;
+            p.Y = y;
+            IntPtr hMon = SafeNativeMethods.MonitorFromPoint(p, MonitorOptions.MONITOR_DEFAULTTONULL);
+            if (hMon==IntPtr.Zero)
+            {
+                // point is off screen
+                return false;
+            }
+            return true;
+        }
 
         /// <summary>
         /// Metoda zapisująca Layout pól na formularzach (położenie splitterów, szerokości kolumn dataGridView
@@ -822,10 +857,13 @@ namespace MojeFunkcjeUniwersalneNameSpace
             allProperties = modelBase?.GetType().GetProperties();
             return allProperties;
         }
-
+        /// <summary>
+        /// Zwraca nazwę typu okna
+        /// </summary>
+        /// <param name="window"></param>
+        /// <returns></returns>
         private string GetWindowName(Window window)
-        {
-            //ToDo: Tu dokleić.. nazwę klasy??
+        {            
             return $"{(window as Object).GetType()}";
         }
 
