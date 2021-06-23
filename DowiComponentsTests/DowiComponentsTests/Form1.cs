@@ -18,6 +18,10 @@ namespace DowiComponentsTests
         {
             InitializeComponent();
             inputValidiator = new InputValidator(this);
+            inputValidiator.RegisterComboBox(dowiComboBox1);
+            inputValidiator.AllowOnlyIntegerValues(textBox1);
+            inputValidiator.RegisterTextBox(textBox1);
+            inputValidiator.DestinationControl = button1;
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -33,8 +37,7 @@ namespace DowiComponentsTests
             comboBox1.Items.Add("Bardzo długa pozycja");
             comboBox1.Items.Add("Naj najdłuższa bardzo długa pozycja");
 
-            inputValidiator.RegisterComboBox(dowiComboBox1);
-            inputValidiator.DestinationControl = button1;
+         
         }
     }
 }

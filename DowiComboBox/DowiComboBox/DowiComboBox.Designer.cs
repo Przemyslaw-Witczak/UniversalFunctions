@@ -16,8 +16,10 @@ namespace DowiComboBoxNameSpace
 
         public ValueInteractionType ValueInteraction { get; set; }
 
-        public IInputValidiator InputValidiator { get; set; }
+        
         public bool HasValue { get; set; } = false;
+
+        public IInputValidiator InputValidiator { get; set; }
 
         /// <summary>
         /// Clean up any resources being used.
@@ -62,7 +64,7 @@ namespace DowiComboBoxNameSpace
             {
                 this.HasValue = true;                
             }
-            InputValidiator?.Validate();
+            InputValidiator?.Validate(this, new ValidationEvent("Text Changed"));
         }
 
         private void HandleKeyPress(object sender, KeyPressEventArgs e)
@@ -72,7 +74,7 @@ namespace DowiComboBoxNameSpace
             
             try
             {
-               HasValue = true;
+                HasValue = true;
                 //comboBox.BackColor = System.Drawing.Color.Green;
                 string TmpStr;
 
@@ -88,7 +90,7 @@ namespace DowiComboBoxNameSpace
                 {
                     HasValue = false;
                     Debug.WriteLine($"TmpStr=isEmpty");
-                    InputValidiator?.Validate();
+                    InputValidiator?.Validate(this, new ValidationEvent("HandleKeyPress"));
                     return;
                 }
                 Debug.WriteLine($"TmpStr={TmpStr}");
@@ -110,7 +112,7 @@ namespace DowiComboBoxNameSpace
                     Debug.WriteLine($"SelSt={SelSt}");
                     comboBox.Text = "";
                     comboBox.SelectedIndex = -1;
-                    InputValidiator?.Validate();
+                    InputValidiator?.Validate(this, new ValidationEvent("HandleKeyPress"));
                     return;
                 }
 
@@ -144,7 +146,7 @@ namespace DowiComboBoxNameSpace
                 HasValue = true;
                 //comboBox.BackColor = System.Drawing.Color.Blue;
                 Debug.WriteLine($"{comboBox.Name} Selected ItemIndex={comboBox.SelectedIndex}");
-                InputValidiator?.Validate();
+                InputValidiator?.Validate(this, new ValidationEvent("HandleKeyPress End"));
 
             }
             catch (Exception ex)

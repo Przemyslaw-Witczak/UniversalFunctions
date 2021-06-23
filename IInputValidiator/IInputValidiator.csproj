@@ -7,7 +7,7 @@
     <ProjectGuid>{043458C6-44E6-475C-AA29-273F2B3967BF}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>IInputValidiator</RootNamespace>
+    <RootNamespace>IInputValidiatorNamespace</RootNamespace>
     <AssemblyName>IInputValidiator</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -46,6 +46,7 @@
   <ItemGroup>
     <Compile Include="IInputValidiator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ValidationEvent.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

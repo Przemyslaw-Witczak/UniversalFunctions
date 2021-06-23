@@ -60,7 +60,7 @@ namespace MojeFunkcjeUniwersalneNameSpace
                 if (destinationControl != value)
                 {
                     destinationControl = value;
-                    Validate();
+                    Validate(this, new ValidationEvent(nameof(DestinationControl)));
                 }
 
             }
@@ -81,7 +81,7 @@ namespace MojeFunkcjeUniwersalneNameSpace
                 if (value != this.enabled)
                 {
                     this.enabled = value;
-                    Validate();
+                    Validate(this, new ValidationEvent(nameof(Enabled)));
                 }
             }
         }
@@ -141,9 +141,9 @@ namespace MojeFunkcjeUniwersalneNameSpace
         public void RegisterTextBox(TextBox tb)
         {
             tb.BackColor = InputValidiatorKolory.Wymagany;
-            tb.TextChanged += (s, e) => Validate();
+            tb.TextChanged += (s, e) => Validate(s, new ValidationEvent("TextChanged"));
             boxes.Add(tb);
-            Validate();
+            Validate(this, new ValidationEvent("RegisterTextBox"));
             controls.Add(tb as Control);
         }
 
@@ -174,7 +174,7 @@ namespace MojeFunkcjeUniwersalneNameSpace
         public void UnregisterTextBox(TextBox tb)
         {
             tb.BackColor = SystemColors.Window;
-            tb.TextChanged -= (s, e) => Validate();
+            tb.TextChanged -= (s, e) => Validate(s, new ValidationEvent("TextChanged"));
             int indeks = -1;
             for (int i = 0; i < boxes.Count;i++ )
             {
@@ -186,7 +186,7 @@ namespace MojeFunkcjeUniwersalneNameSpace
             if (indeks > -1)
             {
                 boxes.RemoveAt(indeks);
-                Validate();
+                Validate(this, new ValidationEvent("RegisterTextBox"));
             }
         }
   
@@ -196,12 +196,14 @@ namespace MojeFunkcjeUniwersalneNameSpace
         /// <param name="cb"></param>
         public void RegisterComboBox(ComboBox cb)
         {
+            if (cb is IDowiComponent)
+                (cb as IDowiComponent).InputValidiator = this;
             cb.BackColor = InputValidiatorKolory.Wymagany;
-            cb.TextChanged += (s, e) => Validate();
+            cb.TextChanged += (s, e) => Validate(s, new ValidationEvent("TextChanged"));
             
             combos.Add(cb);
             
-            Validate();
+            Validate(this, new ValidationEvent("RegisterComboBox"));
             controls.Add(cb as Control);
         }
     
@@ -236,7 +238,10 @@ namespace MojeFunkcjeUniwersalneNameSpace
         public void UnregisterComboBox(ComboBox tb)
         {
             tb.BackColor = SystemColors.Window;
-            tb.TextChanged -= (s, e) => Validate();
+            tb.TextChanged -= (s, e) => Validate(s, new ValidationEvent("TextChanged"));
+            if (tb is IDowiComponent)
+                (tb as IDowiComponent).InputValidiator = null;
+
             int indeks = -1;
             for (int i = 0; i < combos.Count; i++)
             {
@@ -248,13 +253,13 @@ namespace MojeFunkcjeUniwersalneNameSpace
             if (indeks > -1)
             {
                 combos.RemoveAt(indeks);
-                Validate();
+                Validate(this, new ValidationEvent(nameof(UnregisterComboBox)));
             }
         }
         /// <summary>
         /// Metoda dokonująca walidacji wypełnienia powiązanych pól, wywoływana automatycznie podczas zmiany pól powiązanych oraz można ja wywołać ręcznie
         /// </summary>
-        public void Validate()
+        public void Validate(object sender=null, ValidationEvent eventArgs=null)
         {
             bool destinationControlValue = Enabled;
             if (DestinationControl == null)
@@ -387,9 +392,9 @@ namespace MojeFunkcjeUniwersalneNameSpace
         public void RegisterMaskedTextBox(MaskedTextBox tb)
         {
             tb.BackColor = InputValidiatorKolory.Wymagany;
-            tb.TextChanged += (s, e) => Validate();
+            tb.TextChanged += (s, e) => Validate(s, new ValidationEvent("TextChanged"));
             maskedBoxes.Add(tb);
-            Validate();
+            Validate(this, new ValidationEvent(nameof(RegisterMaskedTextBox)));
             controls.Add(tb as Control);
         }
 
@@ -400,7 +405,7 @@ namespace MojeFunkcjeUniwersalneNameSpace
         public void UnregisterMaskedTextBox(MaskedTextBox tb)
         {
             tb.BackColor = SystemColors.Window;
-            tb.TextChanged -= (s, e) => Validate();
+            tb.TextChanged -= (s, e) => Validate(s, new ValidationEvent("TextChanged"));
             int indeks = -1;
             for (int i = 0; i < maskedBoxes.Count; i++)
             {
@@ -414,7 +419,8 @@ namespace MojeFunkcjeUniwersalneNameSpace
                 maskedBoxes.RemoveAt(indeks);
             }
 
-            Validate();
+            Validate(this, new ValidationEvent(nameof(UnregisterMaskedTextBox)));
         }
+        
     }
 }

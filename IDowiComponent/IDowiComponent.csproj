@@ -45,5 +45,11 @@
     <Compile Include="IDowiComponent.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\IInputValidiator\IInputValidiator.csproj">
+      <Project>{043458C6-44E6-475C-AA29-273F2B3967BF}</Project>
+      <Name>IInputValidiator</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

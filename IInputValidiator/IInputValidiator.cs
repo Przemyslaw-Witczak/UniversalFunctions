@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace IInputValidiatorNamespace
+﻿namespace IInputValidiatorNamespace
 {
+
     public interface IInputValidiator
     {
-        void Validate();
+        void Validate(object sender, ValidationEvent eventArgs);
     }
 }

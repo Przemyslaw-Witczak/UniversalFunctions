@@ -5,9 +5,15 @@ VisualStudioVersion = 16.0.31402.337
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DowiComboBox", "DowiComboBox\DowiComboBox.csproj", "{2D682627-BEAF-4E81-A8F4-FF230BEE0F43}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FunkcjeUniwersalne", "..\FunkcjeUniwersalne\FunkcjeUniwersalne\FunkcjeUniwersalne\FunkcjeUniwersalne.csproj", "{22D63D77-4EF4-404D-8CBE-D5E6751A3CAB}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IInputValidiator", "..\IInputValidiator\IInputValidiator.csproj", "{043458C6-44E6-475C-AA29-273F2B3967BF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IDowiComponent", "..\IDowiComponent\IDowiComponent.csproj", "{63641B52-C9F0-4973-87B3-CFEE72A1658A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FunkcjeUniwersalne", "..\FunkcjeUniwersalne\FunkcjeUniwersalne\FunkcjeUniwersalne.csproj", "{22D63D77-4EF4-404D-8CBE-D5E6751A3CAB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MVVMClasses", "..\MVVMClasses\MVVMClasses.csproj", "{2A8EA2CF-3CFE-4778-89D3-A03E389E5912}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataBaseUniversalFunctions", "..\DataBaseUniversalFunctions\DataBaseUniversalFunctions.csproj", "{6DA34A7D-2394-4123-8FDD-E0D81CAD7BF5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -19,14 +25,26 @@ Global
 		{2D682627-BEAF-4E81-A8F4-FF230BEE0F43}.Debug|x86.Build.0 = Debug|x86
 		{2D682627-BEAF-4E81-A8F4-FF230BEE0F43}.Release|x86.ActiveCfg = Release|x86
 		{2D682627-BEAF-4E81-A8F4-FF230BEE0F43}.Release|x86.Build.0 = Release|x86
-		{22D63D77-4EF4-404D-8CBE-D5E6751A3CAB}.Debug|x86.ActiveCfg = Debug|x86
-		{22D63D77-4EF4-404D-8CBE-D5E6751A3CAB}.Debug|x86.Build.0 = Debug|x86
-		{22D63D77-4EF4-404D-8CBE-D5E6751A3CAB}.Release|x86.ActiveCfg = Release|x86
-		{22D63D77-4EF4-404D-8CBE-D5E6751A3CAB}.Release|x86.Build.0 = Release|x86
 		{043458C6-44E6-475C-AA29-273F2B3967BF}.Debug|x86.ActiveCfg = Debug|x86
 		{043458C6-44E6-475C-AA29-273F2B3967BF}.Debug|x86.Build.0 = Debug|x86
 		{043458C6-44E6-475C-AA29-273F2B3967BF}.Release|x86.ActiveCfg = Release|x86
 		{043458C6-44E6-475C-AA29-273F2B3967BF}.Release|x86.Build.0 = Release|x86
+		{63641B52-C9F0-4973-87B3-CFEE72A1658A}.Debug|x86.ActiveCfg = Debug|x86
+		{63641B52-C9F0-4973-87B3-CFEE72A1658A}.Debug|x86.Build.0 = Debug|x86
+		{63641B52-C9F0-4973-87B3-CFEE72A1658A}.Release|x86.ActiveCfg = Release|x86
+		{63641B52-C9F0-4973-87B3-CFEE72A1658A}.Release|x86.Build.0 = Release|x86
+		{22D63D77-4EF4-404D-8CBE-D5E6751A3CAB}.Debug|x86.ActiveCfg = Debug|x86
+		{22D63D77-4EF4-404D-8CBE-D5E6751A3CAB}.Debug|x86.Build.0 = Debug|x86
+		{22D63D77-4EF4-404D-8CBE-D5E6751A3CAB}.Release|x86.ActiveCfg = Release|x86
+		{22D63D77-4EF4-404D-8CBE-D5E6751A3CAB}.Release|x86.Build.0 = Release|x86
+		{2A8EA2CF-3CFE-4778-89D3-A03E389E5912}.Debug|x86.ActiveCfg = Debug|x86
+		{2A8EA2CF-3CFE-4778-89D3-A03E389E5912}.Debug|x86.Build.0 = Debug|x86
+		{2A8EA2CF-3CFE-4778-89D3-A03E389E5912}.Release|x86.ActiveCfg = Release|x86
+		{2A8EA2CF-3CFE-4778-89D3-A03E389E5912}.Release|x86.Build.0 = Release|x86
+		{6DA34A7D-2394-4123-8FDD-E0D81CAD7BF5}.Debug|x86.ActiveCfg = Debug|x86
+		{6DA34A7D-2394-4123-8FDD-E0D81CAD7BF5}.Debug|x86.Build.0 = Debug|x86
+		{6DA34A7D-2394-4123-8FDD-E0D81CAD7BF5}.Release|x86.ActiveCfg = Release|x86
+		{6DA34A7D-2394-4123-8FDD-E0D81CAD7BF5}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

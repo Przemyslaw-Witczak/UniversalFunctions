@@ -1,4 +1,6 @@
-﻿namespace IDowiComponentNamespace
+﻿using IInputValidiatorNamespace;
+
+namespace IDowiComponentNamespace
 {
     /// <summary>
     /// Interfejst customowego komponentu
@@ -9,5 +11,7 @@
         /// Właściwość pozwalająca określić czy komponent jest wypełniony
         /// </summary>
         bool HasValue { get; set; }
+
+        IInputValidiator InputValidiator { get; set; }
     }
 }

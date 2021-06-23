@@ -53,6 +53,14 @@
     <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="DataBaseUniversalFunctions, Version=1.0.0.0, Culture=neutral, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\DowiComboBox\DowiComboBox\bin\x86\Debug\DataBaseUniversalFunctions.dll</HintPath>
+    </Reference>
+    <Reference Include="DowiComboBox, Version=1.0.0.1, Culture=neutral, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\DowiComboBox\DowiComboBox\bin\x86\Debug\DowiComboBox.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -100,10 +108,6 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\DowiComboBox\DowiComboBox\DowiComboBox.csproj">
-      <Project>{2d682627-beaf-4e81-a8f4-ff230bee0f43}</Project>
-      <Name>DowiComboBox</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\FunkcjeUniwersalne\FunkcjeUniwersalne\FunkcjeUniwersalne.csproj">
       <Project>{22D63D77-4EF4-404D-8CBE-D5E6751A3CAB}</Project>
       <Name>FunkcjeUniwersalne</Name>
@@ -111,6 +115,10 @@
     <ProjectReference Include="..\..\IInputValidiator\IInputValidiator.csproj">
       <Project>{043458c6-44e6-475c-aa29-273f2b3967bf}</Project>
       <Name>IInputValidiator</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\MVVMClasses\MVVMClasses.csproj">
+      <Project>{2a8ea2cf-3cfe-4778-89d3-a03e389e5912}</Project>
+      <Name>MVVMClasses</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
