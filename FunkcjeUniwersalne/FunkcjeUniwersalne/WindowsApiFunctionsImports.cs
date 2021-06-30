@@ -124,7 +124,21 @@ namespace MojeFunkcjeUniwersalneNameSpace
         [DllImport("user32.dll", SetLastError = true)]
         public static extern IntPtr MonitorFromPoint(POINT pt, MonitorOptions dwFlags);
 
-        
+        /// <summary>
+        /// Wyślij wiadomość do okna
+        /// </summary>
+        /// <param name="hWnd"></param>
+        /// <param name="wMsg"></param>
+        /// <param name="wParam"></param>
+        /// <param name="lParam"></param>
+        /// <returns></returns>
+        [DllImport("user32.dll")]
+        public static extern int SendMessage(IntPtr hWnd, Int32 wMsg, bool wParam, Int32 lParam);
+
+        /// <summary>
+        /// WM_SETREDRAW
+        /// </summary>
+        public const int WM_SETREDRAW = 11;
 
     }
 }
