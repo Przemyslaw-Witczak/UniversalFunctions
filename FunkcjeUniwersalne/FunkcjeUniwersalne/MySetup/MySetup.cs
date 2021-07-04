@@ -845,8 +845,20 @@ namespace MojeFunkcjeUniwersalneNameSpace
         /// </summary>
         /// <param name="window">Okno z którego dataContextu pobrać filrty jako ModelBase</param>
         /// <returns></returns>
-        public PropertyInfo[] GetModelProperties(Window window, out ModelBase modelBase)
-        {            
+        //public PropertyInfo[] GetModelProperties(Window window, out ModelBase modelBase)
+        //{            
+        //    var windowName = nameof(window);
+        //    Debug.WriteLine($"Odczyt parametrów filtrów dataContext okna {windowName}");
+        //    var viewModel = window.DataContext;
+        //    var dataContextType = viewModel.GetType();
+        //    var allProperties = dataContextType.GetProperties();
+        //    var modelBaseProperty = allProperties.Where(prop => prop.PropertyType.IsSubclassOf(typeof(ModelBase)))?.FirstOrDefault();
+        //    modelBase = (ModelBase)modelBaseProperty?.GetValue(viewModel);
+        //    allProperties = modelBase?.GetType().GetProperties();
+        //    return allProperties;
+        //}
+        public PropertyInfo[] GetModelProperties(System.Windows.Controls.ContentControl window, out ModelBase modelBase)
+        {
             var windowName = nameof(window);
             Debug.WriteLine($"Odczyt parametrów filtrów dataContext okna {windowName}");
             var viewModel = window.DataContext;
@@ -862,7 +874,7 @@ namespace MojeFunkcjeUniwersalneNameSpace
         /// </summary>
         /// <param name="window"></param>
         /// <returns></returns>
-        private string GetWindowName(Window window)
+        private string GetWindowName(System.Windows.Controls.ContentControl window)
         {            
             return $"{(window as Object).GetType()}";
         }
@@ -871,7 +883,7 @@ namespace MojeFunkcjeUniwersalneNameSpace
         /// Inicjalizacja formularza znadź w WPF
         /// </summary>
         /// <param name="window"></param>
-        public void LoadSearchFields(Window window)
+        public void LoadSearchFields(System.Windows.Controls.ContentControl window)
         {
             var allProperties = GetModelProperties(window, out ModelBase modelBase);
             if (allProperties == null)
@@ -953,7 +965,7 @@ namespace MojeFunkcjeUniwersalneNameSpace
         /// <param name="modelBase">Model danych</param>
         /// <param name="property">Właściwośc</param>
         /// <returns></returns>
-        private ObservableCollection<DictionaryListItem> GetDictionaryListValues(Window window, ModelBase modelBase, PropertyInfo property)
+        private ObservableCollection<DictionaryListItem> GetDictionaryListValues(System.Windows.Controls.ContentControl window, ModelBase modelBase, PropertyInfo property)
         {
             var viewModel = window.DataContext;
             var attributes = property.GetCustomAttributes(typeof(DictionaryListItemValuesAttribute), false);
@@ -977,7 +989,7 @@ namespace MojeFunkcjeUniwersalneNameSpace
         /// Zapisz parametry wyszukiwania okna WPF
         /// </summary>
         /// <param name="window"></param>
-        public void SaveSearchFields(Window window)
+        public void SaveSearchFields(System.Windows.Controls.ContentControl window)
         {
             var windowName = GetWindowName(window);            
             var allProperties = GetModelProperties(window, out ModelBase model);
