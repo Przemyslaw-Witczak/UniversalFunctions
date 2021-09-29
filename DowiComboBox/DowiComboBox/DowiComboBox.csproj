@@ -57,12 +57,12 @@
     <Service Include="{94E38DFF-614B-4cbd-B67C-F211BB35CE8B}" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\FunkcjeUniwersalne\FunkcjeUniwersalne\FunkcjeUniwersalne.csproj">
-      <Project>{22D63D77-4EF4-404D-8CBE-D5E6751A3CAB}</Project>
-      <Name>FunkcjeUniwersalne</Name>
+    <ProjectReference Include="..\..\FunkcjeUniwersalne\MyExtensions\DowiExtensions.csproj">
+      <Project>{4972dfb0-708b-4a65-be70-d7320b7e6354}</Project>
+      <Name>DowiExtensions</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\IDowiComponent\IDowiComponent.csproj">
-      <Project>{63641b52-c9f0-4973-87b3-cfee72a1658a}</Project>
+      <Project>{63641B52-C9F0-4973-87B3-CFEE72A1658A}</Project>
       <Name>IDowiComponent</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\IInputValidiator\IInputValidiator.csproj">

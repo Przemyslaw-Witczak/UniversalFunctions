@@ -42,7 +42,6 @@
   <ItemGroup>
     <Reference Include="FirebirdSql.Data.FirebirdClient">
       <HintPath>.\FirebirdSql.Data.FirebirdClient.dll</HintPath>
-      <EmbedInteropTypes>False</EmbedInteropTypes>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
@@ -95,6 +94,10 @@
     <ProjectReference Include="..\..\FunkcjeUniwersalne\FunkcjeUniwersalne\FunkcjeUniwersalne.csproj">
       <Project>{22d63d77-4ef4-404d-8cbe-d5e6751a3cab}</Project>
       <Name>FunkcjeUniwersalne</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\FunkcjeUniwersalne\MyExtensions\DowiExtensions.csproj">
+      <Project>{4972dfb0-708b-4a65-be70-d7320b7e6354}</Project>
+      <Name>DowiExtensions</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\ISqlKlient\ISqlKlient.csproj">
       <Project>{cdb5b687-e81e-4ba6-a605-9f8a7711d28e}</Project>

@@ -1,6 +1,6 @@
-﻿using IDowiComponentNamespace;
+﻿using DowiExtensionsNameSpace;
+using IDowiComponentNamespace;
 using IInputValidiatorNamespace;
-using MojeFunkcjeUniwersalneNameSpace.Extensions;
 using System;
 using System.Diagnostics;
 using System.Windows.Forms;
@@ -87,6 +87,7 @@ namespace DowiComboBoxNameSpace
                 if (string.IsNullOrEmpty(TmpStr))
                 {
                     HasValue = false;
+                    comboBox.SelectedIndex = -1;
                     Debug.WriteLine($"TmpStr=isEmpty");
                     InputValidiator?.Validate();
                     return;

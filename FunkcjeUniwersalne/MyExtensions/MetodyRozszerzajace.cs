@@ -6,7 +6,7 @@ using System.Globalization;
 using System.Linq;
 using System.Windows.Forms;
 
-namespace MojeFunkcjeUniwersalneNameSpace.Extensions
+namespace DowiExtensionsNameSpace
 {
 
     public static class StringExtensions

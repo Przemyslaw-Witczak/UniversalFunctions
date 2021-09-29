@@ -1,4 +1,4 @@
-﻿namespace MojeFunkcjeUniwersalneNameSpace.Forms
+﻿namespace DowiFormsNameSpace
 {
     partial class frmAnulujZatwierdzPanel
     {

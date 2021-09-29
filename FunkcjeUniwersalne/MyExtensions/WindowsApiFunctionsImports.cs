@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text;
 
-namespace MojeFunkcjeUniwersalneNameSpace
+namespace DowiExtensionsNameSpace
 {
     [StructLayout(LayoutKind.Sequential)]
     public struct SYSTEMTIME
@@ -27,8 +24,8 @@ namespace MojeFunkcjeUniwersalneNameSpace
 
         public POINT(int x, int y)
         {
-            this.X = x;
-            this.Y = y;
+            X = x;
+            Y = y;
         }
 
         public static implicit operator System.Drawing.Point(POINT p)
@@ -133,7 +130,7 @@ namespace MojeFunkcjeUniwersalneNameSpace
         /// <param name="lParam"></param>
         /// <returns></returns>
         [DllImport("user32.dll")]
-        public static extern int SendMessage(IntPtr hWnd, Int32 wMsg, bool wParam, Int32 lParam);
+        public static extern int SendMessage(IntPtr hWnd, int wMsg, bool wParam, int lParam);
 
         /// <summary>
         /// WM_SETREDRAW

@@ -1,5 +1,5 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using MojeFunkcjeUniwersalneNameSpace.Extensions;
+﻿using DowiExtensionsNameSpace;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace MojeFunkcjeRozszerzajace.Tests
 {
