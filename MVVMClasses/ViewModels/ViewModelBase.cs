@@ -9,11 +9,11 @@
         /// <summary>
         /// Inicjalizacja formularza, tu inicjalizować Filtry
         /// </summary>
-        public abstract void AkcjaStartowa();
+        public abstract void AkcjaStartowaAsync();
 
         public ViewModelBase()
         {
-            AkcjaStartowa();
+            AkcjaStartowaAsync();
         }
     }
 }
