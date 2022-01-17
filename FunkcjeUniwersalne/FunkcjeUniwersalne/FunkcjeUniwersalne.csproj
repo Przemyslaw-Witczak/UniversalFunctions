@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>MojeFunkcjeUniwersalneNameSpace</RootNamespace>
     <AssemblyName>FunkcjeUniwersalne</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile>
     </TargetFrameworkProfile>
@@ -85,7 +85,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\DataBaseUniversalFunctions\DataBaseUniversalFunctions.csproj">
-      <Project>{6da34a7d-2394-4123-8fdd-e0d81cad7bf5}</Project>
+      <Project>{6DA34A7D-2394-4123-8FDD-E0D81CAD7BF5}</Project>
       <Name>DataBaseUniversalFunctions</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\IDowiComponent\IDowiComponent.csproj">

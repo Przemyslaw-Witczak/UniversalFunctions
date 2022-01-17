@@ -6,14 +6,11 @@ using System.Data;
 using FirebirdSql.Data.FirebirdClient;
 using System.Collections.Generic;
 using System.IO;
-using System.Threading.Tasks;
-using System.Threading;
 using System.Text;
-using System.Data.SqlClient;
-using MojeFunkcjeUniwersalneNameSpace.Logger;
 using System.Configuration;
 using ISqlKlientNameSpace;
 using System.Text.RegularExpressions;
+using MojeFunkcjeUniwersalneNameSpace.Logger;
 //using System.Data.SqlClient;
 
 namespace FbKlientNameSpace
@@ -179,6 +176,7 @@ namespace FbKlientNameSpace
         }
 
         private bool _isDisposed;
+        private readonly string _connectionString;
 
         #endregion
 
@@ -201,10 +199,11 @@ namespace FbKlientNameSpace
         /// <summary>
         /// Konstruktor obiektu do komunikacji z bazą danych Firebird SQL Server, może być wykorzystywany w aplikacjach wielowątkowych i asynchronicznych
         /// </summary>
-        public FbKlient()  //konstruktor
+        /// <param name="connectionString">Opcjonalny connectionstring na potrzeby aplikacji webowych, kiedy nie można stworzyć klasy konfiguracyjnej.</param>
+        public FbKlient(string connectionString="")  //konstruktor
         {
+            _connectionString = connectionString;
             konstruktor();
-
         }
 
         /// <summary>
@@ -361,7 +360,7 @@ namespace FbKlientNameSpace
 
         }
 
-        private static string GetConnectionString()
+        private string GetConnectionString()
         {
             //return String.Format("DataSource={3};Database={0};User={1};Password={2};Dialect=3;Port={4};Dialect={5};" +
             //                                    "Charset={6};Role={7};Connection lifetime={8};Pooling={9};" +
@@ -382,6 +381,8 @@ namespace FbKlientNameSpace
             //                                 Convert.ToInt16(Properties.Settings.Default.Embedded).ToString()
 
             //                                 );
+            if (!string.IsNullOrEmpty(_connectionString))
+                return _connectionString;
             return $"DataSource={ConfigurationManager.AppSettings["DataBaseIp"]};" +
                 $"Database={ConfigurationManager.AppSettings["Database"]};" +
                 $"User={ConfigurationManager.AppSettings["DataBaseUsr"]};" +

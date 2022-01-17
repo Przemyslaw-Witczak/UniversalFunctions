@@ -114,54 +114,61 @@ namespace FbKlientNameSpace
                 return;
             }
 
-            var configFile = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
-            var settings = configFile.AppSettings.Settings;
 
-            //ConfigurationManager.AppSettings["DataBaseIp"] = ParametrY.DbServer;
-            //ConfigurationManager.AppSettings["Database"] = ParametrY.DataBasePath;
-            //ConfigurationManager.AppSettings["DataBaseUsr"] = ParametrY.DbUser;
-            //ConfigurationManager.AppSettings["DataBasePwd"] = ParametrY.DbPassword;
-            //ConfigurationManager.AppSettings["DataBaseIp"] = ParametrY.DbServer;
+            try
+            {
+                var configFile = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
+                var settings = configFile.AppSettings.Settings;
 
-            //ConfigurationManager.AppSettings["DataBasePort"] = ParametrY.DbPort.ToString();
+                //ConfigurationManager.AppSettings["DataBaseIp"] = ParametrY.DbServer;
+                //ConfigurationManager.AppSettings["Database"] = ParametrY.DataBasePath;
+                //ConfigurationManager.AppSettings["DataBaseUsr"] = ParametrY.DbUser;
+                //ConfigurationManager.AppSettings["DataBasePwd"] = ParametrY.DbPassword;
+                //ConfigurationManager.AppSettings["DataBaseIp"] = ParametrY.DbServer;
 
-            //ConfigurationManager.AppSettings["DataBaseDialect"] = ParametrY.Dialect.ToString();
-            //ConfigurationManager.AppSettings["DataBaseCharset"] = ParametrY.Charset;
-            //ConfigurationManager.AppSettings["DataBaseRole"] = ParametrY.Role;
-            //ConfigurationManager.AppSettings["DataBaseConnection_lifetime"] = ParametrY.ConnectionLifeTime.ToString();
-            //ConfigurationManager.AppSettings["DataBasePooling"] = ParametrY.Pooling.ToString();
-            //ConfigurationManager.AppSettings["DataBaseMinPoolSize"] = ParametrY.MinPoolSize.ToString();
-            //ConfigurationManager.AppSettings["DataBaseMaxPoolSize"] = ParametrY.MaxPoolSize.ToString();
-            //ConfigurationManager.AppSettings["DataBasePacket_Size"] = ParametrY.PacketSize.ToString();
-            //ConfigurationManager.AppSettings["DataBaseServerType"] = Convert.ToInt16(ParametrY.Embedded).ToString();
-            //ConfigurationManager.AppSettings["LogQueries"] = ParametrY.QueriesLog.ToString();
+                //ConfigurationManager.AppSettings["DataBasePort"] = ParametrY.DbPort.ToString();
 
-            settings.SetKeyValue("DataBaseIp", ParametrY.DbServer);
-            settings.SetKeyValue("Database", ParametrY.DataBasePath);
-            settings.SetKeyValue("DataBaseUsr", ParametrY.DbUser);
-            settings.SetKeyValue("DataBasePwd", ParametrY.DbPassword);
-            settings.SetKeyValue("DataBaseIp", ParametrY.DbServer);
+                //ConfigurationManager.AppSettings["DataBaseDialect"] = ParametrY.Dialect.ToString();
+                //ConfigurationManager.AppSettings["DataBaseCharset"] = ParametrY.Charset;
+                //ConfigurationManager.AppSettings["DataBaseRole"] = ParametrY.Role;
+                //ConfigurationManager.AppSettings["DataBaseConnection_lifetime"] = ParametrY.ConnectionLifeTime.ToString();
+                //ConfigurationManager.AppSettings["DataBasePooling"] = ParametrY.Pooling.ToString();
+                //ConfigurationManager.AppSettings["DataBaseMinPoolSize"] = ParametrY.MinPoolSize.ToString();
+                //ConfigurationManager.AppSettings["DataBaseMaxPoolSize"] = ParametrY.MaxPoolSize.ToString();
+                //ConfigurationManager.AppSettings["DataBasePacket_Size"] = ParametrY.PacketSize.ToString();
+                //ConfigurationManager.AppSettings["DataBaseServerType"] = Convert.ToInt16(ParametrY.Embedded).ToString();
+                //ConfigurationManager.AppSettings["LogQueries"] = ParametrY.QueriesLog.ToString();
 
-            settings.SetKeyValue("DataBasePort", ParametrY.DbPort.ToString());
+                settings.SetKeyValue("DataBaseIp", ParametrY.DbServer);
+                settings.SetKeyValue("Database", ParametrY.DataBasePath);
+                settings.SetKeyValue("DataBaseUsr", ParametrY.DbUser);
+                settings.SetKeyValue("DataBasePwd", ParametrY.DbPassword);
+                settings.SetKeyValue("DataBaseIp", ParametrY.DbServer);
 
-            settings.SetKeyValue("DataBaseDialect", ParametrY.Dialect.ToString());
-            settings.SetKeyValue("DataBaseCharset", ParametrY.Charset);
-            settings.SetKeyValue("DataBaseRole", ParametrY.Role);
-            settings.SetKeyValue("DataBaseConnection_lifetime", ParametrY.ConnectionLifeTime.ToString());
-            settings.SetKeyValue("DataBasePooling", ParametrY.Pooling.ToString());
-            settings.SetKeyValue("DataBaseMinPoolSize", ParametrY.MinPoolSize.ToString());
-            settings.SetKeyValue("DataBaseMaxPoolSize", ParametrY.MaxPoolSize.ToString());
-            settings.SetKeyValue("DataBasePacket_Size", ParametrY.PacketSize.ToString());
-            settings.SetKeyValue("DataBaseServerType", Convert.ToInt16(ParametrY.Embedded).ToString());
-            settings.SetKeyValue("LogQueries", ParametrY.QueriesLog.ToString());
+                settings.SetKeyValue("DataBasePort", ParametrY.DbPort.ToString());
 
-            //settings.SetKeyValue("zusNip", txtNip.Text);
-            //settings.SetKeyValue("zusReportEmail", txtEmail.Text);
-            //settings.SetKeyValue("zusReportPass", txtHaslo.Text);
+                settings.SetKeyValue("DataBaseDialect", ParametrY.Dialect.ToString());
+                settings.SetKeyValue("DataBaseCharset", ParametrY.Charset);
+                settings.SetKeyValue("DataBaseRole", ParametrY.Role);
+                settings.SetKeyValue("DataBaseConnection_lifetime", ParametrY.ConnectionLifeTime.ToString());
+                settings.SetKeyValue("DataBasePooling", ParametrY.Pooling.ToString());
+                settings.SetKeyValue("DataBaseMinPoolSize", ParametrY.MinPoolSize.ToString());
+                settings.SetKeyValue("DataBaseMaxPoolSize", ParametrY.MaxPoolSize.ToString());
+                settings.SetKeyValue("DataBasePacket_Size", ParametrY.PacketSize.ToString());
+                settings.SetKeyValue("DataBaseServerType", Convert.ToInt16(ParametrY.Embedded).ToString());
+                settings.SetKeyValue("LogQueries", ParametrY.QueriesLog.ToString());
 
-            configFile.Save(ConfigurationSaveMode.Modified);
-            ConfigurationManager.RefreshSection(configFile.AppSettings.SectionInformation.Name);
+                //settings.SetKeyValue("zusNip", txtNip.Text);
+                //settings.SetKeyValue("zusReportEmail", txtEmail.Text);
+                //settings.SetKeyValue("zusReportPass", txtHaslo.Text);
 
+                configFile.Save(ConfigurationSaveMode.Modified);
+                ConfigurationManager.RefreshSection(configFile.AppSettings.SectionInformation.Name);
+            }
+            catch
+            {
+
+            }
         }
     }
 }
