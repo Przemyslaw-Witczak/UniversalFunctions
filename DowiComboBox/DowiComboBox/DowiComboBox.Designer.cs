@@ -1,5 +1,5 @@
-﻿using DowiExtensionsNameSpace;
-using IDowiComponentNamespace;
+﻿using DowiComboBoxNameSpace;
+using DowiExtensionsNameSpace;
 using IInputValidiatorNamespace;
 using System;
 using System.Diagnostics;
@@ -7,7 +7,7 @@ using System.Windows.Forms;
 
 namespace DowiComboBoxNameSpace
 {
-    partial class DowiComboBox : IDowiComponent
+    partial class DowiComboBox
     {
         /// <summary>
         /// Required designer variable.
@@ -56,11 +56,11 @@ namespace DowiComboBoxNameSpace
         {
             if (this.SelectedIndex < 0)
             {
-                this.HasValue = false;               
+                this.HasValue = false;
             }
             else
             {
-                this.HasValue = true;                
+                this.HasValue = true;
             }
             InputValidiator?.Validate();
         }
@@ -69,10 +69,10 @@ namespace DowiComboBoxNameSpace
         {
             Debug.WriteLine("HandleKeyPress");
             ComboBox comboBox = sender as ComboBox;
-            
+
             try
             {
-               HasValue = true;
+                HasValue = true;
                 //comboBox.BackColor = System.Drawing.Color.Green;
                 string TmpStr;
 
@@ -140,7 +140,7 @@ namespace DowiComboBoxNameSpace
                     comboBox.SelectionLength = comboBox.Text.Length - SelSt;
                     Debug.WriteLine("SelectioStart=" + SelSt.ToString());
                 }
-                if (ValueInteraction==ValueInteractionType.InSet)
+                if (ValueInteraction == ValueInteractionType.InSet)
                     e.Handled = true;
                 HasValue = true;
                 //comboBox.BackColor = System.Drawing.Color.Blue;

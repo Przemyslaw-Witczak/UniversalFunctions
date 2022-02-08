@@ -1,11 +1,12 @@
-﻿using System;
+﻿using IDowiComponentNamespace;
+using System;
 using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
 namespace DowiComboBoxNameSpace
 {
-    public partial class DowiComboBox: ComboBox
+    public partial class DowiComboBox: ComboBox, IDowiComponent
     {
         //Store the default width to perform check in UpdateDropDownWidth.
         private int initialDropDownWidth = 0;

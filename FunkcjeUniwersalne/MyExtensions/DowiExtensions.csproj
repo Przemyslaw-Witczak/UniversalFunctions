@@ -54,6 +54,10 @@
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="DowiForms, Version=1.0.0.0, Culture=neutral, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\DowiComboBox\DowiComboBox\bin\Release\DowiForms.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
@@ -70,12 +74,6 @@
     <Compile Include="MetodyRozszerzajace.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="WindowsApiFunctionsImports.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\DowiForms\DowiForms.csproj">
-      <Project>{e15694d8-fc00-4391-ac57-caa108901de5}</Project>
-      <Name>DowiForms</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
