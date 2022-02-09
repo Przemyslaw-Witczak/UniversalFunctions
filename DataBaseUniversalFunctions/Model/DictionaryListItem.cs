@@ -28,7 +28,10 @@ namespace DataBaseUniversalFunctions.Model
         /// </summary>
         public object AdditionalData { get; set; }
         
-
+        /// <summary>
+        /// Zwraca wartość Value
+        /// </summary>
+        /// <returns></returns>
         public override string ToString()
         {
             return Value;
