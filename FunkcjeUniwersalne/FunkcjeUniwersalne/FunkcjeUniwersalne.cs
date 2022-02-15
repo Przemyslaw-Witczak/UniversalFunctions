@@ -175,12 +175,15 @@ namespace MojeFunkcjeUniwersalneNameSpace
                             file.Write(DataGridtoCSV(DG));
                         }
                     }
-                    MessageBox.Show("Zakończono eksport do pliku");
+                    var response = MessageBox.Show($"Zakończono eksport do pliku {Path.GetFileName(SaveDialog.FileName)}, {DG.RowCount} wierszy. Czy otworzyć plik w skojarzonym programie?", "Eksport do csv", MessageBoxButtons.YesNo);
+                    if (response == DialogResult.Yes)
+                        System.Diagnostics.Process.Start(SaveDialog.FileName); 
                 }
             }
             catch (Exception ex)
             {
                 MessageBox.Show($"Eksport się nie powiódł: {ex}");
+                return;
             }
 
 

@@ -278,6 +278,26 @@ namespace MojeFunkcjeUniwersalneNameSpace
 
             gridKolumny.Add(kolumna);
         }
-        
+
+        /// <summary>
+        /// Metoda ustawia pogrubioną czcionkę dla wybranego wiersza grida, 
+        /// na potrzeby podsumowania
+        /// </summary>
+        /// <param name="grid">Grid</param>
+        /// <param name="rowNumber">Numer wiersza który ma być pogrubiony</param>
+        public static void UstawPogrubienieWiersza(DataGridView grid, int rowNumber)
+        {
+            var noweFormatowanie = new DataGridViewCellStyle();
+            noweFormatowanie.Font = new Font(grid.DefaultCellStyle.Font, FontStyle.Bold);
+            grid.Rows[rowNumber].DefaultCellStyle = noweFormatowanie;
+        }
+
+        public static void UstawKolorKomorki(DataGridView grid, int rowNumber, int colNumber, Color color)
+        {           
+            grid.Rows[rowNumber].Cells[colNumber].Style.ForeColor = color;
+        }
+
     }
+
+
 }
