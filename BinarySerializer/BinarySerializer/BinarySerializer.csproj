@@ -7,9 +7,9 @@
     <ProjectGuid>{87BD0960-0624-4E8B-BCF0-0917F184A4CC}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>BinarySerializer</RootNamespace>
+    <RootNamespace>BinarySerializerNamespace</RootNamespace>
     <AssemblyName>BinarySerializer</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile>
     </TargetFrameworkProfile>
@@ -54,7 +54,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\FunkcjeUniwersalne\FunkcjeUniwersalne\FunkcjeUniwersalne.csproj">
-      <Project>{22D63D77-4EF4-404D-8CBE-D5E6751A3CAB}</Project>
+      <Project>{22d63d77-4ef4-404d-8cbe-d5e6751a3cab}</Project>
       <Name>FunkcjeUniwersalne</Name>
     </ProjectReference>
   </ItemGroup>

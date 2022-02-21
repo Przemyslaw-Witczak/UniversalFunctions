@@ -1,5 +1,4 @@
-﻿using MojeFunkcjeUniwersalneNameSpace;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -38,7 +37,7 @@ namespace BinarySerializerNamespace
 
                 Parameter propertyParameter = new Parameter(propertyInfo.Name);
                 propertyParameter.AsValue = value;
-                byte[] byteValue = FunkcjeUniwersalne.GetBytes(value.ToString());
+                byte[] byteValue = MojeFunkcjeUniwersalneNameSpace.FunkcjeUniwersalne.GetBytes(value.ToString());
 
                 sumStream.Write(byteValue, 0, value.ToString().Length);
 
@@ -71,8 +70,8 @@ namespace BinarySerializerNamespace
             byte[] buffer = new byte[endStream];
             sumStream.Position = 0;
             sumStream.Read(buffer, 0, endStream);
-            string streamString = FunkcjeUniwersalne.Instance.GetString(buffer);
-            string hashString = FunkcjeUniwersalne.Instance.GetMd5Hash(streamString);
+            string streamString = MojeFunkcjeUniwersalneNameSpace.FunkcjeUniwersalne.Instance.GetString(buffer);
+            string hashString = MojeFunkcjeUniwersalneNameSpace.FunkcjeUniwersalne.Instance.GetMd5Hash(streamString);
             return hashString;
         }
 
@@ -91,7 +90,7 @@ namespace BinarySerializerNamespace
                 Parameter readenParameter = ps.Deserialize(source);
                 if (readenParameter.Name != obj.GetType().Name)
                 {
-                    byte[] byteValue = FunkcjeUniwersalne.GetBytes(readenParameter.AsValue.ToString());
+                    byte[] byteValue = MojeFunkcjeUniwersalneNameSpace.FunkcjeUniwersalne.GetBytes(readenParameter.AsValue.ToString());
                     sumStream.Write(byteValue, 0, readenParameter.AsValue.ToString().ToString().Length);
                 }
                 else

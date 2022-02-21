@@ -1,9 +1,16 @@
-﻿using DataBaseUniversalFunctions.Model;
-using MojeFunkcjeRozszerzajace;
+﻿using DataBaseUniversalFunctions;
+using DataBaseUniversalFunctions.Model;
+using DowiExtensionsNameSpace;
+using MojeFunkcjeUniwersalneNameSpace.Wpf;
+using MVVMClasses;
+using MVVMClasses.Models;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
+using System.Reflection;
 using System.Windows.Forms;
 using System.Xml;
 using System.Xml.Serialization;
@@ -48,6 +55,7 @@ namespace MojeFunkcjeUniwersalneNameSpace
         /// Lista kontrolek, generowana automatycznie, dla metod wewnętrznych w celu zapisu i odczytu wartosci
         /// </summary>
         private List<Control> ListaKontrolek;
+        
         #endregion
         #region Konstruktor i destruktor
 
@@ -98,7 +106,7 @@ namespace MojeFunkcjeUniwersalneNameSpace
             Konfiguracja = new List<cKonfiguracja>();
             GetParamFromDatabase();
             ParentForm = null;
-            ListaKontrolek = new List<Control>();           
+            ListaKontrolek = new List<Control>();            
         }
 
         /// <summary>
@@ -130,7 +138,7 @@ namespace MojeFunkcjeUniwersalneNameSpace
             }
             ParentForm = AParentForm;
         }
-
+        
         /// <summary>
         /// Metoda przeszukująca kontener
         /// </summary>
@@ -533,17 +541,28 @@ namespace MojeFunkcjeUniwersalneNameSpace
                     SetComboBoxBehavior2((ComboBox)ListaKontrolek[i]);
                 }
             }
-            //TODO: Sprawdzać czy ustawienie formularza nie wykroczy poza ekran
+            
             if (GetParam(AParentForm.Name, "WindowState", "Normal")=="Normal")
             {
                 try
                 {
-                    AParentForm.Left = Convert.ToInt32(GetParam(AParentForm.Name, "Left", AParentForm.Left.ToString()));
-                    AParentForm.Top = Convert.ToInt32(GetParam(AParentForm.Name, "Top", AParentForm.Top.ToString()));
+                    int x = Convert.ToInt32(GetParam(AParentForm.Name, "Left", AParentForm.Left.ToString()));
+                    int y = Convert.ToInt32(GetParam(AParentForm.Name, "Top", AParentForm.Top.ToString()));
+                    if (CheckIfPointWillBeVisible(x, y))
+                    { 
+                        AParentForm.Left = x;
+                        AParentForm.Top = y;
+                    }
+                   
                     if (AParentForm.FormBorderStyle == FormBorderStyle.Sizable || AParentForm.FormBorderStyle == FormBorderStyle.SizableToolWindow)
                     {
-                        AParentForm.Width = Convert.ToInt32(GetParam(AParentForm.Name, "Width", AParentForm.Width.ToString()));
-                        AParentForm.Height = Convert.ToInt32(GetParam(AParentForm.Name, "Height", AParentForm.Height.ToString()));
+                        int w = Convert.ToInt32(GetParam(AParentForm.Name, "Width", AParentForm.Left.ToString()));
+                        int h = Convert.ToInt32(GetParam(AParentForm.Name, "Height", AParentForm.Top.ToString()));
+                        if (CheckIfPointWillBeVisible(w, h))
+                        {
+                            AParentForm.Width = w;
+                            AParentForm.Height = h;
+                        }
                     }
                 }
                 catch
@@ -559,7 +578,29 @@ namespace MojeFunkcjeUniwersalneNameSpace
             
         }
 
-       
+        
+
+        /// <summary>
+        /// Zbitka metod z 
+        /// https://www.pinvoke.net/default.aspx/user32/MonitorFromPoint.html
+        /// https://stackoverflow.com/questions/4681738/how-do-i-determine-if-a-window-is-off-screen
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <returns></returns>
+        bool CheckIfPointWillBeVisible(int x, int y)
+        {
+            POINT p;
+            p.X = x;
+            p.Y = y;
+            IntPtr hMon = SafeNativeMethods.MonitorFromPoint(p, MonitorOptions.MONITOR_DEFAULTTONULL);
+            if (hMon==IntPtr.Zero)
+            {
+                // point is off screen
+                return false;
+            }
+            return true;
+        }
 
         /// <summary>
         /// Metoda zapisująca Layout pól na formularzach (położenie splitterów, szerokości kolumn dataGridView
@@ -792,6 +833,214 @@ namespace MojeFunkcjeUniwersalneNameSpace
 
                 }
             }
+        }
+
+        /// <summary>
+        /// Zwraca wszystkie właściwości modelu dziedziczącego bo bazowym modelu typu ModelBase, bedącego w DataContexcie okna
+        /// </summary>
+        /// <param name="window">Okno z którego dataContextu pobrać filrty jako ModelBase</param>
+        /// <returns></returns>
+        //public PropertyInfo[] GetModelProperties(Window window, out ModelBase modelBase)
+        //{            
+        //    var windowName = nameof(window);
+        //    Debug.WriteLine($"Odczyt parametrów filtrów dataContext okna {windowName}");
+        //    var viewModel = window.DataContext;
+        //    var dataContextType = viewModel.GetType();
+        //    var allProperties = dataContextType.GetProperties();
+        //    var modelBaseProperty = allProperties.Where(prop => prop.PropertyType.IsSubclassOf(typeof(ModelBase)))?.FirstOrDefault();
+        //    modelBase = (ModelBase)modelBaseProperty?.GetValue(viewModel);
+        //    allProperties = modelBase?.GetType().GetProperties();
+        //    return allProperties;
+        //}
+        public PropertyInfo[] GetModelProperties(System.Windows.Controls.ContentControl window, out ModelBase modelBase)
+        {
+            var windowName = nameof(window);
+            Debug.WriteLine($"Odczyt parametrów filtrów dataContext okna {windowName}");
+            var viewModel = window.DataContext;
+            var dataContextType = viewModel.GetType();
+            var allProperties = dataContextType.GetProperties();
+            var modelBaseProperty = allProperties.Where(prop => prop.PropertyType.IsSubclassOf(typeof(ModelBase)))?.FirstOrDefault();
+            modelBase = (ModelBase)modelBaseProperty?.GetValue(viewModel);
+            allProperties = modelBase?.GetType().GetProperties();
+            return allProperties;
+        }
+        /// <summary>
+        /// Zwraca nazwę typu okna
+        /// </summary>
+        /// <param name="window"></param>
+        /// <returns></returns>
+        private string GetWindowName(System.Windows.Controls.ContentControl window)
+        {            
+            return $"{(window as Object).GetType()}";
+        }
+
+        /// <summary>
+        /// Inicjalizacja formularza znadź w WPF
+        /// </summary>
+        /// <param name="window"></param>
+        public void LoadSearchFields(System.Windows.Controls.ContentControl window)
+        {
+            var allProperties = GetModelProperties(window, out ModelBase modelBase);
+            if (allProperties == null)
+                return;
+            var windowName = GetWindowName(window);
+            foreach (var property in allProperties)
+            {
+                var propertyName = property.Name;
+                var savedStringValue = GetParam(windowName, propertyName, "");
+                Debug.WriteLine($"{property}='{savedStringValue}'");
+                if (!string.IsNullOrEmpty(savedStringValue))
+                {
+                    if (property.PropertyType == typeof(DictionaryListItem))
+                    {
+                        var dictionaryList = GetDictionaryListValues(window, modelBase, property);
+                        var found = GetDictionaryListItemParam(savedStringValue, dictionaryList);
+                        if (found!=null)                        
+                        {
+                            property.SetValue(modelBase, found, null);
+                            break;
+                        }
+                        
+                    }
+                    else if (property.PropertyType == typeof(DateTimeFilter))
+                    {
+                        var newDateFimeFilter = new DateTimeFilter()
+                        {
+                            SelectedValue = Convert.ToDateTime(savedStringValue)
+                        };
+                        property.SetValue(modelBase, newDateFimeFilter, null);
+                    }
+                    else if (property.PropertyType == typeof(ObservableCollection<DictionaryListItem>))
+                    {                        
+                        var propertyValue = property.GetValue(modelBase);
+                        var observableCollection = propertyValue as ObservableCollection<DictionaryListItem>;
+                        int count = Convert.ToInt32(savedStringValue); //ile pozycji do zaznacenia
+                        for (int i=1;i<=count;i++)
+                        {
+                            var positionToFind = GetParam(windowName, $"{propertyName}_{i}", "");
+                            var found = GetDictionaryListItemParam(positionToFind, observableCollection);
+                            if (found!=null)
+                            {
+                                found.IsChecked = true;
+                            }
+                        }                        
+                    }
+                    else
+                    {
+                        property.SetValue(modelBase, Convert.ChangeType(savedStringValue, property.PropertyType), null);
+                    }
+                }
+            }
+        
+        }
+
+        /// <summary>
+        /// Metoda wyszukująca element na liście słownikowej, do zaznaczenia lub ustawienia w polu ComboBox, wyszukuje po kluczu lub Id
+        /// </summary>        
+        /// <param name="savedStringValue"></param>
+        /// <param name="dictionaryList"></param>
+        private DictionaryListItem GetDictionaryListItemParam(string savedStringValue, ObservableCollection<DictionaryListItem> dictionaryList)
+        {
+            foreach (var dictItem in dictionaryList)
+            {
+                if ((string.IsNullOrEmpty(dictItem.IdentityKey) && dictItem.Identity.ToString() == savedStringValue)
+                    || dictItem.IdentityKey == savedStringValue)
+                {
+                    return dictItem;                    
+                }
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// Metoda zwraca listę typu DictionaryListItem dla właściwości podanej w parametrze, 
+        /// słownika szuka w ViewModelu
+        /// </summary>
+        /// <param name="window">Okno którego viewModel szukamy</param>
+        /// <param name="modelBase">Model danych</param>
+        /// <param name="property">Właściwośc</param>
+        /// <returns></returns>
+        private ObservableCollection<DictionaryListItem> GetDictionaryListValues(System.Windows.Controls.ContentControl window, ModelBase modelBase, PropertyInfo property)
+        {
+            var viewModel = window.DataContext;
+            var attributes = property.GetCustomAttributes(typeof(DictionaryListItemValuesAttribute), false);
+            if (attributes != null && attributes.Count() == 1)
+            {
+                var dictionaryListItemValuesAttribute = (attributes.First() as DictionaryListItemValuesAttribute);
+                var dictionaryListItemName = dictionaryListItemValuesAttribute.DictionaryListName;
+                var dataContextType = viewModel.GetType();
+                var allProperties = dataContextType.GetProperties();
+                var dictionaryList = allProperties.Where(prop => prop.Name==dictionaryListItemName)?.FirstOrDefault();
+                if (dictionaryList!=null)
+                {
+                    var dictionaryListValue = dictionaryList.GetValue(viewModel);
+                    return dictionaryListValue as ObservableCollection<DictionaryListItem>;
+                }
+                
+            }
+            return null;
+        }
+        /// <summary>
+        /// Zapisz parametry wyszukiwania okna WPF
+        /// </summary>
+        /// <param name="window"></param>
+        public void SaveSearchFields(System.Windows.Controls.ContentControl window)
+        {
+            var windowName = GetWindowName(window);            
+            var allProperties = GetModelProperties(window, out ModelBase model);
+            if (allProperties == null)
+                return;
+            foreach (var property in allProperties)
+            {
+                var propertyName = property.Name;
+                var propertyValue = property.GetValue(model);
+                Debug.WriteLine($"{property}={propertyValue}");
+                if (property.PropertyType == typeof(DictionaryListItem))
+                {
+                    var dictItem = propertyValue as DictionaryListItem;
+                    SetDictionaryListItemParam(windowName, propertyName, dictItem);
+                }
+                else if (property.PropertyType == typeof(DateTimeFilter))
+                {
+                    var dateTimeFilter = propertyValue as DateTimeFilter;
+                    if (dateTimeFilter.IsChecked)
+                    {
+                        SetParam(windowName, propertyName, $"{dateTimeFilter.SelectedValue}");
+                    }                                      
+                }
+                else if (property.PropertyType == typeof(ObservableCollection<DictionaryListItem>))
+                {                    
+                    var observableCollection = propertyValue as ObservableCollection<DictionaryListItem>;
+                    int count=0;
+                    foreach(var dictionaryListItem in observableCollection)
+                    {
+                        if (dictionaryListItem.IsChecked)
+                        {
+                            count++;
+                            SetDictionaryListItemParam(windowName, $"{propertyName}_{count}", dictionaryListItem);
+                        }
+                    }
+                    SetParam(windowName, $"{propertyName}", $"{count}");
+                }
+                else
+                {
+                    SetParam(windowName, propertyName, $"{propertyValue}");
+                }
+            }
+        }
+
+        /// <summary>
+        /// Metoda zapisująca zaznaczoną pozycję DictionaryListItem.. rozwiązuje problem czy pozycja słownikowa ma klucz czy Id
+        /// </summary>
+        /// <param name="windowName">Nazwa okna</param>
+        /// <param name="propertyName">Nazwa właściwości-filtru</param>
+        /// <param name="dictItem">Pozycja słownikowa</param>
+        private void SetDictionaryListItemParam(string windowName, string propertyName, DictionaryListItem dictItem)
+        {
+            if (string.IsNullOrEmpty(dictItem?.IdentityKey))
+                SetParam(windowName, propertyName, $"{dictItem?.Identity}");
+            else
+                SetParam(windowName, propertyName, $"{dictItem?.IdentityKey}");
         }
 
         /// <summary>

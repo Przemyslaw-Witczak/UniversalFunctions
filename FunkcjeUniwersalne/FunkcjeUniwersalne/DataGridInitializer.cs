@@ -43,7 +43,8 @@ namespace MojeFunkcjeUniwersalneNameSpace
         /// Konstruktor klasy
         /// </summary>
         /// <param name="gridPozycje">Grid do inicjalizacji</param>
-        public DataGridInitializer(DataGridView gridPozycje)
+        /// <param name="showRowNumbers">Pokaz wiersze z numerami zamiast kolumny Lp</param>
+        public DataGridInitializer(DataGridView gridPozycje, bool showRowNumbers=false)
         {
             this.gridKomponent = gridPozycje;
 
@@ -54,11 +55,41 @@ namespace MojeFunkcjeUniwersalneNameSpace
             gridKomponent.ColumnHeadersVisible = true;          
             DataGridViewCellStyle columnHeaderStyle = new DataGridViewCellStyle();
             columnHeaderStyle.BackColor = Color.Beige;
-            columnHeaderStyle.Font = new Font("Verdana", 8, FontStyle.Bold);
+            columnHeaderStyle.Font = new Font("Verdana", 7, FontStyle.Bold);
             gridKomponent.ColumnHeadersDefaultCellStyle = columnHeaderStyle;
             //ukryj boczną kolumnę, wskaźnik wiersza
-            gridKomponent.RowHeadersVisible = false;
+            gridKomponent.RowHeadersVisible = showRowNumbers;
+            if (showRowNumbers)
+                gridKomponent.RowPostPaint += dataGridViewRowPostPaintEventHandler;
 
+        }
+
+        /// <summary>
+        /// Metoda obsługi zdarzenia malowania nagłówka wiersza
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void dataGridViewRowPostPaintEventHandler(object sender, DataGridViewRowPostPaintEventArgs e)
+        {
+            var grid = sender as DataGridView;
+            var rowIdx = (e.RowIndex + 1).ToString();
+
+            var centerFormat = new StringFormat()
+            {
+                // right alignment might actually make more sense for numbers
+                Alignment = StringAlignment.Center,
+
+                LineAlignment = StringAlignment.Center
+            };
+            //get the size of the string
+            Size textSize = TextRenderer.MeasureText(rowIdx, gridKomponent.Font);
+            //if header width lower then string width then resize
+            if (grid.RowHeadersWidth < textSize.Width + 10)
+            {
+                grid.RowHeadersWidth = textSize.Width + 10;
+            }
+            var headerBounds = new Rectangle(e.RowBounds.Left, e.RowBounds.Top, grid.RowHeadersWidth, e.RowBounds.Height);
+            e.Graphics.DrawString(rowIdx, gridKomponent.Font, SystemBrushes.ControlText, headerBounds, centerFormat);
         }
 
         /// <summary>
@@ -67,10 +98,7 @@ namespace MojeFunkcjeUniwersalneNameSpace
         /// <param name="kolumna"></param>
         private void AddColumn(DataGridViewColumn kolumna)
         {            
-
             
-
-
             gridKolumny.Add(kolumna);
         }
         /// <summary>
@@ -250,5 +278,26 @@ namespace MojeFunkcjeUniwersalneNameSpace
 
             gridKolumny.Add(kolumna);
         }
+
+        /// <summary>
+        /// Metoda ustawia pogrubioną czcionkę dla wybranego wiersza grida, 
+        /// na potrzeby podsumowania
+        /// </summary>
+        /// <param name="grid">Grid</param>
+        /// <param name="rowNumber">Numer wiersza który ma być pogrubiony</param>
+        public static void UstawPogrubienieWiersza(DataGridView grid, int rowNumber)
+        {
+            var noweFormatowanie = new DataGridViewCellStyle();
+            noweFormatowanie.Font = new Font(grid.DefaultCellStyle.Font, FontStyle.Bold);
+            grid.Rows[rowNumber].DefaultCellStyle = noweFormatowanie;
+        }
+
+        public static void UstawKolorKomorki(DataGridView grid, int rowNumber, int colNumber, Color color)
+        {           
+            grid.Rows[rowNumber].Cells[colNumber].Style.ForeColor = color;
+        }
+
     }
+
+
 }

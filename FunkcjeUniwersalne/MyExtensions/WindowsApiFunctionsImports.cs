@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text;
 
-namespace MojeFunkcjeUniwersalneNameSpace
+namespace DowiExtensionsNameSpace
 {
     [StructLayout(LayoutKind.Sequential)]
     public struct SYSTEMTIME
@@ -17,6 +14,36 @@ namespace MojeFunkcjeUniwersalneNameSpace
         public short wMinute;
         public short wSecond;
         public short wMilliseconds;
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
+    public struct POINT
+    {
+        public int X;
+        public int Y;
+
+        public POINT(int x, int y)
+        {
+            X = x;
+            Y = y;
+        }
+
+        public static implicit operator System.Drawing.Point(POINT p)
+        {
+            return new System.Drawing.Point(p.X, p.Y);
+        }
+
+        public static implicit operator POINT(System.Drawing.Point p)
+        {
+            return new POINT(p.X, p.Y);
+        }
+    }
+
+    public enum MonitorOptions : uint
+    {
+        MONITOR_DEFAULTTONULL = 0x00000000,
+        MONITOR_DEFAULTTOPRIMARY = 0x00000001,
+        MONITOR_DEFAULTTONEAREST = 0x00000002
     }
 
     public static class SafeNativeMethods
@@ -82,6 +109,33 @@ namespace MojeFunkcjeUniwersalneNameSpace
 
         [DllImport("kernel32.dll")]
         public static extern uint GetLastError();
+
+
+
+        /// <summary>
+        /// https://www.pinvoke.net/default.aspx/user32/MonitorFromPoint.html
+        /// </summary>
+        /// <param name="pt"></param>
+        /// <param name="dwFlags"></param>
+        /// <returns></returns>
+        [DllImport("user32.dll", SetLastError = true)]
+        public static extern IntPtr MonitorFromPoint(POINT pt, MonitorOptions dwFlags);
+
+        /// <summary>
+        /// Wyślij wiadomość do okna
+        /// </summary>
+        /// <param name="hWnd"></param>
+        /// <param name="wMsg"></param>
+        /// <param name="wParam"></param>
+        /// <param name="lParam"></param>
+        /// <returns></returns>
+        [DllImport("user32.dll")]
+        public static extern int SendMessage(IntPtr hWnd, int wMsg, bool wParam, int lParam);
+
+        /// <summary>
+        /// WM_SETREDRAW
+        /// </summary>
+        public const int WM_SETREDRAW = 11;
 
     }
 }

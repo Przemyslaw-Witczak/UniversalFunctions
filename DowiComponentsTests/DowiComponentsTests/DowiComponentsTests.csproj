@@ -104,7 +104,7 @@
       <Project>{2d682627-beaf-4e81-a8f4-ff230bee0f43}</Project>
       <Name>DowiComboBox</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\FunkcjeUniwersalne\FunkcjeUniwersalne\FunkcjeUniwersalne\FunkcjeUniwersalne.csproj">
+    <ProjectReference Include="..\..\FunkcjeUniwersalne\FunkcjeUniwersalne\FunkcjeUniwersalne.csproj">
       <Project>{22D63D77-4EF4-404D-8CBE-D5E6751A3CAB}</Project>
       <Name>FunkcjeUniwersalne</Name>
     </ProjectReference>

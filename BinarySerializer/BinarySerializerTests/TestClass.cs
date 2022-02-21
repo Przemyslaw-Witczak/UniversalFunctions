@@ -10,10 +10,10 @@ namespace BinarySerializerTests
 {
     public class TestClass
     {
-        [BinarySerializerAttribute]
+        [BinarySerializer]
         public int IntProperty { get; set; }
 
-        [BinarySerializerAttribute]
+        [BinarySerializer]
         public string StringProperty { get; set;}
 
         [BinarySerializerAttribute]

@@ -7,7 +7,7 @@
     <ProjectGuid>{22D63D77-4EF4-404D-8CBE-D5E6751A3CAB}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>FunkcjeUniwersalne</RootNamespace>
+    <RootNamespace>MojeFunkcjeUniwersalneNameSpace</RootNamespace>
     <AssemblyName>FunkcjeUniwersalne</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -32,11 +32,12 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="AegisImplicitMail, Version=1.0.3.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\..\Zlotnik\packages\AIM.1.0.3\lib\AegisImplicitMail.dll</HintPath>
+    <Reference Include="AegisImplicitMail">
+      <HintPath>..\packages\AIM.1.0.3\lib\AegisImplicitMail.dll</HintPath>
     </Reference>
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
     <Reference Include="System" />
-    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Security" />
@@ -46,23 +47,15 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Forms\MdiChildFormBase.cs">
-      <SubType>Form</SubType>
-    </Compile>
     <Compile Include="FTP\AppConfig.cs" />
     <Compile Include="DataGridInitializer.cs" />
     <Compile Include="Files\FileElement.cs" />
     <Compile Include="Files\FileServiceClass.cs" />
     <Compile Include="Files\FolderElement.cs" />
     <Compile Include="Files\IPathElement.cs" />
-    <Compile Include="Forms\frmAnulujZatwierdzPanel.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Forms\frmAnulujZatwierdzPanel.Designer.cs">
-      <DependentUpon>frmAnulujZatwierdzPanel.cs</DependentUpon>
-    </Compile>
     <Compile Include="FTP\Ftp.cs" />
     <Compile Include="FunkcjeUniwersalne.cs" />
     <Compile Include="GlobalSuppressions.cs" />
@@ -72,7 +65,6 @@
     <Compile Include="Logger\LogAddedEvent.cs" />
     <Compile Include="Logger\Logger.cs" />
     <Compile Include="Logger\LogPositions.cs" />
-    <Compile Include="MetodyRozszerzajace.cs" />
     <Compile Include="MySetup\cKonfiguracja.cs" />
     <Compile Include="MySetup\cParametr.cs" />
     <Compile Include="MySetup\MySetup.cs" />
@@ -83,13 +75,10 @@
       <DependentUpon>Potwierdzenie.cs</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="WindowsApiFunctionsImports.cs" />
+    <Compile Include="Wpf\WindowExtensions.cs" />
     <Compile Include="XmlSerializator.cs" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Forms\frmAnulujZatwierdzPanel.resx">
-      <DependentUpon>frmAnulujZatwierdzPanel.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Potwierdzenie.resx">
       <DependentUpon>Potwierdzenie.cs</DependentUpon>
     </EmbeddedResource>
@@ -106,6 +95,14 @@
     <ProjectReference Include="..\..\IInputValidiator\IInputValidiator.csproj">
       <Project>{043458c6-44e6-475c-aa29-273f2b3967bf}</Project>
       <Name>IInputValidiator</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\MVVMClasses\MVVMClasses.csproj">
+      <Project>{2A8EA2CF-3CFE-4778-89D3-A03E389E5912}</Project>
+      <Name>MVVMClasses</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\MyExtensions\DowiExtensions.csproj">
+      <Project>{4972dfb0-708b-4a65-be70-d7320b7e6354}</Project>
+      <Name>DowiExtensions</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

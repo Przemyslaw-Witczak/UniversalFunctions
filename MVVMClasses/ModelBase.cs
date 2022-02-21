@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Reflection;
 
 namespace MVVMClasses
 {
@@ -20,6 +17,11 @@ namespace MVVMClasses
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
+
+        public static explicit operator ModelBase(PropertyInfo v)
+        {
+            throw new NotImplementedException();
+        }
         #endregion
     }
 }
