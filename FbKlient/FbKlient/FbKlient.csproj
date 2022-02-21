@@ -40,14 +40,12 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="DowiExtensions">
-      <HintPath>..\..\FunkcjeUniwersalne\MyExtensions\bin\x86\Release\DowiExtensions.dll</HintPath>
+    <Reference Include="DowiExtensions, Version=1.0.0.0, Culture=neutral, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\DowiComboBox\DowiComboBox\bin\Release\DowiExtensions.dll</HintPath>
     </Reference>
     <Reference Include="FirebirdSql.Data.FirebirdClient">
       <HintPath>.\FirebirdSql.Data.FirebirdClient.dll</HintPath>
-    </Reference>
-    <Reference Include="FunkcjeUniwersalne">
-      <HintPath>..\..\FunkcjeUniwersalne\FunkcjeUniwersalne\bin\x86\Release\FunkcjeUniwersalne.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />

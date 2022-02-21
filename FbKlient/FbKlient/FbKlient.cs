@@ -1,17 +1,13 @@
-﻿using System;
-
-
-using System.Windows.Forms;
-using System.Data;
-using FirebirdSql.Data.FirebirdClient;
+﻿using FirebirdSql.Data.FirebirdClient;
+using ISqlKlientNameSpace;
+using System;
 using System.Collections.Generic;
+using System.Configuration;
+using System.Data;
 using System.IO;
 using System.Text;
-using System.Configuration;
-using ISqlKlientNameSpace;
 using System.Text.RegularExpressions;
-using MojeFunkcjeUniwersalneNameSpace.Logger;
-//using System.Data.SqlClient;
+using System.Windows.Forms;
 
 namespace FbKlientNameSpace
 {
@@ -25,6 +21,9 @@ namespace FbKlientNameSpace
     public class FbKlient : IDisposable, ISqlKlient
     {
         #region Zmienne publiczne i prywatne
+
+        Action<string> ExternalLoggerMethod;
+
         /// <summary>
         /// Nadrzędny formularz wykorzystywany do prawidłowego wyświetlania komunikatów, oraz zmiany kursora
         /// </summary>
@@ -255,15 +254,7 @@ namespace FbKlientNameSpace
             System.GC.SuppressFinalize(this);
         }
 
-        #endregion
-
-        private void Loguj(string message)
-        {
-            if (ConfigurationManager.AppSettings["LogQueries"]=="true")
-            {
-                Logger.Instance.Loguj(message, false);
-            }
-        }
+        #endregion        
 
         #region Konfiguracja klienta
         /// <summary>
@@ -1176,6 +1167,14 @@ namespace FbKlientNameSpace
             else
             {
                 throw new Exception(message);
+            }
+        }
+
+        private void Loguj(string message)
+        {
+            if (ConfigurationManager.AppSettings["LogQueries"] == "true" && ExternalLoggerMethod!=null)
+            {
+                ExternalLoggerMethod(message);
             }
         }
         #endregion
