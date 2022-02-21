@@ -1,12 +1,11 @@
-﻿using FirebirdSql.Data.FirebirdClient;
-using ISqlKlientNameSpace;
+﻿using FbClientBase;
+using FirebirdSql.Data.FirebirdClient;
+using ISqlClientCore;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
-using System.IO;
 using System.Text;
-using System.Text.RegularExpressions;
 using System.Windows.Forms;
 
 namespace FbKlientNameSpace
@@ -18,12 +17,10 @@ namespace FbKlientNameSpace
     /// Autor: Przemysław Witczak,
     /// Klasa wykorzystuje bibliotekę Firebird .Net Provider, jednak opakowuje ją w funkcje znane z komponentów Borland C++ oraz ODBC
     /// </remarks>
-    public class FbKlient : IDisposable, ISqlKlient
+    public class FbKlient : FbReaderBase, IDisposable, ISqlClient
     {
-        #region Zmienne publiczne i prywatne
-
-        Action<string> ExternalLoggerMethod;
-
+        #region Zmienne publiczne i prywatne       
+        
         /// <summary>
         /// Nadrzędny formularz wykorzystywany do prawidłowego wyświetlania komunikatów, oraz zmiany kursora
         /// </summary>
@@ -43,21 +40,21 @@ namespace FbKlientNameSpace
                     dt = new DataTable();
 
                     //getCommandLog(commandString, Commands[QueryId]);
-                    Commands[QueryId].Connection = DataBaseConnection;
-                    Commands[QueryId].Transaction = Transaction;
-                    da.SelectCommand = Commands[QueryId];
+                    CurrentCommand.Connection = DataBaseConnection;
+                    CurrentCommand.Transaction = Transaction;
+                    da.SelectCommand = CurrentCommand;
                     da.Fill(dt);
 
                     CommitTransaction();
                 }
                 else
                 {
-                    MyShowMessage("Problem z połączeniem do bazy danych !");
+                    ExceptionLogOrMessage("Problem z połączeniem do bazy danych !");
                 }
             }
             catch (Exception ex)
             {
-                MyShowMessage("Problem z wykonaniem zapytania: " + commandString.ToString() + ex.Message.ToString());
+                ExceptionLogOrMessage("Problem z wykonaniem zapytania: " + commandString.ToString() + ex.Message.ToString());
             }
 
             return null ?? dt;
@@ -74,11 +71,27 @@ namespace FbKlientNameSpace
         /// <summary>
         /// Lista komend(zapytań) wysyłanych w transakcji
         /// </summary>
-        private List<FbCommand> Commands;
+        private List<FbCommandFasade> Commands;
+        private FbCommand CurrentCommand
+        {
+            get
+            {
+                return Commands[QueryId].Command;
+            }
+        }
         /// <summary>
         /// Odpowiedź - rekordset
         /// </summary>
-        public FbDataReader Response;
+        public new FbDataReader Response
+        {
+            get
+            {
+                if (Responses==null || Responses.Count==0 || responseId<0)
+                    return null;
+                return Responses[responseId];
+            }
+        }
+
         public List<FbDataReader> Responses;
 
         private bool DataBaseOpened;
@@ -111,6 +124,14 @@ namespace FbKlientNameSpace
         }
 
         private int commandsCount = 1;
+
+        FbCommandFasade CreateCommand()
+        {
+            FbCommand myCommand = new FbCommand();
+            myCommand.Connection = DataBaseConnection;
+            myCommand.Transaction = Transaction;
+            return new FbCommandFasade(myCommand, DebugLog, ExceptionLogOrMessage);
+        }
         /// <summary>
         /// Liczba komend wykonywanych w aktualnej transakcji, domyślnie 1, nie ma konieczności inkrementowania tej zmiennej jeżeli zmieniana jest QueryId
         /// </summary>
@@ -125,11 +146,8 @@ namespace FbKlientNameSpace
                     {
                         for (int i = Commands.Count; i < value; i++)
                         {
-                            FbCommand myCommand = new FbCommand();
-                            myCommand.Connection = DataBaseConnection;
-                            myCommand.Transaction = Transaction;
-
-                            Commands.Add(myCommand);
+                            var cmd = CreateCommand();
+                            Commands.Add(cmd);
                         }
                     }
                     else if (value < commandsCount) //zmniejszenie
@@ -137,7 +155,7 @@ namespace FbKlientNameSpace
                         //for (int i=Commands.Count;i>=value;i--)
                         while (Commands.Count > value)
                         {
-                            Commands[Commands.Count - 1].Dispose();
+                            Commands[Commands.Count - 1].Command.Dispose();
                             Commands.RemoveAt(Commands.Count - 1);
                         }
                     }
@@ -158,19 +176,16 @@ namespace FbKlientNameSpace
             get { return responseId; }
             set
             {
+                if (Responses == null || value > Responses.Count )
+                {
+                    throw new Exception("ResponseId wykracza po za liczbę zapytań !! ResponseId=" + responseId.ToString() + " <= Count=" + Responses.Count.ToString());
+                }
+
                 if (responseId != value)
                 {
                     responseId = value;
                 }
 
-                if (Responses != null && Responses.Count > responseId)
-                {
-                    Response = Responses[responseId];
-                }
-                else
-                {
-                    throw new Exception("ResponseId wykracza po za liczbę zapytań !! ResponseId=" + responseId.ToString() + " <= Count=" + Responses.Count.ToString());
-                }
             }
         }
 
@@ -185,8 +200,8 @@ namespace FbKlientNameSpace
             ParentForm = null;
             DataBaseConnection = null;
             Transaction = null;
-            Commands = new List<FbCommand>();
-            Response = null;
+            Commands = new List<FbCommandFasade>();
+            
             Responses = new List<FbDataReader>();
 
             DataBaseOpened = false;
@@ -248,8 +263,6 @@ namespace FbKlientNameSpace
         public void Dispose()
         {
             Dispose(true);
-
-
 
             System.GC.SuppressFinalize(this);
         }
@@ -330,7 +343,7 @@ namespace FbKlientNameSpace
             }
             catch (Exception e)
             {
-                MyShowMessage($"There is an error while connecting to database: '{ConnectionString}'!\n{e}");
+                ExceptionLogOrMessage($"There is an error while connecting to database: '{ConnectionString}'!\n{e}");
                 DataBaseOpened = false;
 
                 if (Transaction != null)
@@ -475,7 +488,7 @@ namespace FbKlientNameSpace
             {
                 for (int i = 0; i < Commands.Count; i++)
                 {
-                    Commands[i].Dispose();
+                    Commands[i].Command.Dispose();
                     Commands[i] = null;
                     GC.WaitForPendingFinalizers();
                 }
@@ -498,82 +511,25 @@ namespace FbKlientNameSpace
             {
                 if (Commands.Count < 1)
                 {
-                    Commands.Add(new FbCommand(SqlString, DataBaseConnection, Transaction));
+                    var cmd = CreateCommand();
+                    cmd.Command.CommandText = SqlString;
+                    Commands.Add(cmd);
                     QueryId = 0;
                 }
                 else
                 {
-                    Commands[QueryId].CommandText += SqlString;
+                    CurrentCommand.CommandText += SqlString;
                 }
                 Loguj("FbKlient__AddSQL-Koniec");
             }
             catch (Exception ex)
             {
-                MyShowMessage("Error while trying AddSQL: " + ex.Message);
+                ExceptionLogOrMessage("Error while trying AddSQL: " + ex.Message);
             }
 
         }
 
-        /// <summary>
-        /// Metoda do przekazywania wartości parametrów do zapytania
-        /// </summary>
-        /// <param name="paramName">Nazwa parametru poprzedzona, może być poprzedzona znakiem '@' lub ':'</param>
-        /// <param name="Typ">Typ danych</param>
-        /// <returns></returns>
-        public FbParameter ParamByName(String paramName, FbDbType paramType)
-        {
-            Loguj("FbKlient__ParamByName('" + paramName + "' as " + paramType.GetType().Name + ")");
-            try
-            {
-                paramName = paramName.Replace(":", "@");
-
-                if (!paramName.Contains("@"))
-                {
-                    paramName = "@" + paramName;
-                }
-
-                FbParameter returned_param = null;
-                foreach (FbParameter param in Commands[queryId].Parameters)
-                {
-                    if (param.ParameterName.Equals(paramName))
-                    {
-                        returned_param = param;
-                        returned_param.FbDbType = paramType;
-                        break;
-                    }
-                }
-
-                if (returned_param == null)
-                {
-                    returned_param = Commands[QueryId].Parameters.Add(paramName, paramType);
-                }
-
-                Loguj("FbKlient__ParamByName-Koniec");
-                return returned_param;
-            }
-            catch (Exception ex)
-            {
-                MyShowMessage("Error while setting parameter " + paramName + " " + ex.Message);
-                return null;
-            }
-        }
-
-        /// <summary>
-        /// Przypisuje parametrowi, wartość NULL
-        /// </summary>
-        /// <param name="paramName"></param>
-        public void SetNull(String paramName)
-        {
-            try
-            {
-                ParamByName(paramName, FbDbType.SmallInt).Value = DBNull.Value;
-            }
-            catch (Exception ex)
-            {
-                MyShowMessage("Error while setting parameter " + paramName + " to null: " + ex.Message);
-            }
-
-        }
+        
         #region Wykonaj zapytanie do bazy
         /// <summary>
         /// Metoda wykonuje zapytanie SQL
@@ -589,25 +545,25 @@ namespace FbKlientNameSpace
                 {
                     if (WithResponse == true)
                     {
-                        foreach (FbCommand command in Commands)
+                        foreach (FbCommandFasade command in Commands)
                         {
-                            GetCommandLog(commandString, command);
-                            Responses.Add(command.ExecuteReader());
+                            command.Command.GetCommandLog(commandString);
+                            Responses.Add(command.Command.ExecuteReader());
                             //Thread.Sleep(200);
                         }
                         if (Responses.Count > 0)
                         {
-                            Response = Responses[0];
+                            ResponseId = 0;                            
                         }
                     }
                     else
                     {
-                        foreach (FbCommand command in Commands)
+                        foreach (FbCommandFasade command in Commands)
                         {
-                            if (!String.IsNullOrEmpty(command.CommandText))
+                            if (!String.IsNullOrEmpty(command.Command.CommandText))
                             {
-                                GetCommandLog(commandString, command);
-                                command.ExecuteNonQuery();
+                                command.Command.GetCommandLog(commandString);
+                                command.Command.ExecuteNonQuery();
                             }
                         }
                         CommitTransaction();
@@ -617,13 +573,13 @@ namespace FbKlientNameSpace
                 }
                 else
                 {
-                    Response = null;
+                    ResponseId = -1;
                     Responses = null;
                 }
             }
             catch (Exception ex)
             {
-                MyShowMessage($"Execute: Problem z wykonaniem zapytania: {commandString}, Exception={ex}");
+                ExceptionLogOrMessage($"Execute: Problem z wykonaniem zapytania: {commandString}, Exception={ex}");
             }
         }
 
@@ -652,17 +608,15 @@ namespace FbKlientNameSpace
             try
             {
                 
-                    FirebirdSql.Data.Isql.FbScript fbScript = new FirebirdSql.Data.Isql.FbScript(script);
-                    fbScript.Parse();
-
-                    FirebirdSql.Data.Isql.FbBatchExecution fbe = new FirebirdSql.Data.Isql.FbBatchExecution(new FbConnection(GetConnectionString()), fbScript);                                      
-                    string scriptParsed = fbScript.ToString();
-                    //for (int i = 0; i < fbScript.Results.Count; i++)
-                    //    fbe.SqlStatements.Add(fbScript.Results[i]);
-                    //fbe.SqlStatements.Add(scriptParsed);
-                    fbe.Execute(true);                    
+                FirebirdSql.Data.Isql.FbScript fbScript = new FirebirdSql.Data.Isql.FbScript(script);
+                fbScript.Parse();
+                //ToDo: Sprawdzić możliwości rolbacku transakcji w przypadku błędów w skryptach
+                var connection = new FbConnection(GetConnectionString());                
+                FirebirdSql.Data.Isql.FbBatchExecution fbe = new FirebirdSql.Data.Isql.FbBatchExecution(connection);
+                fbe.AppendSqlStatements(fbScript);                
+                string scriptParsed = fbScript.ToString();
                     
-                
+                fbe.Execute(true);                                                        
                 
             }
             catch (Exception ex)
@@ -687,25 +641,7 @@ namespace FbKlientNameSpace
         }
         #endregion
 
-        private int GetFieldIndex(String FieldName)
-        {
-            Loguj("FbKlient__GetFieldIndex '" + FieldName + "'");
-            try
-            {
-                int returned_value = Response.GetOrdinal(FieldName);
-                if (returned_value < 0)
-                {
-                    MyShowMessage("Can not find field " + FieldName);
-                }
-
-                return returned_value;
-            }
-            catch (Exception ex)
-            {
-                MyShowMessage("Error in GetFieldIndex '" + FieldName + "' " + ex.Message);
-                return -1;
-            }
-        }
+        
 
         /// <summary>
         /// Odczytaj następny rekord
@@ -727,437 +663,16 @@ namespace FbKlientNameSpace
                 }
                 catch (Exception ex)
                 {
-                    MyShowMessage("Error in sql read: " + ex.Message);
+                    ExceptionLogOrMessage("Error in sql read: " + ex.Message);
                 }
             }
             return returned_value;
         }
-        #region Pobieranie danych z klienta
-        /// <summary>
-        /// Zwraca wartość bool odczytaną z bazy danych
-        /// </summary>
-        /// <param name="FieldName">Nazwa kolumny</param>
-        /// <returns>Zwrócona wartość</returns>
-        public bool GetBoolean(String FieldName)
-        {
-            try
-            {
-                if (Response.IsDBNull(GetFieldIndex(FieldName)))
-                {
-                    throw new Exception("'" + FieldName + "' has NULL value, can't convert to bool !");
-                }
-
-                return Response.GetBoolean(GetFieldIndex(FieldName));
-            }
-            catch (Exception ex)
-            {
-                MyShowMessage("Error while getting bool value from '" + FieldName + "' !\n" + ex.Message);
-            }
-            return false;
-        }
-
-        /// <summary>
-        /// Zwraca wartość byte odczytaną z bazy danych
-        /// </summary>
-        /// <param name="FieldName">Nazwa kolumny</param>
-        /// <returns>Zwrócona wartość</returns>
-        public byte GetByte(String FieldName)
-        {
-            try
-            {
-                if (Response.IsDBNull(GetFieldIndex(FieldName)))
-                {
-                    throw new Exception("'" + FieldName + "' has NULL value, can't convert to byte !");
-                }
-
-                return Response.GetByte(GetFieldIndex(FieldName));
-            }
-            catch (Exception ex)
-            {
-                MyShowMessage("Error while getting byte value from '" + FieldName + "' !\n" + ex.Message);
-            }
-            return 0;
-        }
-
-        /// <summary>
-        /// Zwraca wartość Char odczytaną z bazy danych
-        /// </summary>
-        /// <param name="FieldName">Nazwa kolumny</param>
-        /// <returns>Zwrócona wartość</returns>
-        public char GetChar(String FieldName)
-        {
-            try
-            {
-                if (Response.IsDBNull(GetFieldIndex(FieldName)))
-                {
-                    throw new Exception("'" + FieldName + "' has NULL value, can't convert to char !");
-                }
-
-                return Response.GetChar(GetFieldIndex(FieldName));
-            }
-            catch (Exception ex)
-            {
-                MyShowMessage("Error while getting byte value from '" + FieldName + "' !\n" + ex.Message);
-            }
-            return Convert.ToChar(0);
-        }
-
-        /// <summary>
-        /// Zwraca wartość DateTime odczytaną z bazy danych
-        /// </summary>
-        /// <param name="FieldName">Nazwa kolumny</param>
-        /// <returns>Zwrócona wartość</returns>
-        public DateTime GetDateTime(String FieldName)
-        {
-            try
-            {
-                if (Response.IsDBNull(GetFieldIndex(FieldName)))
-                {
-                    throw new Exception("'" + FieldName + "' has NULL value, can't convert to DateTime !");
-                }
-
-                return Response.GetDateTime(GetFieldIndex(FieldName));
-            }
-            catch (Exception ex)
-            {
-                MyShowMessage("Error while getting DateTime value from '" + FieldName + "' !\n" + ex.Message);
-            }
-            return DateTime.MinValue;
-        }
-
-        /// <summary>
-        /// Zwraca wartość Decimal odczytaną z bazy danych
-        /// </summary>
-        /// <param name="FieldName">Nazwa kolumny</param>
-        /// <returns>Zwrócona wartość</returns>
-        public decimal GetDecimal(String FieldName)
-        {
-            try
-            {
-                if (Response.IsDBNull(GetFieldIndex(FieldName)))
-                {
-                    throw new Exception("'" + FieldName + "' has NULL value, can't convert to Decimal !");
-                }
-
-                return Response.GetDecimal(GetFieldIndex(FieldName));
-            }
-            catch (Exception ex)
-            {
-                MyShowMessage("Error while getting Decimal value from '" + FieldName + "' !\n" + ex.Message);
-            }
-            return 0;
-        }
-
-        /// <summary>
-        /// Zwraca wartość Double odczytaną z bazy danych
-        /// </summary>
-        /// <param name="FieldName">Nazwa kolumny</param>
-        /// <returns>Zwrócona wartość</returns>
-        public double GetDouble(String FieldName)
-        {
-            try
-            {
-                if (Response.IsDBNull(GetFieldIndex(FieldName)))
-                {
-                    throw new Exception("'" + FieldName + "' has NULL value, can't convert to Double !");
-                }
-
-                return Response.GetDouble(GetFieldIndex(FieldName));
-            }
-            catch (Exception ex)
-            {
-                MyShowMessage("Error while getting Double value from '" + FieldName + "' !\n" + ex.Message);
-            }
-            return 0;
-        }
-
-        /// <summary>
-        /// Zwraca wartość Int16 odczytaną z bazy danych
-        /// </summary>
-        /// <param name="FieldName">Nazwa kolumny</param>
-        /// <returns>Zwrócona wartość</returns>
-        public short GetInt16(String FieldName)
-        {
-            try
-            {
-                if (Response.IsDBNull(GetFieldIndex(FieldName)))
-                {
-                    throw new Exception("'" + FieldName + "' has NULL value, can't convert to Int16 !");
-                }
-
-                return Response.GetInt16(GetFieldIndex(FieldName));
-            }
-            catch (Exception ex)
-            {
-                MyShowMessage("Error while getting Int16 value from '" + FieldName + "' !\n" + ex.Message);
-            }
-            return 0;
-        }
-
-        /// <summary>
-        /// Zwraca wartość Int32 odczytaną z bazy danych
-        /// </summary>
-        /// <param name="FieldName">Nazwa kolumny</param>
-        /// <returns>Zwrócona wartość</returns>
-        public int GetInt32(String FieldName)
-        {
-            try
-            {
-                if (Response.IsDBNull(GetFieldIndex(FieldName)))
-                {
-                    throw new Exception("'" + FieldName + "' has NULL value, can't convert to Int32 !");
-                }
-
-                return Response.GetInt32(GetFieldIndex(FieldName));
-            }
-            catch (Exception ex)
-            {
-                MyShowMessage("Error while getting Int32 value from '" + FieldName + "' !\n" + ex.Message);
-            }
-            return 0;
-        }
-
-        /// <summary>
-        /// Zwraca wartość Int64 odczytaną z bazy danych
-        /// </summary>
-        /// <param name="FieldName">Nazwa kolumny</param>
-        /// <returns>Zwrócona wartość</returns>
-        public long GetInt64(String FieldName)
-        {
-            try
-            {
-                if (Response.IsDBNull(GetFieldIndex(FieldName)))
-                {
-                    throw new Exception("'" + FieldName + "' has NULL value, can't convert to Int64 !");
-                }
-
-                return Response.GetInt64(GetFieldIndex(FieldName));
-            }
-            catch (Exception ex)
-            {
-                MyShowMessage("Error while getting Int64 value from '" + FieldName + "' !\n" + ex.Message);
-            }
-            return 0;
-        }
-
-        /// <summary>
-        /// Zwraca wartość String odczytaną z bazy danych
-        /// </summary>
-        /// <param name="FieldName">Nazwa kolumny</param>
-        /// <returns>Zwrócona wartość</returns>
-        public string GetString(String FieldName)
-        {
-            try
-            {
-                //if (Response.IsDBNull(GetFieldIndex(FieldName)))
-                //    throw new Exception("'" + FieldName + "' has NULL value, can't convert to string !");
-                return Response.GetString(GetFieldIndex(FieldName));
-            }
-            catch (Exception ex)
-            {
-                MyShowMessage("Error while getting string value from '" + FieldName + "' !\n" + ex.Message);
-            }
-            return string.Empty;
-        }
-
-        /// <summary>
-        /// Zwraca wartość Object odczytaną z bazy danych
-        /// </summary>
-        /// <param name="FieldName">Nazwa kolumny</param>
-        /// <returns>Zwrócona wartość</returns>
-        public object GetValue(String FieldName)
-        {
-            try
-            {
-                return Response.GetValue(GetFieldIndex(FieldName));
-            }
-            catch (Exception ex)
-            {
-                MyShowMessage("Error while getting value from '" + FieldName + "' !\n" + ex.Message);
-            }
-            return null;
-        }
-
-        /// <summary>
-        /// Zwraca informację czy pole odczytane z bazy danych ma wartość NULL czy inną
-        /// </summary>
-        /// <param name="FieldName">Nazwa kolumny</param>
-        /// <returns>Prawda/Fałsz</returns>
-        public bool IsDBNull(String FieldName)
-        {
-            try
-            {
-                return Response.IsDBNull(GetFieldIndex(FieldName));
-            }
-            catch (Exception ex)
-            {
-                MyShowMessage("Error while checking if '" + FieldName + "' is null!\n" + ex.Message);
-            }
-            return false;
-        }
-        #region Załączniki
-        /// <summary>
-        /// Metoda pobiera załącznik z bazy danych z parametru blob o podanej nazwie i zapisuje w podanej ścieżce
-        /// </summary>
-        /// <param name="FieldName">Nazwa parametru</param>
-        /// <param name="FileName">Ścieżka do pliku gdzie zapisać</param>
-        public void GetFile(String FieldName, String FileName)
-        {
-                       
-            try
-            {
-                //using (FileStream fs = new FileStream(FileName, FileMode.OpenOrCreate, FileAccess.Write)) // Writes the BLOB to a file
-                Stream fs = new FileStream(FileName, FileMode.OpenOrCreate, FileAccess.Write);//) // Writes the BLOB to a file
-                {
-                    GetIntoStream(FieldName, ref fs);
-                    fs.Close();
-                }
-            }
-            catch
-            {
-                MyShowMessage("Error while writing blob parameter " + FieldName + " with file " + FileName);
-            }
-
-        }
-
-        /// <summary>
-        /// Metoda pobiera parametr o podanej nazwie i zapisuje w strumieniu
-        /// </summary>
-        /// <param name="FieldName"></param>
-        /// <param name="fs"></param>
-        public void GetIntoStream(string FieldName, ref Stream fs)
-        {
-            //using (BinaryWriter bw = new BinaryWriter(fs)) // Streams the BLOB to the FileStream object.
-            BinaryWriter bw = new BinaryWriter(fs);
-            {
-                int bufferSize = 100;                   // Size of the BLOB buffer.
-                byte[] outbyte = new byte[bufferSize];  // The BLOB byte[] buffer to be filled by GetBytes.
-                long retval;                            // The bytes returned from GetBytes.
-                long startIndex = 0;                    // The starting position in the BLOB output.
-                                                        // Reset the starting byte for the new BLOB.
-                startIndex = 0;
-
-                // Read the bytes into outbyte[] and retain the number of bytes returned.
-                retval = Response.GetBytes(GetFieldIndex(FieldName), startIndex, outbyte, 0, bufferSize);
-
-                // Continue reading and writing while there are bytes beyond the size of the buffer.
-                while (retval == bufferSize)
-                {
-                    bw.Write(outbyte);
-                    bw.Flush();
-
-                    // Reposition the start index to the end of the last buffer and fill the buffer.
-                    startIndex += bufferSize;
-                    retval = Response.GetBytes(GetFieldIndex(FieldName), startIndex, outbyte, 0, bufferSize);
-                }
-
-                // Write the remaining buffer.
-                bw.Write(outbyte, 0, (int)retval);
-                bw.Flush();
-                
-
-                outbyte = null;
-            }
-        }
-
-        /// <summary>
-        /// Dodaje plik jako obiekt blob
-        /// </summary>
-        /// <param name="ParamName">nazwa parametru zapytania</param>
-        /// <param name="FileName">ścieżka do pliku</param>
-        public void SetFile(String ParamName, String FileName)
-        {
-            try
-            {
-                using (FileStream fs = new FileStream(FileName, FileMode.Open, FileAccess.Read))
-                {
-                    SetStreamParameter(ParamName, fs);
-                }
-            }
-            catch
-            {
-                MyShowMessage($"Error while setting blob parameter {ParamName} with file {FileName} in SetFile");
-            }
-        }
-
-        private void SetStreamParameter(string ParamName, Stream fs)
-        {
-            using (BinaryReader br = new BinaryReader(fs))
-            {
-                byte[] photo = br.ReadBytes((int)fs.Length);
-
-                br.Close();
-
-                fs.Close();
-
-                Commands[QueryId].Parameters.Add(ParamName, FbDbType.Binary, photo.Length).Value = photo;
-            }
-        }
-
-        /// <summary>
-        /// Dodaje strumień jako obiekt blob
-        /// </summary>
-        /// <param name="ParamName"></param>
-        /// <param name="memoryStream"></param>
-        public void SetFromStream(string ParamName, Stream memoryStream)
-        {
-            try
-            {
-                memoryStream.Position = 0;
-                SetStreamParameter(ParamName, memoryStream);
-            }
-            catch
-            {
-                MyShowMessage($"Error while setting blob parameter {ParamName} in SetStream");
-            }
-        }
-        #endregion
+        
 
 
-        #endregion
-
-
-        #region MetodySystemowe
-        /// <summary>
-        /// Funkcja generująca log, z zapytaniem oraz parametrami przekazanymi do zapytania
-        /// </summary>
-        /// <param name="commandString">StringBuilder</param>
-        /// <param name="command">Obiekt SQL Command</param>
-        private void GetCommandLog(StringBuilder commandString, FbCommand command)
-        {
-            commandString.Append(Regex.Replace(command.CommandText, @"\s+", " ") + "|");
-            commandString.Append(getParameterValues(command));
-            commandString.Append(Environment.NewLine);
-        }
-
-        /// <summary>
-        /// Metoda zwraca nazwy parametrów przekazanych do zapytania z wartościami
-        /// </summary>
-        /// <param name="command">Obiekt SQL Command</param>
-        /// <returns>Łańcuch znaków</returns>
-        private string getParameterValues(FbCommand command)
-        {
-            var returnedValue = new StringBuilder();
-            foreach (FbParameter param in command.Parameters)
-            {
-                if (param != null)
-                {
-                    if (param.Value != null && param.Value != DBNull.Value)
-                        returnedValue.AppendFormat("{0}='{1}';", param.ParameterName,
-                            param.Value.ToString().Length > 255
-                                ? param.Value.ToString().Substring(0, 255)
-                                : param.Value.ToString());
-                    else
-                        returnedValue.AppendFormat("'{0}'=NULL;", param.ParameterName);
-                }
-
-
-            }
-
-            return returnedValue.ToString();
-        }
-
-        void MyShowMessage(string message)
+        #region MetodySystemowe        
+        protected override void ExceptionLogOrMessage(string message)
         {
             Loguj(message);
             if (ParentForm != null)
@@ -1172,10 +687,15 @@ namespace FbKlientNameSpace
 
         private void Loguj(string message)
         {
-            if (ConfigurationManager.AppSettings["LogQueries"] == "true" && ExternalLoggerMethod!=null)
+            if (ConfigurationManager.AppSettings["LogQueries"] == "true" && DebugLog != null)
             {
-                ExternalLoggerMethod(message);
+                DebugLog(message);
             }
+        }       
+
+        public void SetNull(string paramName)
+        {
+            Commands[QueryId].SetNull(paramName);
         }
         #endregion
     }
