@@ -64,14 +64,6 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\FunkcjeUniwersalne\FunkcjeUniwersalne\FunkcjeUniwersalne.csproj">
-      <Project>{22d63d77-4ef4-404d-8cbe-d5e6751a3cab}</Project>
-      <Name>FunkcjeUniwersalne</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\ISqlKlient\ISqlKlient.csproj">
-      <Project>{cdb5b687-e81e-4ba6-a605-9f8a7711d28e}</Project>
-      <Name>ISqlKlient</Name>
-    </ProjectReference>
     <ProjectReference Include="..\FbKlient\FbKlient.csproj">
       <Project>{7ba21dde-bba3-46ab-8f00-40d5b6aac575}</Project>
       <Name>FbKlient</Name>
