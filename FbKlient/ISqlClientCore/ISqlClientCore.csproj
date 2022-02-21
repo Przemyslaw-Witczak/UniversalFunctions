@@ -4,4 +4,8 @@
 	<TargetFrameworks>netstandard2.1;net48;netcoreapp3.1</TargetFrameworks>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="FirebirdSql.Data.FirebirdClient" Version="8.5.4" />
+  </ItemGroup>
+
 </Project>

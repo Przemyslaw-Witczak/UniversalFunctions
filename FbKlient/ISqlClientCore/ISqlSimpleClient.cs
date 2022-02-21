@@ -1,4 +1,5 @@
-﻿using System;
+﻿using FirebirdSql.Data.FirebirdClient;
+using System;
 
 namespace ISqlClientCore
 {
@@ -47,5 +48,13 @@ namespace ISqlClientCore
         /// </summary>
         /// <param name="paramName">Nazwa parametru</param>
         void SetNull(string paramName);
+
+        /// <summary>
+        /// Metoda do przekazywania wartości parametrów do zapytania
+        /// </summary>
+        /// <param name="paramName">Nazwa parametru poprzedzona, może być poprzedzona znakiem '@' lub ':'</param>
+        /// <param name="Typ">Typ danych</param>
+        /// <returns></returns>
+        FbParameter ParamByName(String paramName, FbDbType paramType);
     }
 }

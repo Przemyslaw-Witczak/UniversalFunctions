@@ -17,7 +17,7 @@ namespace FbKlientNameSpace
     /// Autor: Przemysław Witczak,
     /// Klasa wykorzystuje bibliotekę Firebird .Net Provider, jednak opakowuje ją w funkcje znane z komponentów Borland C++ oraz ODBC
     /// </remarks>
-    public class FbKlient : FbReaderBase, IDisposable, ISqlClient
+    public class FbKlient : FbClientCore, IDisposable, ISqlClient
     {
         #region Zmienne publiczne i prywatne       
         
@@ -40,9 +40,9 @@ namespace FbKlientNameSpace
                     dt = new DataTable();
 
                     //getCommandLog(commandString, Commands[QueryId]);
-                    CurrentCommand.Connection = DataBaseConnection;
-                    CurrentCommand.Transaction = Transaction;
-                    da.SelectCommand = CurrentCommand;
+                    Command.Connection = DataBaseConnection;
+                    Command.Transaction = Transaction;
+                    da.SelectCommand = Command;
                     da.Fill(dt);
 
                     CommitTransaction();
@@ -71,12 +71,12 @@ namespace FbKlientNameSpace
         /// <summary>
         /// Lista komend(zapytań) wysyłanych w transakcji
         /// </summary>
-        private List<FbCommandFasade> Commands;
-        private FbCommand CurrentCommand
+        private List<FbCommand> Commands;
+        private new FbCommand Command
         {
             get
             {
-                return Commands[QueryId].Command;
+                return Commands[QueryId];
             }
         }
         /// <summary>
@@ -125,12 +125,12 @@ namespace FbKlientNameSpace
 
         private int commandsCount = 1;
 
-        FbCommandFasade CreateCommand()
+        FbCommand CreateCommand()
         {
-            FbCommand myCommand = new FbCommand();
-            myCommand.Connection = DataBaseConnection;
-            myCommand.Transaction = Transaction;
-            return new FbCommandFasade(myCommand, DebugLog, ExceptionLogOrMessage);
+            var newCommand = new FbCommand();
+            newCommand.Connection = DataBaseConnection;
+            newCommand.Transaction = Transaction;
+            return newCommand;
         }
         /// <summary>
         /// Liczba komend wykonywanych w aktualnej transakcji, domyślnie 1, nie ma konieczności inkrementowania tej zmiennej jeżeli zmieniana jest QueryId
@@ -155,7 +155,7 @@ namespace FbKlientNameSpace
                         //for (int i=Commands.Count;i>=value;i--)
                         while (Commands.Count > value)
                         {
-                            Commands[Commands.Count - 1].Command.Dispose();
+                            Commands[Commands.Count - 1].Dispose();
                             Commands.RemoveAt(Commands.Count - 1);
                         }
                     }
@@ -200,7 +200,7 @@ namespace FbKlientNameSpace
             ParentForm = null;
             DataBaseConnection = null;
             Transaction = null;
-            Commands = new List<FbCommandFasade>();
+            Commands = new List<FbCommand>();
             
             Responses = new List<FbDataReader>();
 
@@ -488,7 +488,7 @@ namespace FbKlientNameSpace
             {
                 for (int i = 0; i < Commands.Count; i++)
                 {
-                    Commands[i].Command.Dispose();
+                    Commands[i].Dispose();
                     Commands[i] = null;
                     GC.WaitForPendingFinalizers();
                 }
@@ -512,13 +512,13 @@ namespace FbKlientNameSpace
                 if (Commands.Count < 1)
                 {
                     var cmd = CreateCommand();
-                    cmd.Command.CommandText = SqlString;
+                    cmd.CommandText = SqlString;
                     Commands.Add(cmd);
                     QueryId = 0;
                 }
                 else
                 {
-                    CurrentCommand.CommandText += SqlString;
+                    Command.CommandText += SqlString;
                 }
                 Loguj("FbKlient__AddSQL-Koniec");
             }
@@ -545,10 +545,10 @@ namespace FbKlientNameSpace
                 {
                     if (WithResponse == true)
                     {
-                        foreach (FbCommandFasade command in Commands)
+                        foreach (var command in Commands)
                         {
-                            command.Command.GetCommandLog(commandString);
-                            Responses.Add(command.Command.ExecuteReader());
+                            command.GetCommandLog(commandString);
+                            Responses.Add(command.ExecuteReader());
                             //Thread.Sleep(200);
                         }
                         if (Responses.Count > 0)
@@ -558,12 +558,12 @@ namespace FbKlientNameSpace
                     }
                     else
                     {
-                        foreach (FbCommandFasade command in Commands)
+                        foreach (var command in Commands)
                         {
-                            if (!String.IsNullOrEmpty(command.Command.CommandText))
+                            if (!String.IsNullOrEmpty(command.CommandText))
                             {
-                                command.Command.GetCommandLog(commandString);
-                                command.Command.ExecuteNonQuery();
+                                command.GetCommandLog(commandString);
+                                command.ExecuteNonQuery();
                             }
                         }
                         CommitTransaction();
@@ -692,11 +692,7 @@ namespace FbKlientNameSpace
                 DebugLog(message);
             }
         }       
-
-        public void SetNull(string paramName)
-        {
-            Commands[QueryId].SetNull(paramName);
-        }
+        
         #endregion
     }
 }

@@ -4,13 +4,14 @@ using System.IO;
 
 namespace FbClientBase
 {
-    public abstract class FbReaderBase
+    public abstract class FbClientCore
     {
+        protected FbCommand Command;
         protected FbDataReader Response;
         public Action<string> DebugLog;
         protected abstract void ExceptionLogOrMessage(string message);
-        
 
+        #region Odczyt wartości pól z zapytania bazodanowego
         public int GetFieldIndex(String FieldName)
         {
             DebugLog("FbKlient__GetFieldIndex '" + FieldName + "'");
@@ -357,5 +358,124 @@ namespace FbClientBase
                 outbyte = null;
             }
         }
+
+        #endregion
+
+        #region Ustawienie wartości parametrów
+        /// <summary>
+        /// Metoda do przekazywania wartości parametrów do zapytania
+        /// </summary>
+        /// <param name="paramName">Nazwa parametru poprzedzona, może być poprzedzona znakiem '@' lub ':'</param>
+        /// <param name="Typ">Typ danych</param>
+        /// <returns></returns>
+        public FbParameter ParamByName(String paramName, FbDbType paramType)
+        {
+            DebugLog("FbKlient__ParamByName('" + paramName + "' as " + paramType.GetType().Name + ")");
+            try
+            {
+                paramName = paramName.Replace(":", "@");
+
+                if (!paramName.Contains("@"))
+                {
+                    paramName = "@" + paramName;
+                }
+
+                FbParameter returned_param = null;
+                foreach (FbParameter param in Command.Parameters)
+                {
+                    if (param.ParameterName.Equals(paramName))
+                    {
+                        returned_param = param;
+                        returned_param.FbDbType = paramType;
+                        break;
+                    }
+                }
+
+                if (returned_param == null)
+                {
+                    returned_param = Command.Parameters.Add(paramName, paramType);
+                }
+
+                DebugLog("FbKlient__ParamByName-Koniec");
+                return returned_param;
+            }
+            catch (Exception ex)
+            {
+                ExceptionLogOrMessage("Error while setting parameter " + paramName + " " + ex.Message);
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Przypisuje parametrowi, wartość NULL
+        /// </summary>
+        /// <param name="paramName"></param>
+        public void SetNull(String paramName)
+        {
+            try
+            {
+                ParamByName(paramName, FbDbType.SmallInt).Value = DBNull.Value;
+            }
+            catch (Exception ex)
+            {
+                ExceptionLogOrMessage("Error while setting parameter " + paramName + " to null: " + ex.Message);
+            }
+
+        }
+        #endregion
+
+        #region Załączniki
+        /// <summary>
+        /// Dodaje plik jako obiekt blob
+        /// </summary>
+        /// <param name="ParamName">nazwa parametru zapytania</param>
+        /// <param name="FileName">ścieżka do pliku</param>
+        public void SetFile(String ParamName, String FileName)
+        {
+            try
+            {
+                using (FileStream fs = new FileStream(FileName, FileMode.Open, FileAccess.Read))
+                {
+                    SetStreamParameter(ParamName, fs);
+                }
+            }
+            catch
+            {
+                ExceptionLogOrMessage($"Error while setting blob parameter {ParamName} with file {FileName} in SetFile");
+            }
+        }
+
+        private void SetStreamParameter(string ParamName, Stream fs)
+        {
+            using (BinaryReader br = new BinaryReader(fs))
+            {
+                byte[] photo = br.ReadBytes((int)fs.Length);
+
+                br.Close();
+
+                fs.Close();
+
+                Command.Parameters.Add(ParamName, FbDbType.Binary, photo.Length).Value = photo;
+            }
+        }
+
+        /// <summary>
+        /// Dodaje strumień jako obiekt blob
+        /// </summary>
+        /// <param name="ParamName"></param>
+        /// <param name="memoryStream"></param>
+        public void SetFromStream(string ParamName, Stream memoryStream)
+        {
+            try
+            {
+                memoryStream.Position = 0;
+                SetStreamParameter(ParamName, memoryStream);
+            }
+            catch
+            {
+                ExceptionLogOrMessage($"Error while setting blob parameter {ParamName} in SetStream");
+            }
+        }
+        #endregion
     }
 }
