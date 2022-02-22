@@ -2,22 +2,49 @@
 using System;
 using System.IO;
 
-namespace FbClientBase
+namespace FbClientBaseNameSpace
 {
-    public abstract class FbClientCore
+    /// <summary>
+    /// Klasa bazowa klientów/fasad do FirebirdSql.Data.FirebirdClient
+    /// </summary>
+    /// <remarks>Zawiera metody wspólne, niezależne od środowiska. Pobieranie wartości requestów, ustawianie zapytań i parametrów.</remarks>
+    public abstract class FbAbstractClient
     {
-        protected FbCommand Command;
-        protected FbDataReader Response;
+        /// <summary>
+        /// Zewnętrzna metoda logująca między innymi zapytania.
+        /// </summary>
         public Action<string> DebugLog;
+
+        /// <summary>
+        /// Pobiera aktualny command w celu przypisania parametrów zapytania.
+        /// </summary>
+        /// <returns></returns>
+        protected abstract FbCommand GetCurrentCommand();
+
+        /// <summary>
+        /// Pobiera aktualny response reader
+        /// </summary>
+        /// <returns></returns>
+        protected abstract FbDataReader GetCurrentResponse();
+
+        /// <summary>
+        /// Metoda abstrakcyjna, wymaga implementacji w celu logowania komunikatów błędów, lub wyświetlania okien komunikatów, zależnie od implementacji klasy pochodnej
+        /// </summary>
+        /// <param name="message"></param>
         protected abstract void ExceptionLogOrMessage(string message);
 
         #region Odczyt wartości pól z zapytania bazodanowego
+        /// <summary>
+        /// Metoda zwraca indeks pola w tablicy wszystkich odczytanych kolumn
+        /// </summary>
+        /// <param name="FieldName"></param>
+        /// <returns>Indeks kolumny, jeżeli pole nie występuje w responsie, zwraca -1 </returns>
         public int GetFieldIndex(String FieldName)
         {
-            DebugLog("FbKlient__GetFieldIndex '" + FieldName + "'");
+            DebugLog?.Invoke("FbKlient__GetFieldIndex '" + FieldName + "'");
             try
             {
-                int returned_value = Response.GetOrdinal(FieldName);
+                int returned_value = GetCurrentResponse().GetOrdinal(FieldName);
                 if (returned_value < 0)
                 {
                     ExceptionLogOrMessage("Can not find field " + FieldName);
@@ -41,12 +68,12 @@ namespace FbClientBase
         {
             try
             {
-                if (Response.IsDBNull(GetFieldIndex(FieldName)))
+                if (GetCurrentResponse().IsDBNull(GetFieldIndex(FieldName)))
                 {
                     throw new Exception("'" + FieldName + "' has NULL value, can't convert to bool !");
                 }
 
-                return Response.GetBoolean(GetFieldIndex(FieldName));
+                return GetCurrentResponse().GetBoolean(GetFieldIndex(FieldName));
             }
             catch (Exception ex)
             {
@@ -64,12 +91,12 @@ namespace FbClientBase
         {
             try
             {
-                if (Response.IsDBNull(GetFieldIndex(FieldName)))
+                if (GetCurrentResponse().IsDBNull(GetFieldIndex(FieldName)))
                 {
                     throw new Exception("'" + FieldName + "' has NULL value, can't convert to byte !");
                 }
 
-                return Response.GetByte(GetFieldIndex(FieldName));
+                return GetCurrentResponse().GetByte(GetFieldIndex(FieldName));
             }
             catch (Exception ex)
             {
@@ -87,12 +114,12 @@ namespace FbClientBase
         {
             try
             {
-                if (Response.IsDBNull(GetFieldIndex(FieldName)))
+                if (GetCurrentResponse().IsDBNull(GetFieldIndex(FieldName)))
                 {
                     throw new Exception("'" + FieldName + "' has NULL value, can't convert to char !");
                 }
 
-                return Response.GetChar(GetFieldIndex(FieldName));
+                return GetCurrentResponse().GetChar(GetFieldIndex(FieldName));
             }
             catch (Exception ex)
             {
@@ -110,12 +137,12 @@ namespace FbClientBase
         {
             try
             {
-                if (Response.IsDBNull(GetFieldIndex(FieldName)))
+                if (GetCurrentResponse().IsDBNull(GetFieldIndex(FieldName)))
                 {
                     throw new Exception("'" + FieldName + "' has NULL value, can't convert to DateTime !");
                 }
 
-                return Response.GetDateTime(GetFieldIndex(FieldName));
+                return GetCurrentResponse().GetDateTime(GetFieldIndex(FieldName));
             }
             catch (Exception ex)
             {
@@ -133,12 +160,12 @@ namespace FbClientBase
         {
             try
             {
-                if (Response.IsDBNull(GetFieldIndex(FieldName)))
+                if (GetCurrentResponse().IsDBNull(GetFieldIndex(FieldName)))
                 {
                     throw new Exception("'" + FieldName + "' has NULL value, can't convert to Decimal !");
                 }
 
-                return Response.GetDecimal(GetFieldIndex(FieldName));
+                return GetCurrentResponse().GetDecimal(GetFieldIndex(FieldName));
             }
             catch (Exception ex)
             {
@@ -156,12 +183,12 @@ namespace FbClientBase
         {
             try
             {
-                if (Response.IsDBNull(GetFieldIndex(FieldName)))
+                if (GetCurrentResponse().IsDBNull(GetFieldIndex(FieldName)))
                 {
                     throw new Exception("'" + FieldName + "' has NULL value, can't convert to Double !");
                 }
 
-                return Response.GetDouble(GetFieldIndex(FieldName));
+                return GetCurrentResponse().GetDouble(GetFieldIndex(FieldName));
             }
             catch (Exception ex)
             {
@@ -179,12 +206,12 @@ namespace FbClientBase
         {
             try
             {
-                if (Response.IsDBNull(GetFieldIndex(FieldName)))
+                if (GetCurrentResponse().IsDBNull(GetFieldIndex(FieldName)))
                 {
                     throw new Exception("'" + FieldName + "' has NULL value, can't convert to Int16 !");
                 }
 
-                return Response.GetInt16(GetFieldIndex(FieldName));
+                return GetCurrentResponse().GetInt16(GetFieldIndex(FieldName));
             }
             catch (Exception ex)
             {
@@ -202,12 +229,12 @@ namespace FbClientBase
         {
             try
             {
-                if (Response.IsDBNull(GetFieldIndex(FieldName)))
+                if (GetCurrentResponse().IsDBNull(GetFieldIndex(FieldName)))
                 {
                     throw new Exception("'" + FieldName + "' has NULL value, can't convert to Int32 !");
                 }
 
-                return Response.GetInt32(GetFieldIndex(FieldName));
+                return GetCurrentResponse().GetInt32(GetFieldIndex(FieldName));
             }
             catch (Exception ex)
             {
@@ -225,12 +252,12 @@ namespace FbClientBase
         {
             try
             {
-                if (Response.IsDBNull(GetFieldIndex(FieldName)))
+                if (GetCurrentResponse().IsDBNull(GetFieldIndex(FieldName)))
                 {
                     throw new Exception("'" + FieldName + "' has NULL value, can't convert to Int64 !");
                 }
 
-                return Response.GetInt64(GetFieldIndex(FieldName));
+                return GetCurrentResponse().GetInt64(GetFieldIndex(FieldName));
             }
             catch (Exception ex)
             {
@@ -250,7 +277,7 @@ namespace FbClientBase
             {
                 //if (Response.IsDBNull(GetFieldIndex(FieldName)))
                 //    throw new Exception("'" + FieldName + "' has NULL value, can't convert to string !");
-                return Response.GetString(GetFieldIndex(FieldName));
+                return GetCurrentResponse().GetString(GetFieldIndex(FieldName));
             }
             catch (Exception ex)
             {
@@ -268,7 +295,7 @@ namespace FbClientBase
         {
             try
             {
-                return Response.GetValue(GetFieldIndex(FieldName));
+                return GetCurrentResponse().GetValue(GetFieldIndex(FieldName));
             }
             catch (Exception ex)
             {
@@ -286,7 +313,7 @@ namespace FbClientBase
         {
             try
             {
-                return Response.IsDBNull(GetFieldIndex(FieldName));
+                return GetCurrentResponse().IsDBNull(GetFieldIndex(FieldName));
             }
             catch (Exception ex)
             {
@@ -337,7 +364,7 @@ namespace FbClientBase
                 startIndex = 0;
 
                 // Read the bytes into outbyte[] and retain the number of bytes returned.
-                retval = Response.GetBytes(GetFieldIndex(FieldName), startIndex, outbyte, 0, bufferSize);
+                retval = GetCurrentResponse().GetBytes(GetFieldIndex(FieldName), startIndex, outbyte, 0, bufferSize);
 
                 // Continue reading and writing while there are bytes beyond the size of the buffer.
                 while (retval == bufferSize)
@@ -347,7 +374,7 @@ namespace FbClientBase
 
                     // Reposition the start index to the end of the last buffer and fill the buffer.
                     startIndex += bufferSize;
-                    retval = Response.GetBytes(GetFieldIndex(FieldName), startIndex, outbyte, 0, bufferSize);
+                    retval = GetCurrentResponse().GetBytes(GetFieldIndex(FieldName), startIndex, outbyte, 0, bufferSize);
                 }
 
                 // Write the remaining buffer.
@@ -370,7 +397,7 @@ namespace FbClientBase
         /// <returns></returns>
         public FbParameter ParamByName(String paramName, FbDbType paramType)
         {
-            DebugLog("FbKlient__ParamByName('" + paramName + "' as " + paramType.GetType().Name + ")");
+            DebugLog?.Invoke("FbKlient__ParamByName('" + paramName + "' as " + paramType.GetType().Name + ")");
             try
             {
                 paramName = paramName.Replace(":", "@");
@@ -381,7 +408,7 @@ namespace FbClientBase
                 }
 
                 FbParameter returned_param = null;
-                foreach (FbParameter param in Command.Parameters)
+                foreach (FbParameter param in GetCurrentCommand().Parameters)
                 {
                     if (param.ParameterName.Equals(paramName))
                     {
@@ -393,10 +420,10 @@ namespace FbClientBase
 
                 if (returned_param == null)
                 {
-                    returned_param = Command.Parameters.Add(paramName, paramType);
+                    returned_param = GetCurrentCommand().Parameters.Add(paramName, paramType);
                 }
 
-                DebugLog("FbKlient__ParamByName-Koniec");
+                DebugLog?.Invoke("FbKlient__ParamByName-Koniec");
                 return returned_param;
             }
             catch (Exception ex)
@@ -409,7 +436,8 @@ namespace FbClientBase
         /// <summary>
         /// Przypisuje parametrowi, wartość NULL
         /// </summary>
-        /// <param name="paramName"></param>
+        /// <remarks>Tak naprawdę parametrowi przypisywany jest DbNull.Value</remarks>
+        /// <param name="paramName">Nazwa parametru</param>
         public void SetNull(String paramName)
         {
             try
@@ -455,7 +483,7 @@ namespace FbClientBase
 
                 fs.Close();
 
-                Command.Parameters.Add(ParamName, FbDbType.Binary, photo.Length).Value = photo;
+                GetCurrentCommand().Parameters.Add(ParamName, FbDbType.Binary, photo.Length).Value = photo;
             }
         }
 

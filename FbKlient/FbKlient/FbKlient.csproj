@@ -107,10 +107,6 @@
       <Project>{31d5e0c0-c31f-4130-a7e7-33a735497276}</Project>
       <Name>FbClientBase</Name>
     </ProjectReference>
-    <ProjectReference Include="..\ISqlClientCore\ISqlClientCore.csproj">
-      <Project>{e7e95f4e-577e-406b-972d-099ecd3eed7e}</Project>
-      <Name>ISqlClientCore</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

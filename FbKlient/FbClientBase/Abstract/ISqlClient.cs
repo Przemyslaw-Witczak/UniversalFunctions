@@ -1,13 +1,12 @@
-﻿using System;
-
-namespace ISqlKlientNameSpace
+﻿namespace FbClientBase.Abstract
 {
-    public interface ISqlKlient : ISqlSimpleClient
+
+    public interface ISqlClient : ISqlSimpleClient
     {
         /// <summary>
         /// Liczba komend, zapytań do bazy danych, updat'ów, insertów
         /// </summary>
-        int CommandsCount { get; /*private set;*/ }
+        int CommandsCount { get; }
 
         /// <summary>
         /// Indeks aktualnie dodawanego zapytania
@@ -19,11 +18,11 @@ namespace ISqlKlientNameSpace
         /// </summary>
         int ResponseId { get; set; }
 
-        
+
         /// <summary>
         /// Konfiguracja połączenia do bazy danych
         /// </summary>
         void ConfigureDataBase();
-        
+
     }
 }

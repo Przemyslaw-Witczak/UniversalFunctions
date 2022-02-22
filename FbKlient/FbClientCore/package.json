@@ -1,0 +1,15 @@
+{
+  "name": "fbclientcore",
+  "version": "1.0.0",
+  "description": "Wrapper-Fasade class for FirebirdSql.Data.FirebirdClient. Manages connection, transaction and command. Performs simple parameter and fields access.",
+  "main": "index.js",
+  "scripts": {
+    "test": "alert(\"Hello, World!\");"
+  },
+  "repository": {
+    "type": "git",
+    "url": "Przemyslaw-Witczak/UniversalFunctions"
+  },
+  "author": "Przemysław Witczak",
+  "license": "ISC"
+}

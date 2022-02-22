@@ -1,6 +1,7 @@
-﻿using FbClientBase;
+﻿using FbClientBase.Abstract;
+using FbClientBase.Extensions;
+using FbClientBaseNameSpace;
 using FirebirdSql.Data.FirebirdClient;
-using ISqlClientCore;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -17,7 +18,7 @@ namespace FbKlientNameSpace
     /// Autor: Przemysław Witczak,
     /// Klasa wykorzystuje bibliotekę Firebird .Net Provider, jednak opakowuje ją w funkcje znane z komponentów Borland C++ oraz ODBC
     /// </remarks>
-    public class FbKlient : FbClientCore, IDisposable, ISqlClient
+    public class FbKlient : FbAbstractClient, IDisposable, ISqlClient
     {
         #region Zmienne publiczne i prywatne       
         
@@ -40,9 +41,9 @@ namespace FbKlientNameSpace
                     dt = new DataTable();
 
                     //getCommandLog(commandString, Commands[QueryId]);
-                    Command.Connection = DataBaseConnection;
-                    Command.Transaction = Transaction;
-                    da.SelectCommand = Command;
+                    GetCurrentCommand().Connection = DataBaseConnection;
+                    GetCurrentCommand().Transaction = Transaction;
+                    da.SelectCommand = GetCurrentCommand();
                     da.Fill(dt);
 
                     CommitTransaction();
@@ -72,24 +73,22 @@ namespace FbKlientNameSpace
         /// Lista komend(zapytań) wysyłanych w transakcji
         /// </summary>
         private List<FbCommand> Commands;
-        private new FbCommand Command
+        protected override FbCommand GetCurrentCommand()
         {
-            get
-            {
-                return Commands[QueryId];
-            }
+            return Commands[QueryId];
         }
         /// <summary>
         /// Odpowiedź - rekordset
         /// </summary>
-        public new FbDataReader Response
-        {
-            get
+        protected override FbDataReader GetCurrentResponse()
+        {            
+            if (Responses == null || Responses.Count == 0 || responseId < 0)
             {
-                if (Responses==null || Responses.Count==0 || responseId<0)
-                    return null;
-                return Responses[responseId];
-            }
+                    
+                return null;
+            }                
+            return Responses[responseId];
+        
         }
 
         public List<FbDataReader> Responses;
@@ -518,7 +517,7 @@ namespace FbKlientNameSpace
                 }
                 else
                 {
-                    Command.CommandText += SqlString;
+                    GetCurrentCommand().CommandText += SqlString;
                 }
                 Loguj("FbKlient__AddSQL-Koniec");
             }
@@ -651,11 +650,11 @@ namespace FbKlientNameSpace
         {
             Loguj("FbKlient__Read");
             bool returned_value = false;
-            if (Response != null)
+            if (GetCurrentResponse() != null)
             {
                 try
                 {
-                    returned_value = Response.Read();
+                    returned_value = GetCurrentResponse().Read();
                     if (!returned_value && Responses.Count - 1 == ResponseId)
                     {
                         DataBaseClose();

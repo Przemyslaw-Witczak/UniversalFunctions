@@ -3,7 +3,7 @@ using System;
 using System.Text;
 using System.Text.RegularExpressions;
 
-namespace FbClientBase
+namespace FbClientBase.Extensions
 {
     /// <summary>
     /// Klasa metod rozszerzających do FbCommand

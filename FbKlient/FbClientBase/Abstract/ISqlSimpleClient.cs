@@ -1,6 +1,7 @@
-﻿using System;
+﻿using FirebirdSql.Data.FirebirdClient;
+using System;
 
-namespace ISqlKlientNameSpace
+namespace FbClientBase.Abstract
 {
     public interface ISqlSimpleClient
     {
@@ -38,14 +39,23 @@ namespace ISqlKlientNameSpace
         object GetValue(string FieldName);
         bool IsDBNull(string FieldName);
         /// <summary>
-        /// Przesunięcie wskaźnika na następny zwrócony rekord
+        /// Przesunięcie wskaźnika na następny zwrócony rekord,
+        /// jeżeli recordset nie ma więcej rekordów, metoda zwraca False
         /// </summary>
-        /// <returns></returns>
+        /// <returns>Czy istnieje następny rekord</returns>
         bool Read();
         /// <summary>
         /// Ustawienie parametrowi wartości NULL
         /// </summary>
         /// <param name="paramName">Nazwa parametru</param>
         void SetNull(string paramName);
+
+        /// <summary>
+        /// Metoda do przekazywania wartości parametrów do zapytania
+        /// </summary>
+        /// <param name="paramName">Nazwa parametru poprzedzona, może być poprzedzona znakiem '@' lub ':'</param>
+        /// <param name="Typ">Typ danych</param>
+        /// <returns></returns>
+        FbParameter ParamByName(string paramName, FbDbType paramType);
     }
 }

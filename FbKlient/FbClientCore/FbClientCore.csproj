@@ -1,15 +1,18 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <Description>Fasade class for Firebird SQL Command. Creates connection, transaction, manages commiting and disposing.</Description>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="FirebirdSql.Data.FirebirdClient" Version="8.5.4" />
+    <PackageReference Include="NLog" Version="4.7.13" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ISqlClientCore\ISqlClientCore.csproj" />
+    <ProjectReference Include="..\FbClientBase\FbClientBase.csproj" />
   </ItemGroup>
 
 </Project>
