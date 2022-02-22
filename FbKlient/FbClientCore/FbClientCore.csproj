@@ -4,6 +4,9 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <Description>Fasade class for Firebird SQL Command. Creates connection, transaction, manages commiting and disposing.</Description>
+	<Authors>Przemysław Witczak</Authors>
+    <Company>DowiSoft</Company>
+	<RepositoryUrl>https://github.com/Przemyslaw-Witczak/UniversalFunctions</RepositoryUrl>
   </PropertyGroup>
 
   <ItemGroup>
