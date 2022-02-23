@@ -1,9 +1,7 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using vl53l0xMeasurmentApp;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using FbCoreClientNameSpace;
 using FirebirdSql.Data.FirebirdClient;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
 using System.Diagnostics;
 
 namespace vl53l0xMeasurmentApp.Tests

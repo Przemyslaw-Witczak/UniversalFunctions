@@ -5,7 +5,7 @@ using FirebirdSql.Data.FirebirdClient;
 using System;
 using System.Text;
 
-namespace vl53l0xMeasurmentApp
+namespace FbCoreClientNameSpace
 {
     public class FbCoreClient : FbAbstractClient, IDisposable, ISqlSimpleClient
     {

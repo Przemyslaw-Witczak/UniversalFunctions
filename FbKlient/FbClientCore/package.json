@@ -1,6 +1,6 @@
 {
   "name": "fbclientcore",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Wrapper-Fasade class for FirebirdSql.Data.FirebirdClient. Manages connection, transaction and command. Performs simple parameter and fields access.",
   "main": "index.js",
   "scripts": {

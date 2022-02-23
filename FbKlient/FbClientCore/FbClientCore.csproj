@@ -7,6 +7,9 @@
 	<Authors>Przemysław Witczak</Authors>
     <Company>DowiSoft</Company>
 	<RepositoryUrl>https://github.com/Przemyslaw-Witczak/UniversalFunctions</RepositoryUrl>
+	<PackageVersion>1.0.1</PackageVersion>
+	<AssemblyVersion>1.0.1</AssemblyVersion>
+	<FileVersion>1.0.1</FileVersion>
   </PropertyGroup>
 
   <ItemGroup>
