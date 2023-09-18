@@ -32,7 +32,7 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="AegisImplicitMail">
+    <Reference Include="AegisImplicitMail, Version=1.0.3.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\AIM.1.0.3\lib\AegisImplicitMail.dll</HintPath>
     </Reference>
     <Reference Include="PresentationCore" />
