@@ -8,6 +8,7 @@
 	<Authors>Przemysław Witczak</Authors>
     <Company>DowiSoft</Company>
 	<RepositoryUrl>https://github.com/Przemyslaw-Witczak/UniversalFunctions</RepositoryUrl>
+	<Platforms>AnyCPU;x86</Platforms>
   </PropertyGroup>
 
   <ItemGroup>
