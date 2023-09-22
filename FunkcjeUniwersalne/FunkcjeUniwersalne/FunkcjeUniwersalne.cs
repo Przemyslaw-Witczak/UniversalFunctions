@@ -633,7 +633,23 @@ namespace MojeFunkcjeUniwersalneNameSpace
                     graphics.DrawImage(image, destRect, 0, 0, image.Width, image.Height, GraphicsUnit.Pixel, wrapMode);
                 }
             }
+            //ToDo: Save image in temp
+#if DEBUG
+            string tempFileName = Path.GetTempFileName();
 
+            try
+            {
+                // Save the Bitmap to the temporary file
+                destImage.Save(tempFileName);
+
+                // You can now use the tempFileName as the path to your temporary image file
+                Console.WriteLine("Image saved to: " + tempFileName);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error: " + ex.Message);
+            }
+#endif
             return destImage;
         }
         #endregion

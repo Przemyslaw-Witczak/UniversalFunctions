@@ -11,7 +11,7 @@
         {
             if (image == null)
                 return null;
-            return iTextSharp.text.Image.GetInstance(image, System.Drawing.Imaging.ImageFormat.Jpeg);
+            return iTextSharp.text.Image.GetInstance(image, System.Drawing.Imaging.ImageFormat.Bmp);
         }
     }
 }
