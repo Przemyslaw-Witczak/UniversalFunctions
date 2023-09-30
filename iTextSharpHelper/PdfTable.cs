@@ -55,7 +55,7 @@ namespace iTextSharpHelper
             set
             {
                 _cellPicture = value;
-                text = string.Empty;
+                //text = string.Empty;
             }
         }
 
@@ -265,17 +265,24 @@ namespace iTextSharpHelper
                 while(x<ColumnCount)
                 {
 
-                    PdfPCell cell;
+                    PdfPCell cell = new PdfPCell();
                     var currentCell = Cells[x][y];
-                    if (currentCell.cellPicture != null)
+
+                    if (!string.IsNullOrEmpty(currentCell.Text))
                     {
-                        cell = new PdfPCell(currentCell.cellPicture);
+                        cell.AddElement(new Phrase(currentCell.Text, currentCell.Font));
+                    }
+                    SetPdfCellAlignment(cell, currentCell.Align);
+
+                    if (currentCell.cellPicture != null)
+                    {                        
+                        //without that, thumbnail fits into whole cell
+                        //currentCell.cellPicture.ScaleAbsolute(100f, 100f); // Set the image size                      
+                         cell.AddElement(currentCell.cellPicture);
+
                         if (!currentCell.NoBorder)
                             cell.Padding = 1; //żeby zdjęcie nie zasłaniało ramek
-                    }
-                    else
-                        cell = new PdfPCell(new Phrase(currentCell.Text, currentCell.Font));
-                    SetPdfCellAlignment(cell, currentCell.Align);                    
+                    }                                        
  
                     if (currentCell.NoBorder)
                         cell.Border = 0;
