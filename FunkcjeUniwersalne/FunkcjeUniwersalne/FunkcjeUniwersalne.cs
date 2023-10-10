@@ -635,7 +635,7 @@ namespace MojeFunkcjeUniwersalneNameSpace
             }
             //ToDo: Save image in temp
 #if DEBUG
-            string tempFileName = Path.GetTempFileName();
+            string tempFileName = Path.GetTempFileName().Replace(".tmp", ".png");
 
             try
             {
