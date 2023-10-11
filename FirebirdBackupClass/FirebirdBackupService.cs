@@ -73,7 +73,7 @@ namespace FirebirdBackup
 
                 backupSvc.Options = FbBackupFlags.IgnoreLimbo;
 
-                backupSvc.ServiceOutput += new ServiceOutputEventHandler(ServiceOutput);
+                //backupSvc.ServiceOutput += new ServiceOutputEventHandler(ServiceOutput);
 
                 backupSvc.Execute();
                 Logger.Instance.Loguj($"Zakończono tworzenie kopii bazy {connectionString.Database} w pliku {backupFile}");
@@ -110,7 +110,7 @@ namespace FirebirdBackup
             restoreSvc.PageSize = 4096;
             restoreSvc.Options = FbRestoreFlags.Create | FbRestoreFlags.Replace;
 
-            restoreSvc.ServiceOutput += new ServiceOutputEventHandler(ServiceOutput);
+            //restoreSvc.ServiceOutput += new ServiceOutputEventHandler(ServiceOutput);
 
             restoreSvc.Execute();
         }

@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using static iTextSharp.text.TabStop;
 
 namespace iTextSharpHelper
 {
@@ -265,25 +266,30 @@ namespace iTextSharpHelper
                 while(x<ColumnCount)
                 {
 
-                    PdfPCell cell = new PdfPCell();
-                    var currentCell = Cells[x][y];
+                    PdfPCell cell = new PdfPCell();                    
+                    var currentCell = Cells[x][y];                    
 
                     if (!string.IsNullOrEmpty(currentCell.Text))
-                    {
-                        cell.AddElement(new Phrase(currentCell.Text, currentCell.Font));
+                    {                        
+                        var phrase = new Paragraph(currentCell.Text, currentCell.Font);                        
+                        SetPdfPhraseAlignment(phrase, currentCell.Align);    
+                        cell.AddElement(phrase);
                     }
-                    SetPdfCellAlignment(cell, currentCell.Align);
+                                        
 
                     if (currentCell.cellPicture != null)
-                    {                        
+                    {
                         //without that, thumbnail fits into whole cell
-                        //currentCell.cellPicture.ScaleAbsolute(100f, 100f); // Set the image size                      
-                         cell.AddElement(currentCell.cellPicture);
-
+                        currentCell.cellPicture.ScaleAbsolute(70f, 70f); // Set the image size                      
+                        //cell.AddElement(currentCell.cellPicture);
+                        cell.AddElement(currentCell.cellPicture);
                         if (!currentCell.NoBorder)
                             cell.Padding = 1; //żeby zdjęcie nie zasłaniało ramek
-                    }                                        
- 
+                    }
+
+                    //cell = new PdfPCell(phrase);
+                    SetPdfCellAlignment(cell, currentCell.Align);
+
                     if (currentCell.NoBorder)
                         cell.Border = 0;
 
@@ -325,29 +331,53 @@ namespace iTextSharpHelper
             return returnedTable;
         }
 
+        private int MapCellAlignmentToElementAlignmentEnum(CellAlignment cellAlignment)
+        {
+            switch (cellAlignment)
+            {
+                case CellAlignment.caLeft:
+                    return Element.ALIGN_LEFT;                    
+                case CellAlignment.caCenter:
+                    return Element.ALIGN_CENTER;
+                    
+                case CellAlignment.caRight:
+                    return Element.ALIGN_RIGHT;
+                    
+                //case CellAlignment.caMiddle:
+                //    cell.VerticalAlignment = Element.ALIGN_MIDDLE;
+                //    cell.HorizontalAlignment = Element.ALIGN_CENTER;
+                //    break;
+                default:
+                    return Element.ALIGN_CENTER;
+            }
+        }
+
+        /// <summary>
+        /// Mapuje wyrównanie tekstu na paragraf/akapit
+        /// </summary>
+        /// <param name="phrase"></param>
+        /// <param name="align"></param>
+        /// <exception cref="NotImplementedException"></exception>
+        private void SetPdfPhraseAlignment(Paragraph phrase, CellAlignment align)
+        {
+            phrase.Alignment = MapCellAlignmentToElementAlignmentEnum(align);            
+        }
+
         /// <summary>
         /// Mapuje wyrównanie tekstu komórek tabeli
         /// </summary>
         /// <param name="cell"></param>
         /// <param name="alignment"></param>
-        private void SetPdfCellAlignment(PdfPCell cell, CellAlignment alignment)
+        private void SetPdfCellAlignment(PdfPCell cell, CellAlignment align)
         {
-            switch (alignment)
+            switch (align)
             {
-                case CellAlignment.caLeft:
-                    cell.HorizontalAlignment = 0;
-                    break;
-                case CellAlignment.caCenter:
-                    cell.HorizontalAlignment = 1;
-                    break;
-                case CellAlignment.caRight:
-                    cell.HorizontalAlignment = 2;
-                    break;
                 case CellAlignment.caMiddle:
                     cell.VerticalAlignment = Element.ALIGN_MIDDLE;
-                    cell.HorizontalAlignment = 1;
+                    cell.HorizontalAlignment = Element.ALIGN_CENTER;
                     break;
                 default:
+                    cell.HorizontalAlignment = MapCellAlignmentToElementAlignmentEnum((CellAlignment)align);
                     break;
             }
 
