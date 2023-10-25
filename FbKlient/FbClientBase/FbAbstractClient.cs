@@ -25,7 +25,7 @@ namespace FbClientBaseNameSpace
         /// Pobiera aktualny response reader
         /// </summary>
         /// <returns></returns>
-        protected abstract FbDataReader GetCurrentResponse();
+        public abstract FbDataReader GetCurrentResponse();
 
         /// <summary>
         /// Metoda abstrakcyjna, wymaga implementacji w celu logowania komunikatów błędów, lub wyświetlania okien komunikatów, zależnie od implementacji klasy pochodnej

@@ -234,7 +234,7 @@ namespace FbCoreClientNameSpace
         /// <summary>
         /// <inheritdoc cref="FbClientBase.GetCurrentResponse"/>
         /// </summary>        
-        protected override FbDataReader GetCurrentResponse()
+        public override FbDataReader GetCurrentResponse()
         {
             return _reader;
         }

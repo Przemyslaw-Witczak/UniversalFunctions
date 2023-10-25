@@ -80,7 +80,7 @@ namespace FbKlientNameSpace
         /// <summary>
         /// Odpowiedź - rekordset
         /// </summary>
-        protected override FbDataReader GetCurrentResponse()
+        public override FbDataReader GetCurrentResponse()
         {            
             if (Responses == null || Responses.Count == 0 || responseId < 0)
             {
