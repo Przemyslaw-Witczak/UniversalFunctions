@@ -652,6 +652,24 @@ namespace MojeFunkcjeUniwersalneNameSpace
 #endif
             return destImage;
         }
+
+        public static void AddTextOnImage(Image image, string textToAdd)
+        {
+            using (Graphics graphics = Graphics.FromImage(image))
+            {
+                // Define a font and brush for the text
+                Font font = new Font("Arial", 48, FontStyle.Regular);
+                SolidBrush brush = new SolidBrush(Color.Black);
+                
+                // Specify the position where you want to add text
+                PointF textPosition = new PointF(10, image.Height-(10+font.Height));
+
+                // Add text to the image
+                graphics.DrawString(textToAdd, font, brush, textPosition);
+
+            }
+
+        }
         #endregion
 
     }

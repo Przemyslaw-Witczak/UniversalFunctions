@@ -280,14 +280,13 @@ namespace iTextSharpHelper
                     if (currentCell.cellPicture != null)
                     {
                         //without that, thumbnail fits into whole cell
-                        currentCell.cellPicture.ScaleAbsolute(70f, 70f); // Set the image size                      
-                        //cell.AddElement(currentCell.cellPicture);
+                        currentCell.cellPicture.ScaleAbsolute(70f, 70f); // Set the image size                                              
+                        currentCell.cellPicture.Alignment = (int)currentCell.Align;
                         cell.AddElement(currentCell.cellPicture);
                         if (!currentCell.NoBorder)
                             cell.Padding = 1; //żeby zdjęcie nie zasłaniało ramek
                     }
 
-                    //cell = new PdfPCell(phrase);
                     SetPdfCellAlignment(cell, currentCell.Align);
 
                     if (currentCell.NoBorder)

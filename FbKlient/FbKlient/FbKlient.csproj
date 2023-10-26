@@ -104,7 +104,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\FbClientBase\FbClientBase.csproj">
-      <Project>{31d5e0c0-c31f-4130-a7e7-33a735497276}</Project>
+      <Project>{3daa4d16-bd27-4982-a8b2-ea3cbd565949}</Project>
       <Name>FbClientBase</Name>
     </ProjectReference>
   </ItemGroup>
