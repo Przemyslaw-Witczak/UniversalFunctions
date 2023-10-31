@@ -280,7 +280,7 @@ namespace iTextSharpHelper
                     if (currentCell.cellPicture != null)
                     {
                         //without that, thumbnail fits into whole cell
-                        currentCell.cellPicture.ScaleAbsolute(70f, 70f); // Set the image size                                              
+                        currentCell.cellPicture.ScaleAbsolute(100f, 100f); // Set the image size                                              
                         currentCell.cellPicture.Alignment = (int)currentCell.Align;
                         cell.AddElement(currentCell.cellPicture);
                         if (!currentCell.NoBorder)
