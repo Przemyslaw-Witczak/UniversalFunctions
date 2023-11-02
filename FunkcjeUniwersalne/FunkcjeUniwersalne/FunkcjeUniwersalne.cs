@@ -7,6 +7,7 @@ using System.IO;
 using System.Security.Cryptography;
 using System.Text;
 using System.Windows.Forms;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace MojeFunkcjeUniwersalneNameSpace
 
@@ -597,7 +598,7 @@ namespace MojeFunkcjeUniwersalneNameSpace
         /// <param name="height">The height to resize to.</param>
         /// <returns>The resized image.</returns>
         /// remarks https://stackoverflow.com/questions/1922040/how-to-resize-an-image-c-sharp
-        public static Bitmap ResizeImage(Image image, int width, int height)
+        public static Bitmap ResizeImage(System.Drawing.Image image, int width, int height)
         {
             if (image == null)
             {
@@ -653,7 +654,7 @@ namespace MojeFunkcjeUniwersalneNameSpace
             return destImage;
         }
 
-        public static void AddTextOnImage(Image image, string textToAdd)
+        public static void AddTextOnImage(System.Drawing.Image image, string textToAdd)
         {
             using (Graphics graphics = Graphics.FromImage(image))
             {
@@ -663,9 +664,26 @@ namespace MojeFunkcjeUniwersalneNameSpace
                 
                 // Specify the position where you want to add text
                 PointF textPosition = new PointF(10, image.Height-(10+font.Height));
+                RectangleF textArea = new RectangleF(10, image.Height - (10 + font.Height), image.Width - 20, image.Height - 20);
+
+                // Create a StringFormat object with word wrapping
+                StringFormat stringFormat = new StringFormat
+                {
+                    FormatFlags = StringFormatFlags.LineLimit,
+                    Trimming = StringTrimming.Word
+                };
+
+                // Measure the size of the text
+                SizeF textSize = graphics.MeasureString(textToAdd, font, (int)textArea.Width, stringFormat);
+
+                // Calculate the Y-coordinate to keep the text within the image bounds
+                float newY = image.Height - textSize.Height - 10; // 10 is a margin
+
+                // Update the text area with the calculated Y-coordinate
+                textArea = new RectangleF(textArea.Left, newY, textArea.Width, textArea.Height);
 
                 // Add text to the image
-                graphics.DrawString(textToAdd, font, brush, textPosition);
+                graphics.DrawString(textToAdd, font, brush, textArea, stringFormat);
 
             }
 
