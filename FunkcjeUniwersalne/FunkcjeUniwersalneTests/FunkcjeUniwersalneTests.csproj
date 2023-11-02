@@ -85,7 +85,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\FunkcjeUniwersalne\FunkcjeUniwersalne.csproj">
-      <Project>{22D63D77-4EF4-404D-8CBE-D5E6751A3CAB}</Project>
+      <Project>{22d63d77-4ef4-404d-8cbe-d5e6751a3cab}</Project>
       <Name>FunkcjeUniwersalne</Name>
     </ProjectReference>
     <ProjectReference Include="..\MyExtensions\DowiExtensions.csproj">
