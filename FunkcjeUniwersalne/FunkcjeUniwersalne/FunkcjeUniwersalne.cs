@@ -658,7 +658,7 @@ namespace MojeFunkcjeUniwersalneNameSpace
             using (Graphics graphics = Graphics.FromImage(image))
             {
                 // Define a font and brush for the text
-                Font font = new Font("Arial", 48, FontStyle.Regular);
+                Font font = new Font("Arial", 36, FontStyle.Regular);
                 SolidBrush brush = new SolidBrush(Color.Black);
                 
                 // Specify the position where you want to add text
