@@ -654,12 +654,12 @@ namespace MojeFunkcjeUniwersalneNameSpace
             return destImage;
         }
 
-        public static void AddTextOnImage(System.Drawing.Image image, string textToAdd)
+        public static void AddTextOnImage(System.Drawing.Image image, string textToAdd, float initialEmSize=26)
         {
             using (Graphics graphics = Graphics.FromImage(image))
             {
                 // Define a font and brush for the text
-                Font font = new Font("Arial", 36, FontStyle.Regular);
+                Font font = new Font("Arial", initialEmSize, FontStyle.Regular);
                 SolidBrush brush = new SolidBrush(Color.Black);
                 
                 // Specify the position where you want to add text
@@ -675,6 +675,13 @@ namespace MojeFunkcjeUniwersalneNameSpace
 
                 // Measure the size of the text
                 SizeF textSize = graphics.MeasureString(textToAdd, font, (int)textArea.Width, stringFormat);
+
+                //if text is bigger than half of image height, try to decrease forn
+                if (textSize.Height>image.Height/2)
+                {
+                    AddTextOnImage(image, textToAdd, initialEmSize - 2);
+                    return;
+                }
 
                 // Calculate the Y-coordinate to keep the text within the image bounds
                 float newY = image.Height - textSize.Height - 10; // 10 is a margin
