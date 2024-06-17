@@ -356,15 +356,16 @@ namespace FbClientBaseNameSpace
             //using (BinaryWriter bw = new BinaryWriter(fs)) // Streams the BLOB to the FileStream object.
             BinaryWriter bw = new BinaryWriter(fs);
             {
-                int bufferSize = 100;                   // Size of the BLOB buffer.
+                int bufferSize = 1024;                   // Size of the BLOB buffer.
                 byte[] outbyte = new byte[bufferSize];  // The BLOB byte[] buffer to be filled by GetBytes.
                 long retval;                            // The bytes returned from GetBytes.
                 long startIndex = 0;                    // The starting position in the BLOB output.
                                                         // Reset the starting byte for the new BLOB.
                 startIndex = 0;
-
+                var currentResponse = GetCurrentResponse();
+                var currentFieldIndex = GetFieldIndex(FieldName);
                 // Read the bytes into outbyte[] and retain the number of bytes returned.
-                retval = GetCurrentResponse().GetBytes(GetFieldIndex(FieldName), startIndex, outbyte, 0, bufferSize);
+                retval = currentResponse.GetBytes(currentFieldIndex, startIndex, outbyte, 0, bufferSize);
 
                 // Continue reading and writing while there are bytes beyond the size of the buffer.
                 while (retval == bufferSize)
@@ -374,7 +375,7 @@ namespace FbClientBaseNameSpace
 
                     // Reposition the start index to the end of the last buffer and fill the buffer.
                     startIndex += bufferSize;
-                    retval = GetCurrentResponse().GetBytes(GetFieldIndex(FieldName), startIndex, outbyte, 0, bufferSize);
+                    retval = currentResponse.GetBytes(currentFieldIndex, startIndex, outbyte, 0, bufferSize);
                 }
 
                 // Write the remaining buffer.
