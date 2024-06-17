@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using System.Linq;
+using System.Security.Cryptography;
 
 
 namespace MojeFunkcjeUniwersalneNameSpace
@@ -303,6 +304,22 @@ namespace MojeFunkcjeUniwersalneNameSpace
         public static string ReplaceProhibitedCharsFrom(string fileName)
         {
             return fileName.Replace("/", "_").Replace("\\", "_").Replace("%", "_").Replace(":", "_").Replace("*", "_").Replace("?", "_").Replace("\"", "_").Replace("<", "_").Replace(">", "_").Replace("|", "_");
+        }
+
+        /// <summary>
+        /// Function compytes MD5 checksum from given file
+        /// </summary>
+        /// <param name="filePath"></param>
+        /// <returns></returns>
+        public static byte[] ComputeHashForFile(string filePath)
+        {
+            using (var md5 = MD5.Create())
+            {
+                using (var stream = File.OpenRead(filePath))
+                {
+                    return md5.ComputeHash(stream);
+                }
+            }
         }
     }
 }

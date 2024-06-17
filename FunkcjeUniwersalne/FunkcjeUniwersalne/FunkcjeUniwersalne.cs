@@ -396,7 +396,7 @@ namespace MojeFunkcjeUniwersalneNameSpace
         /// </summary>
         /// <param name="data">Tabela bajtów z wynikiem funkcji hash</param>
         /// <returns>Sformatowany łańcuch string</returns>
-        private static string byteArrayToString(byte[] data)
+        public static string ByteArrayToString(byte[] data)
         {
             // Create a new Stringbuilder to collect the bytes
             // and create a string.
@@ -426,7 +426,7 @@ namespace MojeFunkcjeUniwersalneNameSpace
             {
                 // Convert the input string to a byte array and compute the hash.
                 byte[] data = md5Hash.ComputeHash(Encoding.UTF8.GetBytes(input));
-                return byteArrayToString(data);
+                return ByteArrayToString(data);
             }
         }
 
@@ -456,6 +456,20 @@ namespace MojeFunkcjeUniwersalneNameSpace
             }
 
         }
+
+        /// <summary>
+        /// Function returns byte array with MD5 checksum from string
+        /// </summary>
+        /// <param name="stream"></param>
+        /// <returns></returns>
+        public static byte[] ComputeHashForStream(Stream stream)
+        {
+            using (var md5 = MD5.Create())
+            {
+                stream.Position = 0;
+                return md5.ComputeHash(stream);
+            }
+        }
         #endregion
 
         #region SHA256
@@ -473,7 +487,7 @@ namespace MojeFunkcjeUniwersalneNameSpace
                 fromStream.Position = 0;
                 hashValue = mySHA256.ComputeHash(fromStream);
 
-                return byteArrayToString(hashValue);
+                return ByteArrayToString(hashValue);
             }
             catch (Exception ex)
             {
