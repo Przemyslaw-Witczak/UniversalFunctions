@@ -70,7 +70,8 @@ namespace DowiExtensionsNameSpace
             //strValue = String.Format("{0:#,#.000}",  value);
             string decimalSeparator = CultureInfo.CurrentUICulture.NumberFormat.NumberDecimalSeparator; ;
             //strValue = string.Format("{0:#,0.000}", value);
-            strValue = string.Format("{0:#" + decimalSeparator + "0.000}", value);
+            //strValue = string.Format("{0:#" + decimalSeparator + "0.000}", value);
+            strValue = value.ToString("#,0.000", CultureInfo.InvariantCulture);
             return strValue;
         }
 
