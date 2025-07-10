@@ -24,7 +24,11 @@ namespace MojeFunkcjeUniwersalneNameSpace
         /// <summary>
         /// Formularz wyświetla przycisk OK
         /// </summary>
-        Potwierdzenie 
+        Potwierdzenie,
+        /// <summary>
+        /// Formularz wyświetla przycisk OK oraz dodatkowy komunikat błędu w polu Memo
+        /// </summary>
+        Blad
     };
     public partial class Potwierdzenie : Form
     {
@@ -38,8 +42,8 @@ namespace MojeFunkcjeUniwersalneNameSpace
         {
             InitializeComponent();
 
-            label1.Text = Komunikat;
-            label2.Text = "";
+            lblFirstLine.Text = Komunikat;
+            lblSecondLine.Text = "";
             konstruktor(Rodzaj);
         }
 
@@ -49,13 +53,14 @@ namespace MojeFunkcjeUniwersalneNameSpace
         /// <param name="Rodzaj">Rodzaj komunikatu, pytanie czy potwierdzenie</param>
         /// <param name="Komunikat">Pierwsza linia komunikatu</param>
         /// <param name="Komunikat2">Dodatkowa linia komunikatu</param>
-        public Potwierdzenie(KomunikatRodzaj Rodzaj, string Komunikat, string Komunikat2)
-        {
-            InitializeComponent();
+        public Potwierdzenie(KomunikatRodzaj Rodzaj, string Komunikat, string Komunikat2) : this(Rodzaj, Komunikat)
+        {                        
+            lblSecondLine.Text = Komunikat2;            
+        }
 
-            label1.Text = Komunikat;
-            label2.Text = Komunikat2;
-            konstruktor(Rodzaj);
+        public Potwierdzenie(string Komunikat, Exception ex) : this(KomunikatRodzaj.Blad, Komunikat)
+        {
+            txtMultiline.Text = ex.Message;
         }
 
         /// <summary>
@@ -75,6 +80,18 @@ namespace MojeFunkcjeUniwersalneNameSpace
                 btnOk.Visible = false;
                 AcceptButton = btnTak;
                 CancelButton = btnNie;
+            }
+            else if (Rodzaj == KomunikatRodzaj.Blad)
+            {
+                btnNie.Visible = false;
+                btnTak.Visible = false;
+                AcceptButton = btnOk;
+                txtMultiline.Visible = true;
+
+                // Fix for CS1612: Assign the Size property to a local variable, modify it, and then reassign it.
+                var size = pnlSecondLine.Size;
+                size.Height = txtMultiline.Size.Height;
+                pnlSecondLine.Size = size;
             }
         }
 
