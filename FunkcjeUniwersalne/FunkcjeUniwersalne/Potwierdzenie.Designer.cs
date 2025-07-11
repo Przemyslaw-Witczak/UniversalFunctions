@@ -122,12 +122,14 @@
             // 
             // txtMultiline
             // 
-            this.txtMultiline.Location = new System.Drawing.Point(43, 0);
+            this.txtMultiline.Location = new System.Drawing.Point(43, 3);
             this.txtMultiline.Multiline = true;
             this.txtMultiline.Name = "txtMultiline";
             this.txtMultiline.ReadOnly = true;
+            this.txtMultiline.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.txtMultiline.Size = new System.Drawing.Size(410, 111);
             this.txtMultiline.TabIndex = 6;
+            this.txtMultiline.Visible = false;
             // 
             // lblSecondLine
             // 

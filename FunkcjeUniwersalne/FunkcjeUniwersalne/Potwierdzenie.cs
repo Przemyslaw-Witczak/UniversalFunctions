@@ -87,11 +87,9 @@ namespace MojeFunkcjeUniwersalneNameSpace
                 btnTak.Visible = false;
                 AcceptButton = btnOk;
                 txtMultiline.Visible = true;
-
-                // Fix for CS1612: Assign the Size property to a local variable, modify it, and then reassign it.
-                var size = pnlSecondLine.Size;
-                size.Height = txtMultiline.Size.Height;
-                pnlSecondLine.Size = size;
+                
+                this.Height = 280;
+                
             }
         }
 
