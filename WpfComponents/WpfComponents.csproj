@@ -75,13 +75,21 @@
       <DependentUpon>CheckedDatePicker.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="CheckedMonthYearPicker.xaml">
+      <Generator>XamlIntelliSenseFileGenerator</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="DowiTextBox.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CheckedMonthYearPicker.xaml.cs">
+      <DependentUpon>CheckedMonthYearPicker.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Converters\ComboBoxUnselectedValueConverter.cs" />
+    <Compile Include="Converters\YearStringToIntConverter.cs" />
     <Compile Include="DowiTextBox.xaml.cs">
       <DependentUpon>DowiTextBox.xaml</DependentUpon>
     </Compile>

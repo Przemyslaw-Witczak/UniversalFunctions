@@ -1,0 +1,34 @@
+<UserControl x:Class="WpfComponents.CheckedMonthYearPicker"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:WpfComponents"
+             x:Name="CheckedMonthYearPickerControl">
+    <UserControl.Resources>
+        <local:YearStringToIntConverter x:Key="YearStringToIntConverter"/>
+    </UserControl.Resources>
+    <Border BorderThickness="1" BorderBrush="Silver" Padding="2">
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="18"/>
+                <ColumnDefinition Width="50"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <CheckBox Grid.Column="0"
+                      VerticalAlignment="Center"
+                      IsChecked="{Binding ElementName=CheckedMonthYearPickerControl, Path=IsChecked, Mode=TwoWay}" />
+            <TextBox Grid.Column="1"
+                     VerticalAlignment="Center"
+                     Margin="1,0"
+                     MaxLength="4"
+                     Text="{Binding Path=Year, ElementName=CheckedMonthYearPickerControl, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource YearStringToIntConverter}}"
+                     MaxWidth="50"
+                     PreviewTextInput="YearTextBox_PreviewTextInput"
+                     DataObject.Pasting="YearTextBox_Pasting"/>
+            <ComboBox Grid.Column="2"
+                      VerticalAlignment="Center"
+                      Margin="2,0"
+                      ItemsSource="{Binding Path=MonthNames, ElementName=CheckedMonthYearPickerControl}"
+                      SelectedIndex="{Binding SelectedMonthIndex, ElementName=CheckedMonthYearPickerControl, Mode=TwoWay}" />
+        </Grid>
+    </Border>
+</UserControl>
