@@ -3,9 +3,9 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="clr-namespace:WpfComponents"
              x:Name="CheckedMonthYearPickerControl">
-    <UserControl.Resources>
+    <!--<UserControl.Resources>
         <local:YearStringToIntConverter x:Key="YearStringToIntConverter"/>
-    </UserControl.Resources>
+    </UserControl.Resources>-->
     <Border BorderThickness="1" BorderBrush="Silver" Padding="2">
         <Grid>
             <Grid.ColumnDefinitions>
@@ -16,19 +16,18 @@
             <CheckBox Grid.Column="0"
                       VerticalAlignment="Center"
                       IsChecked="{Binding ElementName=CheckedMonthYearPickerControl, Path=IsChecked}" />
-            <TextBox Grid.Column="1"
+            <TextBox x:Name="YearTextBox"
+                     Grid.Column="1"
                      VerticalAlignment="Center"
-                     Margin="1,0"
-                     MaxLength="4"
-                     Text="{Binding Path=Year, ElementName=CheckedMonthYearPickerControl, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource YearStringToIntConverter}}"
-                     MaxWidth="50"
+                     Margin="2,0"                     
                      PreviewTextInput="YearTextBox_PreviewTextInput"
-                     DataObject.Pasting="YearTextBox_Pasting"/>
-            <ComboBox Grid.Column="2"
+                     DataObject.Pasting="YearTextBox_Pasting"
+                     KeyUp="YearTextBox_KeyUp" />
+            <ComboBox Name="MonthComboBox"
+                      Grid.Column="2"
                       VerticalAlignment="Center"
                       Margin="2,0"
-                      ItemsSource="{Binding Path=MonthNames, ElementName=CheckedMonthYearPickerControl}"
-                      SelectedIndex="{Binding SelectedMonthIndex, ElementName=CheckedMonthYearPickerControl, Mode=TwoWay}" />
+                      SelectionChanged="MonthComboBox_SelectionChanged" />
         </Grid>
     </Border>
 </UserControl>
