@@ -394,4 +394,25 @@ namespace DowiExtensionsNameSpace
         }
     }
 
+    public static class DateTimeExtensions
+    {
+        /// <summary>
+        /// Zwraca pierwszy dzień miesiąca dla podanej daty
+        /// </summary>
+        /// <param name="dateTime">Data</param>
+        /// <returns>Pierwszy dzień miesiąca</returns>
+        public static DateTime FirstDayOfMonth(this DateTime dateTime)
+        {
+            return new DateTime(dateTime.Year, dateTime.Month, 1);
+        }
+        /// <summary>
+        /// Zwraca ostatni dzień miesiąca dla podanej daty
+        /// </summary>
+        /// <param name="dateTime">Data</param>
+        /// <returns>Ostatni dzień miesiąca</returns>
+        public static DateTime LastDayOfMonth(this DateTime dateTime)
+        {
+            return new DateTime(dateTime.Year, dateTime.Month, DateTime.DaysInMonth(dateTime.Year, dateTime.Month));
+        }
+    }
 }

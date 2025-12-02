@@ -20,5 +20,25 @@ namespace WpfComponentsUITests
         {
             InitializeComponent();
         }
+
+        private DateTime _selectedDate;
+        public DateTime SelectedDate
+        {
+            get { return _selectedDate; }
+            set { _selectedDate = value; }
+        }
+
+        private bool _isChecked;
+        public bool IsChecked
+        {
+            get { return _isChecked; }
+            set { _isChecked = value; }
+        }
+
+        private void CheckedMonthYearPicker_SetTo2023_12_Click(object sender, RoutedEventArgs e)
+        {
+            SelectedDate = new DateTime(1983, 10, 29);
+            IsChecked = true;
+        }
     }
 }

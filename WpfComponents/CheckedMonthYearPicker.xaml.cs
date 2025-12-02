@@ -46,7 +46,14 @@ namespace WpfComponents
         public bool IsChecked
         {
             get { return (bool)GetValue(IsCheckedProperty); }
-            set { SetValue(IsCheckedProperty, value); }
+            set {
+                    if (IsChecked != value)
+                    {
+                        SetValue(IsCheckedProperty, value);
+                        NotifyPropertyChanged(nameof(IsChecked));
+                        UpdateSelectedDate();
+                    }
+                }
         }
 
 
@@ -54,7 +61,15 @@ namespace WpfComponents
         public DateTime SelectedDate
         {
             get => (DateTime)GetValue(SelectedDateProperty);
-            set => SetValue(SelectedDateProperty, value);
+            set
+            {
+                if (SelectedDate != value)
+                {
+                    SetValue(SelectedDateProperty, value);
+                    IsChecked = true;
+                }
+                //NotifyPropertyChanged(nameof(SelectedDate));
+            }
         }
 
         public ObservableCollection<string> MonthNames
@@ -78,9 +93,9 @@ namespace WpfComponents
             {
                 if (_year != value)
                 {
-                    _year = value;
+                    _year = value;       
                     NotifyPropertyChanged(nameof(Year));
-                    UpdateSelectedDate();
+                    UpdateSelectedDate();                    
                 }
             }
         }
@@ -105,12 +120,13 @@ namespace WpfComponents
             if (Year > 0 && SelectedMonthIndex >= 0 && SelectedMonthIndex < 12)
             {
                 SelectedDate = new DateTime(Year, SelectedMonthIndex + 1, 1);
-                IsChecked = true;
+                //IsChecked = true;                
             }
             else
             {
-                IsChecked = false;
+                //IsChecked = false;
             }
+            
         }
 
         private static readonly Regex _numericRegex = new Regex("^[0-9]+$");
