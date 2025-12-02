@@ -12,4 +12,8 @@
     <ProjectReference Include="..\WpfComponents\WpfComponents.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Models\" />
+  </ItemGroup>
+
 </Project>
