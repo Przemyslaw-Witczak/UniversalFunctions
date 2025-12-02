@@ -15,7 +15,7 @@
             </Grid.ColumnDefinitions>
             <CheckBox Grid.Column="0"
                       VerticalAlignment="Center"
-                      IsChecked="{Binding ElementName=CheckedMonthYearPickerControl, Path=IsChecked, Mode=TwoWay}" />
+                      IsChecked="{Binding ElementName=CheckedMonthYearPickerControl, Path=IsChecked}" />
             <TextBox Grid.Column="1"
                      VerticalAlignment="Center"
                      Margin="1,0"
