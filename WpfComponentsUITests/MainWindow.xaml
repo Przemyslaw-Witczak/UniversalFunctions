@@ -23,14 +23,14 @@
         <WpfComponents:CheckedMonthYearPicker x:Name="CheckedMonthYearPicker"
                                     Grid.Row="0" Grid.Column="1"
                                     Margin="2"
-                                    SelectedDate="{Binding SelectedDate, Mode=TwoWay, NotifyOnSourceUpdated=True}"
-                                    IsChecked="{Binding IsChecked, Mode=TwoWay}"
+                                    SelectedDate="{Binding SelectedDate.SelectedValue, Mode=TwoWay, NotifyOnSourceUpdated=True}"
+                                    IsChecked="{Binding SelectedDate.IsChecked, Mode=TwoWay}"
                                               />
         <Button Grid.Row="0" Grid.Column="3" Margin="2" Padding="5,2" Content="Set to 1983-10"
                 Click="CheckedMonthYearPicker_SetTo2023_12_Click"/>
         <StackPanel Grid.Row="0" Grid.Column="2" Orientation="Vertical">
-            <TextBlock Text="{Binding IsChecked, StringFormat=IsChecked: {0}}"/>
-            <TextBlock Text="{Binding SelectedDate, StringFormat=SelectedDate: {0:yyyy-MM-dd}}"/>
+            <TextBlock Text="{Binding SelectedDate.IsChecked, StringFormat=IsChecked: {0}}"/>
+            <TextBlock Text="{Binding SelectedDate.SelectedValue, StringFormat=SelectedDate: {0:yyyy-MM-dd}}"/>
         </StackPanel>
 
         <!-- Row 1: CheckedDatePicker -->
