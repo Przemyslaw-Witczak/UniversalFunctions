@@ -13,7 +13,7 @@ namespace WpfComponents
 {
     public partial class CheckedMonthYearPicker : UserControl
     {        
-     
+    
     
         public static readonly DependencyProperty IsCheckedProperty =
             DependencyProperty.Register(
@@ -37,11 +37,10 @@ namespace WpfComponents
                 return;
             if (!newValue)
             {
-
                 YearTextBox.Text = string.Empty;
                 MonthComboBox.SelectedIndex = -1;
             }
-            else
+            else if (newValue)
             {
                 YearTextBox.Text = DateTime.Now.Year.ToString();
                 MonthComboBox.SelectedIndex = DateTime.Now.Month - 1;

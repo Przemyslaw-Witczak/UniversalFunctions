@@ -1003,10 +1003,8 @@ namespace MojeFunkcjeUniwersalneNameSpace
                 else if (property.PropertyType == typeof(DateTimeFilter))
                 {
                     var dateTimeFilter = propertyValue as DateTimeFilter;
-                    if (dateTimeFilter.IsChecked)
-                    {
-                        SetParam(windowName, propertyName, $"{dateTimeFilter.SelectedValue}");
-                    }                                      
+                    var selectedValue = dateTimeFilter.IsChecked ? dateTimeFilter.SelectedValue.ToString() : "";
+                    SetParam(windowName, propertyName, selectedValue);                                                          
                 }
                 else if (property.PropertyType == typeof(ObservableCollection<DictionaryListItem>))
                 {                    
