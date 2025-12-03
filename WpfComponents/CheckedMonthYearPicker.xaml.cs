@@ -2,12 +2,15 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Globalization;
+using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
+using WpfComponents.Extensions;
 
 namespace WpfComponents
 {
@@ -26,25 +29,31 @@ namespace WpfComponents
                     OnSelectedCheckedChanged));
 
         private static void OnSelectedCheckedChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
+        {            
             var control = (CheckedMonthYearPicker)d;
+            Debug.WriteLine($"{control.Name}:{nameof(OnSelectedCheckedChanged)}({(bool)e.OldValue}, {(bool)e.NewValue})");
             control.OnCheckedChanged((bool)e.OldValue, (bool)e.NewValue);
+            Debug.WriteLine($"{control.Name}:{nameof(OnSelectedCheckedChanged)} completed");
         }
 
         protected virtual void OnCheckedChanged(bool oldValue, bool newValue)
         {
+            Debug.WriteLine($"{Name}:{nameof(OnCheckedChanged)}({oldValue}, {newValue})");
             if (oldValue==newValue)
                 return;
             if (!newValue)
             {
+                Debug.WriteLine($"{Name}:{nameof(OnCheckedChanged)} - clearing date");
                 YearTextBox.Text = string.Empty;
                 MonthComboBox.SelectedIndex = -1;
             }
             else if (newValue)
             {
+                Debug.WriteLine($"{Name}:{nameof(OnCheckedChanged)} - setting date to now");
                 YearTextBox.Text = DateTime.Now.Year.ToString();
                 MonthComboBox.SelectedIndex = DateTime.Now.Month - 1;
             }
+            Debug.WriteLine($"{Name}:{nameof(OnCheckedChanged)} completed");
         }
 
         public static readonly DependencyProperty SelectedDateProperty =
@@ -60,17 +69,20 @@ namespace WpfComponents
         private static void OnSelectedDateChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             var control = (CheckedMonthYearPicker)d;
+            Debug.WriteLine($"{control.Name}:{nameof(OnSelectedDateChanged)}({(DateTime)e.OldValue}, {(DateTime)e.NewValue})");
             control.OnSelectedDateChanged((DateTime)e.OldValue, (DateTime)e.NewValue);
+            Debug.WriteLine($"{control.Name}:{nameof(OnSelectedDateChanged)} completed");
         }
 
         protected virtual void OnSelectedDateChanged(DateTime oldValue, DateTime newValue)
         {
             // Place your logic here. This will be called on binding and user changes.
-            if (newValue.Equals(oldValue))
+            Debug.WriteLine($"{Name}:{nameof(OnSelectedDateChanged)}({oldValue}, {newValue})");
+            if (newValue.IsEqualMonthYear(oldValue))
                 return;
             YearTextBox.Text = newValue.Year.ToString();
             MonthComboBox.SelectedIndex = newValue.Month - 1;
-            
+            Debug.WriteLine($"{Name}:Updated {nameof(YearTextBox)} to {YearTextBox.Text} and {nameof(MonthComboBox)} to {MonthComboBox.SelectedIndex+1}");
         }
 
         public CheckedMonthYearPicker()
@@ -96,9 +108,10 @@ namespace WpfComponents
             set {
                     if (IsChecked != value)
                     {
-                        SetValue(IsCheckedProperty, value);
-                        
-                    }
+                        Debug.WriteLine($"{Name}:{nameof(IsChecked)} set to {value}");
+                        SetValue(IsCheckedProperty, value);   
+                        Debug.WriteLine($"{Name}:{nameof(IsChecked)} is now {IsChecked}");
+                }
                 }
         }
 
@@ -107,18 +120,22 @@ namespace WpfComponents
             get => (DateTime)GetValue(SelectedDateProperty);
             set
             {
-                if (SelectedDate != value)
+                if (!SelectedDate.IsEqualMonthYear(value))
                 {
+                    Debug.WriteLine($"{Name}:{nameof(SelectedDate)} set to {value}");
                     SetValue(SelectedDateProperty, value);
                     IsChecked = true;
                     YearTextBox.Text = value.Year.ToString();
+                    MonthComboBox.SelectedIndex = value.Month - 1;
+                    Debug.WriteLine($"{Name}:Updated {nameof(YearTextBox)} to {YearTextBox.Text} and {nameof(MonthComboBox)} to {MonthComboBox.SelectedIndex+1}");
                 }
                 //NotifyPropertyChanged(nameof(SelectedDate));
             }
         }
 
-        private void UpdateSelectedDate()
+        private void UpdateSelectedDateFromUserInput()
         {
+            Debug.WriteLine($"{Name}:{nameof(UpdateSelectedDateFromUserInput)}");
             var selectedYear = int.TryParse(YearTextBox.Text, out int year) ? year : 0;
             var selectedMonthIndex = MonthComboBox.SelectedIndex > -1 ? MonthComboBox.SelectedIndex : -1;
 
@@ -132,7 +149,7 @@ namespace WpfComponents
             {
                 IsChecked = false;
             }
-            
+            Debug.WriteLine($"{Name}:Updated {nameof(SelectedDate)} to {SelectedDate}, {nameof(IsChecked)}={IsChecked}");
         }
 
         private static readonly Regex _numericRegex = new Regex("^[0-9]+$");
@@ -160,13 +177,15 @@ namespace WpfComponents
 
         private void YearTextBox_KeyUp(object sender, KeyEventArgs e)
         {
-            UpdateSelectedDate();
+            UpdateSelectedDateFromUserInput();
         }
 
         private void MonthComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            UpdateSelectedDate();
+            UpdateSelectedDateFromUserInput();
         }
+
+        
     }
 
    

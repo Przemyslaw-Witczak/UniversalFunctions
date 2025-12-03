@@ -93,6 +93,7 @@
     <Compile Include="DowiTextBox.xaml.cs">
       <DependentUpon>DowiTextBox.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Extensions\DateTimeExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>

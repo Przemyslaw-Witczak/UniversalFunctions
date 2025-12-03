@@ -15,8 +15,8 @@ namespace WpfComponentsUITests
 
         private void CheckedMonthYearPicker_SetTo2023_12_Click(object sender, RoutedEventArgs e)
         {
-            ViewModel.SelectedDate = new DateTime(1983, 10, 29);
-            ViewModel.IsChecked = true;
+            ViewModel.SelectedDate.SelectedValue = new DateTime(1983, 10, 29);
+            //ViewModel.IsChecked = true;
         }
     }
 }
