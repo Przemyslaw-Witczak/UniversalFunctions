@@ -16,8 +16,37 @@ namespace WpfComponents
      
     
         public static readonly DependencyProperty IsCheckedProperty =
-            DependencyProperty.Register(nameof(IsChecked), typeof(bool), typeof(CheckedMonthYearPicker), new FrameworkPropertyMetadata(false, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
+            DependencyProperty.Register(
+                nameof(IsChecked), 
+                typeof(bool), 
+                typeof(CheckedMonthYearPicker), 
+                new FrameworkPropertyMetadata(
+                    false, 
+                    FrameworkPropertyMetadataOptions.BindsTwoWayByDefault,
+                    OnSelectedCheckedChanged));
 
+        private static void OnSelectedCheckedChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            var control = (CheckedMonthYearPicker)d;
+            control.OnCheckedChanged((bool)e.OldValue, (bool)e.NewValue);
+        }
+
+        protected virtual void OnCheckedChanged(bool oldValue, bool newValue)
+        {
+            if (oldValue==newValue)
+                return;
+            if (!newValue)
+            {
+
+                YearTextBox.Text = string.Empty;
+                MonthComboBox.SelectedIndex = -1;
+            }
+            else
+            {
+                YearTextBox.Text = DateTime.Now.Year.ToString();
+                MonthComboBox.SelectedIndex = DateTime.Now.Month - 1;
+            }
+        }
 
         public static readonly DependencyProperty SelectedDateProperty =
             DependencyProperty.Register(
@@ -42,6 +71,7 @@ namespace WpfComponents
                 return;
             YearTextBox.Text = newValue.Year.ToString();
             MonthComboBox.SelectedIndex = newValue.Month - 1;
+            
         }
 
         public CheckedMonthYearPicker()
