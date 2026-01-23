@@ -79,6 +79,7 @@
     <Compile Include="Logger\LoggerTests.cs" />
     <Compile Include="LongExtensionsTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="DecimalExtensionsTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

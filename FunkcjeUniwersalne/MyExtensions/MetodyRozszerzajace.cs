@@ -66,21 +66,14 @@ namespace DowiExtensionsNameSpace
     {
         public static string ToString3Places(this decimal value)
         {
-            string strValue;
-            //strValue = String.Format("{0:#,#.000}",  value);
-            string decimalSeparator = CultureInfo.CurrentUICulture.NumberFormat.NumberDecimalSeparator; ;
-            //strValue = string.Format("{0:#,0.000}", value);
-            //strValue = string.Format("{0:#" + decimalSeparator + "0.000}", value);
-            strValue = value.ToString("#,0.000", CultureInfo.InvariantCulture);
-            return strValue;
+            // Exactly 3 decimal places, using current culture and thousands separators
+            return value.ToString("N3", CultureInfo.CurrentCulture);
         }
 
         public static string ToString2Places(this decimal value)
         {
-            string strValue;
-            //strValue = String.Format("{0:#,#.000}",  value);
-            strValue = string.Format("{0:#,0.00}", value);
-            return strValue;
+            // Exactly 2 decimal places, using current culture and thousands separators
+            return value.ToString("N2", CultureInfo.CurrentCulture);
         }
     }
 

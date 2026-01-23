@@ -7,6 +7,7 @@ using System.IO;
 using System.Security.Cryptography;
 using System.Text;
 using System.Windows.Forms;
+using System.Windows.Navigation;
 using static System.Net.Mime.MediaTypeNames;
 
 namespace MojeFunkcjeUniwersalneNameSpace
@@ -343,39 +344,10 @@ namespace MojeFunkcjeUniwersalneNameSpace
                 currentString = "0";
             }
 
-            char[] workString = currentString.ToCharArray(0, currentString.Length);
-            int charCode;
-
-            for (int i = 0; i < currentString.Length; i++)
-            {
-                charCode = workString[i];
-
-                if (charCode >= 48 && charCode <= 57 /*0 - 9*/
-                    //|| (Kod >= 43 && Kod <= 45) /* + , -*/
-                    || charCode == 43 || charCode == 45
-                    //|| (*WorkString.c_str())==ThousandSeparator //bez tego, bo problem przy konwersji na currency
-                    || charCode == System.Globalization.CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator.ToCharArray(0, 1)[0]
-                )
-                {
-                    outputString += workString[i];
-                }
-            }
-
-            if (string.IsNullOrEmpty(outputString))
-            {
-                outputString = "0";
-            }
-
-            try
-            {
-                Convert.ToDecimal(outputString);
-            }
-            catch (Exception)
-            {
-                outputString = "0";
-            }
-
-            return Convert.ToDecimal(outputString);
+            if (TryParseFlexible(currentString, out decimal result))
+                return result;
+            else
+                return 0M;
         }
 
         public string FormatujDecimalSeparator(string currentString)
@@ -711,5 +683,34 @@ namespace MojeFunkcjeUniwersalneNameSpace
         }
         #endregion
 
+        // Try parse as plain number
+        public static bool TryParseNumber(string s, out decimal result)
+        {
+            return decimal.TryParse(s,
+                System.Globalization.NumberStyles.Number,
+                System.Globalization.CultureInfo.CurrentCulture,
+                out result);
+        }
+
+        // Try parse as currency (accepts symbol, grouping, parentheses etc.)
+        public static bool TryParseCurrency(string s, out decimal result)
+        {
+            return decimal.TryParse(s,
+                System.Globalization.NumberStyles.Currency,
+                System.Globalization.CultureInfo.CurrentCulture,
+                out result);
+        }
+
+        // Flexible: try currency first, then number
+        public static bool TryParseFlexible(string s, out decimal result)
+        {
+            if (TryParseCurrency(s, out result)) return true;
+            if (TryParseNumber(s, out result)) return true;
+
+            // optional: normalize common decimal separators then retry
+            var normalized = s.Replace(',', System.Globalization.CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator[0])
+                      .Replace('.', System.Globalization.CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator[0]);
+            return decimal.TryParse(normalized, System.Globalization.NumberStyles.Number, System.Globalization.CultureInfo.CurrentCulture, out result);
+        }
     }
 }
