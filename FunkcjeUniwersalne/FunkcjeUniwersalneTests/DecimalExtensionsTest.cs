@@ -20,8 +20,19 @@ namespace FunkcjeUniwersalneTests
             var convertedBack2 = FunkcjeUniwersalne.Instance.FormatujStringNaDecimal(stringValueToDecimal2);
 
             Assert.AreEqual(value0dot003, convertedBack);
-            Assert.AreEqual(value0dot003, convertedBack2);
+            Assert.AreEqual(value0dot002, convertedBack2);
 
+            // Additional checks for formatting of currency values
+            Decimal currencyValue = 1234.5M;
+            //format to currency using current culture
+            var currencyString = currencyValue.ToString("C");
+            var convertedBackCurrency = FunkcjeUniwersalne.Instance.FormatujStringNaDecimal(currencyString);
+            Assert.AreEqual(currencyValue, convertedBackCurrency);
+
+            //Check if value with dot as decimal separator is handled correctly
+            var dotDecimalString = "1234.56";
+            var convertedBackDot = FunkcjeUniwersalne.Instance.FormatujStringNaDecimal(dotDecimalString);
+            Assert.AreEqual(1234.56M, convertedBackDot);
         }
     }
 }
