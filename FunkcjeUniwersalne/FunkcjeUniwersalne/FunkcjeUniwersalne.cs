@@ -354,7 +354,7 @@ namespace MojeFunkcjeUniwersalneNameSpace
                     //|| (Kod >= 43 && Kod <= 45) /* + , -*/
                     || charCode == 43 || charCode == 45
                     //|| (*WorkString.c_str())==ThousandSeparator //bez tego, bo problem przy konwersji na currency
-                    || charCode == System.Globalization.CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator.ToCharArray(0, 1)[0]
+                    || charCode == System.Globalization.CultureInfo.CurrentCulture.NumberFormat.CurrencyDecimalSeparator.ToCharArray(0, 1)[0]
                 )
                 {
                     outputString += workString[i];
