@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.0.32112.339
+# Visual Studio Version 18
+VisualStudioVersion = 18.2.11415.280 d18.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FbKlient", "FbKlient\FbKlient.csproj", "{7BA21DDE-BBA3-46AB-8F00-40D5B6AAC575}"
 EndProject
@@ -16,6 +16,11 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FbClientCoreTests", "FbClientCoreTests\FbClientCoreTests.csproj", "{9F01C8BF-98C5-472E-A11D-78182F9FEF3E}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Abstract", "Abstract", "{88C183EE-D1CD-4CCA-A8CE-A9F597E151B6}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Scripts", "Scripts", "{4D88025A-E6F7-4AE3-8D09-D027C214C987}"
+	ProjectSection(SolutionItems) = preProject
+		Create database.sql = Create database.sql
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

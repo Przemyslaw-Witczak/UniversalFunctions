@@ -9,10 +9,12 @@
     <Company>DowiSoft</Company>
 	<RepositoryUrl>https://github.com/Przemyslaw-Witczak/UniversalFunctions</RepositoryUrl>
 	<Platforms>AnyCPU;x86</Platforms>
+	<AssemblyVersion>1.1.0.0</AssemblyVersion>
+	<FileVersion>1.1.0.0</FileVersion>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="FirebirdSql.Data.FirebirdClient" Version="10.3.2" />
+    <PackageReference Include="FirebirdSql.Data.FirebirdClient" Version="10.3.4" />
     <PackageReference Include="System.Threading.Tasks.Extensions" Version="4.6.0" />
   </ItemGroup>
 
