@@ -9,7 +9,7 @@ namespace vl53l0xMeasurmentApp.Tests
     [TestClass()]
     public class FbCoreClientTests
     {
-        private const string _connectionString = @"User=SYSDBA;Password=masterkey;Database=d:\Moje Programy GIT\Funkcje Uniwersalne\FbKlient\FbKlientTests\database\MSKLIENT_TESTS.FDB; DataSource=127.0.0.1;Port=3050;Dialect=3;Charset=NONE;Connection lifetime=15;Pooling=true;MinPoolSize=0;MaxPoolSize=50;PacketSize=8192;ServerType = 0;";
+        private const string _connectionString = @"User=SYSDBA;Password=[databasepassword];Database=/db/test_fbklient.fdb; DataSource=localhost;Port=3050;Dialect=3;Charset=NONE;Connection lifetime=15;Pooling=true;MinPoolSize=0;MaxPoolSize=50;PacketSize=8192;ServerType = 0;";
         
 
         [TestMethod]
