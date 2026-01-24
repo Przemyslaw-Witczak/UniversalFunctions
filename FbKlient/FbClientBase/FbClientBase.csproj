@@ -8,9 +8,10 @@
 	<Authors>Przemysław Witczak</Authors>
     <Company>DowiSoft</Company>
 	<RepositoryUrl>https://github.com/Przemyslaw-Witczak/UniversalFunctions</RepositoryUrl>
-	<Platforms>AnyCPU;x86</Platforms>
-	<AssemblyVersion>1.1.0.0</AssemblyVersion>
-	<FileVersion>1.1.0.0</FileVersion>
+	<Platforms>AnyCPU;x86</Platforms>	
+    <!-- Prevent MSBuild from generating assembly attribute fragments that duplicate your manual attributes -->
+    <GenerateAssemblyInfo>False</GenerateAssemblyInfo>
+    <Version>1.1.0</Version>
   </PropertyGroup>
 
   <ItemGroup>
